@@ -1,0 +1,9 @@
+{
+  "name": "fluentit",
+  "private": true,
+  "workspaces": [
+    "apps/mobile",
+    "packages/content",
+    "packages/srs"
+  ]
+}

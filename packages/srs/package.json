@@ -1,0 +1,9 @@
+{
+  "name": "@fluentit/srs",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "private": true,
+  "dependencies": {
+    "ts-fsrs": "^5.3.0"
+  }
+}
