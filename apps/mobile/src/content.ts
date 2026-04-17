@@ -1,4 +1,3 @@
-// Re-export everything from the content package for easy import within the app
 export {
   ALL_CARDS,
   DOMAINS,
@@ -10,6 +9,11 @@ export {
   networkingCards,
   dataCards,
   aiCards,
+  sysengCards,
+  codingCards,
+  integrationCards,
+  agileCards,
+  governanceCards,
 } from '../../../packages/content/src/index';
 
 export type { Card, Domain, Difficulty, DomainMeta } from '../../../packages/content/src/types';

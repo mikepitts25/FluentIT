@@ -4,7 +4,12 @@ export type Domain =
   | 'cloud'
   | 'networking'
   | 'data'
-  | 'ai';
+  | 'ai'
+  | 'syseng'
+  | 'coding'
+  | 'integration'
+  | 'agile'
+  | 'governance';
 
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
 
