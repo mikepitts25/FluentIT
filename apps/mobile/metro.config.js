@@ -6,13 +6,14 @@ const monorepoRoot = path.resolve(projectRoot, '../..');
 
 const config = getDefaultConfig(projectRoot);
 
-// Watch the monorepo root so Metro finds packages/* sources
+// Watch packages/* source so Metro picks up live edits
 config.watchFolders = [monorepoRoot];
 
-// Let Metro resolve from both the mobile app's node_modules AND the root
+// Resolve modules only from apps/mobile/node_modules — file: symlinks
+// already land there, so we don't need the root on the path.
+// Adding the root caused @babel/runtime version conflicts.
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
-  path.resolve(monorepoRoot, 'node_modules'),
 ];
 
 module.exports = config;
