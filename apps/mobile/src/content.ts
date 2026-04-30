@@ -14,6 +14,6 @@ export {
   integrationCards,
   agileCards,
   governanceCards,
-} from '../../../packages/content/src/index';
+} from '@fluentit/content';
 
-export type { Card, Domain, Difficulty, DomainMeta } from '../../../packages/content/src/types';
+export type { Card, Domain, Difficulty, DomainMeta } from '@fluentit/content';
