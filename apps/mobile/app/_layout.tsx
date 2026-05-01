@@ -14,7 +14,7 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: '#0F172A' },
         }}
       >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Home' }} />
         <Stack.Screen name="domain/[id]" options={{ title: '' }} />
         <Stack.Screen name="card/[id]" options={{ title: '' }} />
         <Stack.Screen name="review" options={{ title: 'Daily Review' }} />
