@@ -346,69 +346,6 @@ export const networkingCards: Card[] = [
     relatedTerms: ['DSCP', 'Traffic Shaping', 'Jitter', 'MPLS'],
   },
   {
-    id: 'net-vlan',
-    domain: 'networking',
-    title: 'VLAN',
-    subtitle: 'Virtual LANs — segment without new hardware',
-    difficulty: 'beginner',
-    tags: ['segmentation', 'switching', 'layer-2'],
-    definition:
-      'A VLAN (Virtual LAN) is a logical grouping of switch ports that creates separate broadcast domains on the same physical switch. Devices on different VLANs cannot communicate without a router, even if they share the same physical cable.',
-    whyItMatters:
-      'VLANs are the foundation of network segmentation. They isolate departments, guest Wi-Fi, IoT devices, and server tiers without buying separate switches — reducing broadcast storms and containing security incidents to a single segment.',
-    analogy:
-      'Like floors in an office building connected by a single elevator (router). People on the same floor can talk freely, but reaching another floor requires going through the elevator — which can enforce access rules.',
-    soundsSmartToSay:
-      '"We should put the IoT devices on their own VLAN — if a smart thermostat gets compromised, it should not be on the same broadcast domain as our servers."',
-    commonConfusions: [
-      'VLAN vs subnet: A VLAN is a Layer 2 (switching) concept. A subnet is a Layer 3 (routing) concept. In practice they map 1:1, but they operate at different layers — you assign a subnet to a VLAN.',
-      'VLAN vs VPC: A VPC is a cloud-provider construct for network isolation. A VLAN is the physical-network equivalent. Many cloud VPCs are implemented using VLANs under the hood.',
-    ],
-    relatedTerms: ['Subnet', 'Network Segmentation', 'Trunk Port', 'VPC'],
-  },
-  {
-    id: 'net-nat',
-    domain: 'networking',
-    title: 'NAT',
-    subtitle: 'Network Address Translation',
-    difficulty: 'beginner',
-    tags: ['ip', 'routing', 'translation'],
-    definition:
-      'NAT translates private IP addresses (like 10.0.x.x or 192.168.x.x) to public IPs before packets leave your network, and translates them back on return. It lets thousands of devices share a handful of public IPs and hides internal network structure from the internet.',
-    whyItMatters:
-      'IPv4 addresses are exhausted — without NAT, every device would need a public IP. NAT is what makes your home router work with one public IP, and it is equally critical in enterprise and cloud networks (NAT gateways in VPCs).',
-    analogy:
-      'Like a company receptionist who takes calls. External callers dial one main number (public IP), and the receptionist routes them to the right internal extension (private IP). The caller never sees the extension number.',
-    soundsSmartToSay:
-      '"Our NAT gateway is a single point of failure and a bandwidth bottleneck — we should deploy one per AZ for both resilience and throughput."',
-    commonConfusions: [
-      'NAT vs firewall: NAT translates addresses; a firewall filters traffic. They often run on the same device (your home router does both) but serve different purposes.',
-      'SNAT vs DNAT: Source NAT changes the source IP (outbound traffic). Destination NAT changes the destination IP (port forwarding for inbound traffic). Most people mean SNAT when they say "NAT."',
-    ],
-    relatedTerms: ['IPv4', 'VPC', 'Private IP', 'Port Forwarding'],
-  },
-  {
-    id: 'net-dhcp',
-    domain: 'networking',
-    title: 'DHCP',
-    subtitle: 'Automatic IP address assignment',
-    difficulty: 'beginner',
-    tags: ['ip', 'configuration', 'protocol'],
-    definition:
-      'DHCP (Dynamic Host Configuration Protocol) automatically assigns IP addresses, subnet masks, gateways, and DNS servers to devices when they join a network. Without it, every device would need manual IP configuration.',
-    whyItMatters:
-      'Managing static IPs for thousands of devices is impossible at scale. DHCP is the protocol that makes "plug it in and it works" possible — from laptops connecting to Wi-Fi to containers getting IPs in a Kubernetes pod network.',
-    analogy:
-      'Like a hotel front desk assigning room numbers. You walk in (connect to the network), the front desk (DHCP server) gives you a room (IP address) for a set duration (lease time), and reclaims it when you check out.',
-    soundsSmartToSay:
-      '"The DHCP lease time is too short — clients are renewing every 30 minutes, which is creating unnecessary broadcast traffic. Let us increase it to 8 hours for the office VLAN."',
-    commonConfusions: [
-      'DHCP vs static IP: DHCP assigns addresses dynamically. Servers, printers, and infrastructure devices typically use static IPs (or DHCP reservations) so their address never changes.',
-      'DHCP vs DNS: DHCP assigns IPs. DNS resolves names to IPs. They work together — many DHCP servers can auto-register DNS records for the IPs they assign (Dynamic DNS).',
-    ],
-    relatedTerms: ['DNS', 'IP Address', 'Subnet', 'Lease Time'],
-  },
-  {
     id: 'net-zero-trust-networking',
     domain: 'networking',
     title: 'Zero Trust Networking',
@@ -451,27 +388,6 @@ export const networkingCards: Card[] = [
     relatedTerms: ['VLAN', 'Firewall', 'Microsegmentation', 'Zero Trust'],
   },
   {
-    id: 'net-mpls',
-    domain: 'networking',
-    title: 'MPLS',
-    subtitle: 'Multi-Protocol Label Switching',
-    difficulty: 'advanced',
-    tags: ['wan', 'carrier', 'routing'],
-    definition:
-      'MPLS is a carrier-grade routing technique that forwards packets using short labels instead of long IP addresses, enabling traffic engineering, guaranteed QoS, and predictable latency across wide-area networks. It is the backbone of most enterprise WAN services.',
-    whyItMatters:
-      'Before SD-WAN, MPLS was the only way to get reliable, low-latency connectivity between branch offices with SLA guarantees. It is still dominant in industries where deterministic performance matters — financial trading, real-time voice, and industrial control.',
-    analogy:
-      'Like an express lane system on a highway. Instead of reading every road sign (IP address) at every intersection, MPLS slaps a colored sticker (label) on each car at the on-ramp, and every toll booth just reads the sticker to route it — faster and with guaranteed lane priority.',
-    soundsSmartToSay:
-      '"We are evaluating SD-WAN to replace some MPLS circuits — the cost per megabit is 5x lower, and for non-latency-sensitive traffic, the SLA tradeoff is acceptable."',
-    commonConfusions: [
-      'MPLS vs SD-WAN: MPLS is a carrier-managed WAN with guaranteed SLAs but high cost. SD-WAN overlays intelligence on cheaper internet links but without guaranteed latency. Most enterprises are in a hybrid transition.',
-      'MPLS vs VPN: A site-to-site VPN encrypts traffic over the internet. MPLS is a private carrier network — traffic never touches the public internet. MPLS provides better performance guarantees but at higher cost.',
-    ],
-    relatedTerms: ['SD-WAN', 'WAN', 'QoS', 'Traffic Engineering'],
-  },
-  {
     id: 'net-ipv6',
     domain: 'networking',
     title: 'IPv6 Migration',
@@ -491,26 +407,5 @@ export const networkingCards: Card[] = [
       'Dual-stack vs tunneling: Dual-stack runs both IPv4 and IPv6 natively. Tunneling (6to4, Teredo) encapsulates IPv6 inside IPv4 — it is a workaround for networks that do not support IPv6 natively.',
     ],
     relatedTerms: ['NAT', 'Dual-Stack', 'SLAAC', 'IPv4'],
-  },
-  {
-    id: 'net-qos',
-    domain: 'networking',
-    title: 'QoS',
-    subtitle: 'Quality of Service — prioritizing what matters',
-    difficulty: 'intermediate',
-    tags: ['performance', 'traffic', 'prioritization'],
-    definition:
-      'QoS (Quality of Service) is a set of techniques that prioritize certain types of network traffic over others. By classifying and queuing packets, QoS ensures latency-sensitive traffic (voice, video, trading) gets bandwidth priority over bulk traffic (backups, downloads).',
-    whyItMatters:
-      'When a network link is saturated, all traffic suffers equally without QoS. A backup job flooding the pipe should not make the CEO\'s video call stutter. QoS prevents bandwidth-hungry applications from starving critical ones.',
-    analogy:
-      'Like a hospital emergency room triage. Everyone arrives at the same ER (network link), but critical patients (voice, video) are seen immediately while stable patients (file transfers) wait. The total capacity does not change — just the priority.',
-    soundsSmartToSay:
-      '"We need to classify our traffic and set DSCP markings so the WAN routers can prioritize voice and real-time control traffic during congestion."',
-    commonConfusions: [
-      'QoS does not add bandwidth: QoS prioritizes traffic within existing capacity. If the link is always saturated, you need more bandwidth — QoS just ensures what you have goes to the right places.',
-      'QoS is only effective end-to-end if every device in the path honors the markings. A single router that ignores DSCP tags breaks the entire QoS chain — this is why managed WAN services like MPLS are preferred for QoS-dependent applications.',
-    ],
-    relatedTerms: ['DSCP', 'Traffic Shaping', 'Jitter', 'MPLS'],
   },
 ];

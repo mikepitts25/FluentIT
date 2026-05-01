@@ -346,48 +346,6 @@ export const sysengCards: Card[] = [
     relatedTerms: ['CMDB', 'Configuration Management', 'Cost Allocation', 'Asset Tagging'],
   },
   {
-    id: 'syseng-raid',
-    domain: 'syseng',
-    title: 'RAID',
-    subtitle: 'Redundant Array of Independent Disks',
-    difficulty: 'beginner',
-    tags: ['storage', 'redundancy', 'hardware'],
-    definition:
-      'RAID combines multiple physical disks into a logical unit to improve performance, redundancy, or both. RAID 1 mirrors data across disks (redundancy). RAID 0 stripes data across disks (speed, no redundancy). RAID 5/6 combines striping with parity for both speed and fault tolerance.',
-    whyItMatters:
-      'Disk failures are inevitable. RAID lets a server survive one or more disk failures without data loss or downtime — it is the first line of defense before backups, replication, and cloud storage.',
-    analogy:
-      'RAID 1 is like writing the same document in two filing cabinets — if one catches fire, you still have the other. RAID 0 is splitting the document across cabinets for faster filing but losing everything if one burns.',
-    soundsSmartToSay:
-      '"RAID is not a backup — it protects against disk failure, not accidental deletion, ransomware, or site-level disasters. We still need offsite backups."',
-    commonConfusions: [
-      'RAID is not a backup: RAID protects against hardware failure. If you delete a file, it is deleted from all RAID members simultaneously. Backups protect against logical errors; RAID protects against physical ones.',
-      'RAID 5 vs RAID 6: RAID 5 survives one disk failure. RAID 6 survives two. With modern large disks, rebuild times are long enough that a second failure during rebuild is a real risk — RAID 6 is preferred for large arrays.',
-    ],
-    relatedTerms: ['Storage Tiers', 'Backup & DR', 'Disk I/O', 'SAN'],
-  },
-  {
-    id: 'syseng-load-testing',
-    domain: 'syseng',
-    title: 'Load Testing',
-    subtitle: 'Find the breaking point before users do',
-    difficulty: 'intermediate',
-    tags: ['performance', 'testing', 'capacity'],
-    definition:
-      'Load testing simulates realistic or extreme traffic against a system to measure performance under stress — response times, error rates, throughput, and resource utilization. Tools like k6, Gatling, and Locust generate synthetic traffic to find bottlenecks before real users hit them.',
-    whyItMatters:
-      'Production incidents often happen at scale — the system works fine at 100 requests/sec but falls over at 500. Load testing reveals bottlenecks (database connections, memory leaks, slow queries) under controlled conditions instead of during Black Friday.',
-    analogy:
-      'Like a fire drill for your infrastructure. You simulate the stress (traffic) to see what breaks and where, then fix it before the real event. The goal is not to prevent all fires but to know exactly which alarms will trigger and which exits work.',
-    soundsSmartToSay:
-      '"We should run a soak test — sustained load for 8 hours — to catch memory leaks and connection pool exhaustion that spike tests miss."',
-    commonConfusions: [
-      'Load test vs stress test vs soak test: A load test validates performance at expected traffic. A stress test pushes past the breaking point. A soak test runs at moderate load for an extended period to find slow leaks.',
-      'Load testing in staging vs production: Staging environments rarely match production hardware and data volume. Load testing results from staging are directional, not definitive — test in production with feature flags when possible.',
-    ],
-    relatedTerms: ['Capacity Planning', 'Observability', 'Performance Tuning', 'k6'],
-  },
-  {
     id: 'syseng-internal-dns',
     domain: 'syseng',
     title: 'Internal DNS',
@@ -407,90 +365,6 @@ export const sysengCards: Card[] = [
       'DNS vs service discovery: Traditional DNS resolves names to IPs. Service discovery (Consul, Kubernetes DNS) adds health checking, load balancing, and metadata. Kubernetes uses DNS as its service discovery mechanism.',
     ],
     relatedTerms: ['DNS', 'Service Discovery', 'Split-Horizon DNS', 'DHCP'],
-  },
-  {
-    id: 'syseng-log-aggregation',
-    domain: 'syseng',
-    title: 'Log Aggregation',
-    subtitle: 'Centralize logs from everywhere',
-    difficulty: 'intermediate',
-    tags: ['logging', 'observability', 'troubleshooting'],
-    definition:
-      'Log aggregation collects, normalizes, and centralizes log data from all your servers, containers, and applications into a single searchable platform. Tools like the ELK Stack (Elasticsearch, Logstash, Kibana), Splunk, Loki, and Datadog Logs provide this capability.',
-    whyItMatters:
-      'When an incident happens, you cannot SSH into 200 servers and grep logs. Centralized log aggregation lets you search, correlate, and visualize logs across your entire fleet — turning hours of investigation into minutes.',
-    analogy:
-      'Like a centralized security camera system versus individual cameras with local storage. Each camera (server) records locally, but the aggregation system pulls all feeds into one monitoring room where you can search and replay across all cameras simultaneously.',
-    soundsSmartToSay:
-      '"We need structured logging with consistent fields across all services — unstructured log aggregation just gives us a faster way to grep through garbage."',
-    commonConfusions: [
-      'Log aggregation vs observability: Logs are one pillar of observability (along with metrics and traces). Log aggregation alone is not observability — you need correlation between logs, metrics, and traces for full visibility.',
-      'ELK vs Loki: ELK indexes the full text of every log line (powerful but expensive). Loki indexes only metadata labels and stores raw log lines cheaply. Choose ELK for ad-hoc full-text search; Loki for cost-effective log storage with label-based queries.',
-    ],
-    relatedTerms: ['System Monitoring', 'ELK Stack', 'Observability', 'Structured Logging'],
-  },
-  {
-    id: 'syseng-runbooks',
-    domain: 'syseng',
-    title: 'Runbooks',
-    subtitle: 'Step-by-step guides for operational tasks',
-    difficulty: 'beginner',
-    tags: ['operations', 'documentation', 'incident-response'],
-    definition:
-      'A runbook is a documented set of step-by-step procedures for performing routine operational tasks or responding to specific incidents — "if disk usage exceeds 90%, do X; if the primary database fails over, do Y." Runbooks standardize responses so any on-call engineer can execute them.',
-    whyItMatters:
-      'At 3 AM, under pressure, even experienced engineers make mistakes. Runbooks turn tribal knowledge into repeatable procedures — reducing mean time to recovery, enabling junior engineers to handle incidents, and ensuring consistent responses.',
-    analogy:
-      'Like the checklists pilots use before takeoff. Even experienced pilots follow the checklist because under stress, humans forget steps. Runbooks are the engineering equivalent — proven procedures for high-stakes situations.',
-    soundsSmartToSay:
-      '"Every alert in PagerDuty should link to a runbook — if the on-call engineer does not know what to do when the alert fires, the alert is worse than useless."',
-    commonConfusions: [
-      'Runbook vs playbook: In practice, the terms are often interchangeable. Some organizations distinguish runbooks (operational procedures) from playbooks (higher-level incident response strategies). Do not argue about terminology — just write them.',
-      'Runbook vs automation: If a runbook is executed the same way every time, it should be automated. Runbooks are the precursor to automation — document first, then automate the well-understood procedures.',
-    ],
-    relatedTerms: ['Incident Response', 'On-Call', 'Automation', 'Post-Mortem'],
-  },
-  {
-    id: 'syseng-kernel-tuning',
-    domain: 'syseng',
-    title: 'Kernel Tuning',
-    subtitle: 'Squeeze more performance from the OS',
-    difficulty: 'advanced',
-    tags: ['linux', 'performance', 'optimization'],
-    definition:
-      'Kernel tuning adjusts operating system parameters — via sysctl, ulimits, cgroups, and scheduler configuration — to optimize performance for specific workloads. Database servers, high-frequency trading systems, and container hosts all benefit from non-default kernel settings.',
-    whyItMatters:
-      'Default kernel settings are designed for general-purpose workloads. A database server with default file descriptor limits (1024) will hit connection limits under moderate load. Kernel tuning is the difference between a system that works and one that works at scale.',
-    analogy:
-      'Like tuning a car engine for a specific type of racing. The factory settings (defaults) are safe for daily driving, but track performance requires adjusting suspension, tire pressure, and gear ratios for the specific conditions.',
-    soundsSmartToSay:
-      '"We need to increase vm.max_map_count for Elasticsearch and tune net.core.somaxconn for the reverse proxy — the defaults are too low for our connection volume."',
-    commonConfusions: [
-      'Kernel tuning vs application tuning: Many performance issues are in the application (bad queries, unoptimized code), not the kernel. Profile the application first — kernel tuning should only address confirmed OS-level bottlenecks.',
-      'Persistent vs ephemeral changes: sysctl changes at runtime are lost on reboot unless written to /etc/sysctl.conf or /etc/sysctl.d/. Container images need tuning baked in or applied via init containers and security contexts.',
-    ],
-    relatedTerms: ['Linux Kernel', 'sysctl', 'cgroups', 'Performance Tuning'],
-  },
-  {
-    id: 'syseng-sre-practices',
-    domain: 'syseng',
-    title: 'SRE Practices',
-    subtitle: 'Engineering reliability, not just operating systems',
-    difficulty: 'intermediate',
-    tags: ['reliability', 'sre', 'methodology'],
-    definition:
-      'Site Reliability Engineering (SRE) practices include error budgets, SLOs, toil reduction, and blameless post-mortems — a framework where reliability is measured quantitatively and operational work is treated as engineering work to be automated, not just endured.',
-    whyItMatters:
-      'Traditional ops teams fight fires endlessly. SRE reframes the problem: define an acceptable error rate (SLO), measure it (SLI), and when the error budget is exhausted, prioritize reliability over features. It gives engineering leadership a data-driven framework for reliability investment.',
-    analogy:
-      'Like a quality control system in manufacturing. You define acceptable defect rates (SLOs), measure actual defects (SLIs), and when you exceed your tolerance (burn error budget), you halt the production line to fix the process before shipping more units.',
-    soundsSmartToSay:
-      '"We have burned 80% of our monthly error budget in the first week — we should freeze feature deployments and focus on reliability until the budget resets."',
-    commonConfusions: [
-      'SRE vs DevOps: DevOps is a culture and set of practices. SRE is a specific implementation of DevOps principles with quantitative frameworks (SLOs, error budgets, toil budgets). Google says "SRE implements DevOps."',
-      'SLO vs SLA: An SLO (Service Level Objective) is an internal reliability target. An SLA (Service Level Agreement) is a contractual commitment with penalties. SLOs should be stricter than SLAs — you want to catch problems before they become SLA violations.',
-    ],
-    relatedTerms: ['SLO/SLI/SLA', 'Error Budget', 'Toil', 'Observability'],
   },
   {
     id: 'syseng-lifecycle',

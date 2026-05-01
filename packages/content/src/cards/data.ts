@@ -346,48 +346,6 @@ export const dataCards: Card[] = [
     relatedTerms: ['Data Lake', 'Apache Iceberg', 'Delta Lake', 'Data Warehouse'],
   },
   {
-    id: 'data-lake',
-    domain: 'data',
-    title: 'Data Lake',
-    subtitle: 'Store everything, structure later',
-    difficulty: 'beginner',
-    tags: ['storage', 'architecture', 'raw-data'],
-    definition:
-      'A data lake is a centralized repository that stores raw data in its native format — structured, semi-structured, and unstructured — at any scale. Unlike a warehouse that requires schema upfront, a data lake ingests first and applies structure at query time.',
-    whyItMatters:
-      'Organizations generate data faster than they can define schemas. A data lake captures everything — logs, clickstreams, IoT telemetry, images — so data scientists and engineers can explore and derive value from it later without losing fidelity.',
-    analogy:
-      'Like a warehouse (physical one) where you dump everything in boxes labeled by source. A data warehouse is a retail store — products are sorted, labeled, and shelved for easy browsing. The lake holds the raw inventory.',
-    soundsSmartToSay:
-      '"We should land the raw data in the lake first and build curated layers on top — do not transform before we understand what questions we need to answer."',
-    commonConfusions: [
-      'Data lake vs data warehouse: A warehouse stores structured, processed data for fast BI queries. A lake stores raw, unprocessed data for flexible exploration. Most modern architectures have both.',
-      'Data lake vs data swamp: A lake without governance, cataloging, or quality controls becomes a data swamp — terabytes of data nobody can find or trust. Governance is what separates a useful lake from a dumping ground.',
-    ],
-    relatedTerms: ['Data Warehouse', 'Data Lakehouse', 'Object Storage', 'Schema-on-Read'],
-  },
-  {
-    id: 'data-mesh',
-    domain: 'data',
-    title: 'Data Mesh',
-    subtitle: 'Decentralize data ownership to the teams that know it',
-    difficulty: 'advanced',
-    tags: ['architecture', 'decentralization', 'ownership'],
-    definition:
-      'Data Mesh is an organizational and architectural paradigm where domain teams own, produce, and serve their data as a product — with shared infrastructure, governance standards, and self-service tooling. It moves away from centralized data teams being the bottleneck for every data request.',
-    whyItMatters:
-      'Centralized data teams cannot scale to serve every domain\'s needs. Data Mesh distributes ownership so the team that understands the data best (orders, payments, logistics) also owns its quality, SLAs, and documentation — like microservices for data.',
-    analogy:
-      'Like the shift from monolithic applications to microservices. Just as microservices let each team own their service independently, Data Mesh lets each team own their data product independently — with shared standards for interoperability.',
-    soundsSmartToSay:
-      '"We should treat the orders data as a product with an SLA, a schema contract, and an owner — not a table that the data team copies into the warehouse and hopes stays correct."',
-    commonConfusions: [
-      'Data Mesh vs data lake: A data lake is a storage technology. Data Mesh is an organizational model. You can implement Data Mesh on top of a data lake — the mesh defines who owns the data, the lake is where it lives.',
-      'Data Mesh does not mean no standards: Decentralized ownership still requires centralized governance for interoperability — common formats, shared catalogs, and cross-domain quality metrics.',
-    ],
-    relatedTerms: ['Data Product', 'Domain-Driven Design', 'Data Governance', 'Microservices'],
-  },
-  {
     id: 'data-sql-nosql',
     domain: 'data',
     title: 'SQL vs NoSQL',
@@ -407,27 +365,6 @@ export const dataCards: Card[] = [
       'NoSQL is not always faster: For complex analytical queries with joins, SQL databases often outperform NoSQL. NoSQL wins on write throughput and horizontal scaling for simple access patterns.',
     ],
     relatedTerms: ['ACID', 'BASE', 'Database Replication', 'Schema Design'],
-  },
-  {
-    id: 'data-governance',
-    domain: 'data',
-    title: 'Data Governance',
-    subtitle: 'Rules, ownership, and trust for your data',
-    difficulty: 'intermediate',
-    tags: ['quality', 'compliance', 'organization'],
-    definition:
-      'Data governance is the set of policies, processes, and standards that ensure data is accurate, consistent, secure, and compliant across an organization. It defines who owns data, who can access it, what quality standards apply, and how long it is retained.',
-    whyItMatters:
-      'Without governance, teams make decisions on conflicting versions of the same metric, PII leaks into analytics datasets, and nobody knows which data to trust. Governance is what makes data an asset instead of a liability.',
-    analogy:
-      'Like building codes for data. Just as building codes ensure structures are safe, data governance ensures data is trustworthy. Without codes, some buildings are excellent and some collapse — you cannot tell which is which until it is too late.',
-    soundsSmartToSay:
-      '"We need a data governance framework before we scale our analytics — otherwise every team will define revenue differently and nobody will trust the dashboard."',
-    commonConfusions: [
-      'Data governance vs data management: Data management is the technical work (ETL, storage, quality checks). Data governance is the organizational framework that directs and oversees that work.',
-      'Governance is not just compliance: GDPR compliance is one output of governance, but governance also covers data quality, lineage, cataloging, and business definitions — it serves analytics teams, not just auditors.',
-    ],
-    relatedTerms: ['Data Catalog', 'Data Quality', 'Data Steward', 'GDPR'],
   },
   {
     id: 'data-partitioning',
@@ -451,27 +388,6 @@ export const dataCards: Card[] = [
     relatedTerms: ['Database Replication', 'Horizontal Scaling', 'Index', 'Hot Spots'],
   },
   {
-    id: 'data-catalog',
-    domain: 'data',
-    title: 'Data Catalog',
-    subtitle: 'A searchable inventory of your data assets',
-    difficulty: 'intermediate',
-    tags: ['discovery', 'metadata', 'governance'],
-    definition:
-      'A data catalog is a metadata management tool that indexes every dataset, table, column, and pipeline in your organization — with descriptions, owners, lineage, quality scores, and usage statistics. Think of it as the search engine for your data.',
-    whyItMatters:
-      'In large organizations, data teams waste 30% or more of their time just finding and understanding data. A catalog eliminates "does this table exist?" and "who owns this column?" questions and is a prerequisite for effective data governance.',
-    analogy:
-      'Like a library card catalog for your data warehouse. Without it, you have a warehouse full of unmarked boxes — everything is there but nobody can find anything. Tools like DataHub, Amundsen, and Atlan are the modern card catalog.',
-    soundsSmartToSay:
-      '"Before we build another dashboard, we need to catalog our data sources and define business-level descriptions for each metric — otherwise we are building on definitions nobody agrees on."',
-    commonConfusions: [
-      'Data catalog vs data dictionary: A data dictionary describes the technical schema (column names, types). A catalog adds business context (ownership, descriptions, lineage, quality) and makes it searchable.',
-      'A catalog is only useful if it is maintained: Auto-cataloging tools can index schemas automatically, but business descriptions and ownership still require human input. An outdated catalog is worse than no catalog.',
-    ],
-    relatedTerms: ['Data Governance', 'Metadata', 'Data Lineage', 'Data Discovery'],
-  },
-  {
     id: 'data-vector-db',
     domain: 'data',
     title: 'Vector Databases',
@@ -491,26 +407,5 @@ export const dataCards: Card[] = [
       'Vector search vs full-text search: Full-text search (Elasticsearch) matches keywords and their variants. Vector search matches semantic meaning — "automobile" and "car" are close in vector space even though they share no characters.',
     ],
     relatedTerms: ['Embeddings', 'RAG', 'Similarity Search', 'Pinecone'],
-  },
-  {
-    id: 'data-lakehouse',
-    domain: 'data',
-    title: 'Data Lakehouse',
-    subtitle: 'Warehouse performance on lake storage',
-    difficulty: 'intermediate',
-    tags: ['architecture', 'analytics', 'hybrid'],
-    definition:
-      'A data lakehouse combines the low-cost, flexible storage of a data lake with the schema enforcement, ACID transactions, and query performance of a data warehouse. Technologies like Delta Lake, Apache Iceberg, and Apache Hudi add a metadata and transaction layer on top of object storage (S3, GCS).',
-    whyItMatters:
-      'Maintaining separate lakes and warehouses means duplicating data, complex ETL pipelines, and inconsistency between raw and processed data. A lakehouse collapses both into one architecture — one copy of the data serving both data science and BI.',
-    analogy:
-      'Like converting a raw warehouse into a retail-ready store without moving the inventory. The same boxes (Parquet files in S3) stay in place, but you add shelving, labels, and a checkout system (Iceberg metadata, ACID transactions) on top.',
-    soundsSmartToSay:
-      '"We should evaluate Apache Iceberg as our table format — it gives us time travel, schema evolution, and partition pruning on top of our existing S3 data lake without migrating anything."',
-    commonConfusions: [
-      'Lakehouse vs data lake: A data lake stores raw files. A lakehouse adds a metadata layer that enables warehouse-like features (ACID, schema enforcement, time travel) on top of lake storage.',
-      'You do not need to choose between a lakehouse and a warehouse — many organizations use a lakehouse for the raw and curated layers and still push aggregated data to Snowflake or BigQuery for BI teams who prefer those tools.',
-    ],
-    relatedTerms: ['Data Lake', 'Apache Iceberg', 'Delta Lake', 'Data Warehouse'],
   },
 ];

@@ -346,27 +346,6 @@ export const integrationCards: Card[] = [
     relatedTerms: ['Swagger UI', 'REST', 'API Contract', 'Postman'],
   },
   {
-    id: 'int-grpc',
-    domain: 'integration',
-    title: 'gRPC',
-    subtitle: 'High-performance RPC with Protocol Buffers',
-    difficulty: 'intermediate',
-    tags: ['rpc', 'performance', 'protobuf'],
-    definition:
-      'gRPC is a high-performance remote procedure call framework that uses Protocol Buffers (protobuf) for serialization and HTTP/2 for transport. It supports strongly typed contracts, bidirectional streaming, and code generation in dozens of languages — making it the default choice for internal service-to-service communication at scale.',
-    whyItMatters:
-      'REST with JSON is human-readable but slow for high-throughput internal services. gRPC is 5–10x faster due to binary serialization and HTTP/2 multiplexing, with strict contracts that catch breaking changes at compile time instead of at runtime.',
-    analogy:
-      'REST is like exchanging letters (readable, flexible, slow). gRPC is like a phone call (direct, fast, requires both sides to speak the same protocol). For internal services that talk millions of times per second, the phone call wins.',
-    soundsSmartToSay:
-      '"For our internal service mesh, gRPC gives us type-safe contracts and streaming — REST is better for our public API where human readability and browser compatibility matter."',
-    commonConfusions: [
-      'gRPC vs REST: REST is resource-oriented (GET /users/123). gRPC is action-oriented (GetUser(id=123)). REST is better for public APIs; gRPC is better for internal high-throughput communication.',
-      'gRPC vs GraphQL: GraphQL lets clients request exactly the fields they need. gRPC uses fixed message schemas. GraphQL is better for flexible client queries; gRPC is better for predefined, high-performance server-to-server calls.',
-    ],
-    relatedTerms: ['Protocol Buffers', 'REST API', 'HTTP/2', 'Service Mesh'],
-  },
-  {
     id: 'int-rate-limiting',
     domain: 'integration',
     title: 'API Rate Limiting',
@@ -388,48 +367,6 @@ export const integrationCards: Card[] = [
     relatedTerms: ['API Gateway', 'Circuit Breaker', '429 Status Code', 'Backpressure'],
   },
   {
-    id: 'int-service-discovery',
-    domain: 'integration',
-    title: 'Service Discovery',
-    subtitle: 'How services find each other dynamically',
-    difficulty: 'intermediate',
-    tags: ['microservices', 'networking', 'dynamic'],
-    definition:
-      'Service discovery is the mechanism by which services in a distributed system locate each other at runtime — registering their addresses when they start and deregistering when they stop. Tools like Consul, Eureka, and Kubernetes DNS provide this capability.',
-    whyItMatters:
-      'In dynamic environments where containers spin up and down constantly, hardcoded addresses break immediately. Service discovery provides a live registry of available service instances, enabling load balancing, failover, and elastic scaling without manual configuration.',
-    analogy:
-      'Like a DNS for microservices that updates in real-time. When a new instance of the payment service starts, it registers itself. When other services need to call payments, they query the registry for a healthy instance — no hardcoded IPs.',
-    soundsSmartToSay:
-      '"Kubernetes DNS handles service discovery within the cluster, but for cross-cluster communication we need something like Consul with health checking and DNS forwarding."',
-    commonConfusions: [
-      'Client-side vs server-side discovery: In client-side discovery, the client queries the registry and picks an instance (Netflix Eureka). In server-side discovery, the client calls a load balancer that queries the registry (Kubernetes Services). Server-side is simpler for clients.',
-      'Service discovery vs DNS: Traditional DNS caches aggressively and updates slowly (TTLs). Service discovery registries update in real-time with health checking — a failed instance is removed in seconds, not minutes.',
-    ],
-    relatedTerms: ['Consul', 'Kubernetes DNS', 'Load Balancer', 'Health Checks'],
-  },
-  {
-    id: 'int-esb',
-    domain: 'integration',
-    title: 'ESB',
-    subtitle: 'Enterprise Service Bus',
-    difficulty: 'advanced',
-    tags: ['enterprise', 'legacy', 'integration'],
-    definition:
-      'An ESB is a centralized middleware platform that routes, transforms, and orchestrates messages between enterprise applications. It was the dominant integration pattern before microservices — products like MuleSoft, IBM Integration Bus, and TIBCO enabled complex B2B and system-to-system integrations.',
-    whyItMatters:
-      'Understanding ESBs is essential for working with enterprise systems. Many large organizations still run critical integrations through ESBs, and modern integration platforms (iPaaS) are essentially cloud-native ESBs. The pattern is not dead — it has evolved.',
-    analogy:
-      'Like a central post office that translates, routes, and transforms mail between departments that each speak a different language. The post office (ESB) ensures the HR system and the payroll system can exchange data even though they use different formats.',
-    soundsSmartToSay:
-      '"The ESB is a single point of failure and a bottleneck — for new integrations, we should evaluate an event-driven approach with a message broker instead of routing everything through the bus."',
-    commonConfusions: [
-      'ESB vs message broker: A message broker (Kafka, RabbitMQ) transports messages. An ESB transports, transforms, routes, and orchestrates messages — it is a message broker plus business logic. Modern architectures prefer dumb pipes (brokers) with smart endpoints.',
-      'ESB vs API gateway: An API gateway handles external request routing and authentication. An ESB handles internal system-to-system integration with message transformation. Some overlap exists but they serve different purposes.',
-    ],
-    relatedTerms: ['Message Queues', 'Middleware', 'iPaaS', 'SOA'],
-  },
-  {
     id: 'int-serialization',
     domain: 'integration',
     title: 'Data Serialization',
@@ -449,48 +386,6 @@ export const integrationCards: Card[] = [
       'JSON vs MessagePack: MessagePack is a binary format that is drop-in compatible with JSON structures but smaller and faster. It is a good middle ground when you want JSON compatibility with better performance.',
     ],
     relatedTerms: ['gRPC', 'Schema Registry', 'JSON', 'Apache Avro'],
-  },
-  {
-    id: 'int-circuit-breaker',
-    domain: 'integration',
-    title: 'Circuit Breaker Pattern',
-    subtitle: 'Stop calling a service that is already down',
-    difficulty: 'intermediate',
-    tags: ['resilience', 'patterns', 'failure'],
-    definition:
-      'The circuit breaker pattern monitors calls to a downstream service and "trips" (opens) when failures exceed a threshold — subsequent calls fail immediately without hitting the downstream service. After a cooldown period, it allows a few test calls (half-open) to see if the service has recovered.',
-    whyItMatters:
-      'Without a circuit breaker, a failing downstream service causes cascading failures — every caller waits for timeouts, exhausts connection pools, and eventually fails too. The circuit breaker prevents one failure from taking down the entire system.',
-    analogy:
-      'Like an electrical circuit breaker in your house. When a short circuit happens, the breaker trips to prevent the wiring from catching fire. Resetting it tests whether the problem is fixed. Without it, one bad outlet can burn down the house.',
-    soundsSmartToSay:
-      '"We need a circuit breaker on the payment service call — if it is down, we should fail fast and return a cached response or graceful degradation rather than hanging for 30 seconds per request."',
-    commonConfusions: [
-      'Circuit breaker vs retry: Retries try again immediately after failure. A circuit breaker stops trying altogether after repeated failures. Use both — retry for transient errors, circuit breaker for sustained outages.',
-      'Circuit breaker vs rate limiting: Rate limiting protects a service from too many requests. A circuit breaker protects a caller from a failing dependency. They protect in different directions.',
-    ],
-    relatedTerms: ['Resilience', 'Retry Pattern', 'Bulkhead Pattern', 'Graceful Degradation'],
-  },
-  {
-    id: 'int-cqrs',
-    domain: 'integration',
-    title: 'CQRS',
-    subtitle: 'Command Query Responsibility Segregation',
-    difficulty: 'advanced',
-    tags: ['architecture', 'patterns', 'scalability'],
-    definition:
-      'CQRS separates the read (query) and write (command) sides of a system into different models, often backed by different databases. Writes go to a normalized store optimized for consistency. Reads go to a denormalized store optimized for query performance. The read store is kept in sync via events.',
-    whyItMatters:
-      'Most applications read far more than they write. CQRS lets you scale reads and writes independently — the read side can use materialized views, caching, and search indexes while the write side maintains strict consistency. It is the pattern behind high-read-throughput systems.',
-    analogy:
-      'Like a library with a catalog system. Authors submit manuscripts (writes) to the archives (write store). The librarian creates catalog cards and shelf displays (read store) optimized for how patrons search. The archive and the catalog are separate systems synced by the librarian.',
-    soundsSmartToSay:
-      '"CQRS makes sense here — our writes are simple but our reads need to join across five tables. Let us denormalize into a read model and sync it from the write side via events."',
-    commonConfusions: [
-      'CQRS does not require event sourcing: CQRS separates reads and writes. Event sourcing stores state as events. They are often used together but are independent patterns — you can do CQRS with a normal database on the write side.',
-      'Eventual consistency trade-off: The read model is updated asynchronously, so it may be slightly behind the write model. If you need read-your-own-writes consistency, you need to handle it at the application level.',
-    ],
-    relatedTerms: ['Event Sourcing', 'Materialized View', 'Event-Driven Architecture', 'Read Replica'],
   },
   {
     id: 'int-openapi',

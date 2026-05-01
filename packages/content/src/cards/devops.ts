@@ -365,49 +365,6 @@ export const devopsCards: Card[] = [
     relatedTerms: ['Blue-Green Deployment', 'Feature Flags', 'Progressive Delivery', 'Rollback'],
   },
   {
-    id: 'devops-service-mesh',
-    domain: 'devops',
-    title: 'Service Mesh',
-    subtitle: 'Infrastructure-layer networking for microservices',
-    difficulty: 'advanced',
-    tags: ['networking', 'microservices', 'observability'],
-    definition:
-      'A service mesh is a dedicated infrastructure layer — typically implemented as sidecar proxies alongside each service — that handles service-to-service communication: load balancing, retries, mTLS encryption, and observability, without changing application code.',
-    whyItMatters:
-      'When you have dozens of microservices, implementing retries, circuit breakers, and mutual TLS in every service is unsustainable. A service mesh moves that logic into the infrastructure so developers can focus on business logic.',
-    analogy:
-      'Like a managed network overlay. Just as a VPC abstracts physical networking from your VMs, a service mesh abstracts service networking from your application code. Istio and Linkerd are the "VPC" for microservice traffic.',
-    soundsSmartToSay:
-      '"Before adding a service mesh, let us make sure we actually need L7 traffic management — if we only need mTLS, a simpler solution like cert-manager might suffice."',
-    commonConfusions: [
-      'Service mesh vs API gateway: An API gateway handles north-south traffic (external clients to internal services). A service mesh handles east-west traffic (service to service). Most architectures need both.',
-      'Service mesh vs load balancer: A load balancer distributes traffic to service instances. A service mesh handles that plus retries, timeouts, circuit breaking, mutual TLS, and distributed tracing across the entire mesh.',
-      'Sidecar vs ambient: Traditional service meshes inject a sidecar proxy per pod. Newer approaches (like Istio Ambient) use per-node proxies to reduce overhead.',
-    ],
-    relatedTerms: ['Kubernetes', 'mTLS', 'Istio', 'Sidecar Pattern'],
-  },
-  {
-    id: 'devops-feature-flags',
-    domain: 'devops',
-    title: 'Feature Flags',
-    subtitle: 'Deploy does not have to mean release',
-    difficulty: 'beginner',
-    tags: ['deployment', 'release', 'toggles'],
-    definition:
-      'Feature flags are conditional switches in code that let you enable or disable features at runtime without deploying new code. They decouple deployment from release — code ships dark, then you turn it on for specific users, percentages, or regions.',
-    whyItMatters:
-      'Feature flags eliminate the "big bang release." Product teams can test with beta users, run A/B experiments, and instantly kill a broken feature — all without emergency rollbacks or hotfix deploys.',
-    analogy:
-      'Like the circuit breakers in your electrical panel. The wiring (code) is always there, but you can flip individual breakers on or off without rewiring the house.',
-    soundsSmartToSay:
-      '"We should flag that feature for a gradual rollout — 10% of users first, then ramp up once we confirm metrics are stable."',
-    commonConfusions: [
-      'Feature flags vs environment variables: Env vars are set at deploy time and require a restart to change. Feature flags change at runtime and can target specific users or segments.',
-      'Technical debt risk: Stale feature flags left in the code become confusing tech debt. Teams need a process to clean up flags after full rollout.',
-    ],
-    relatedTerms: ['Canary Deployment', 'A/B Testing', 'Progressive Delivery', 'LaunchDarkly'],
-  },
-  {
     id: 'devops-helm',
     domain: 'devops',
     title: 'Helm Charts',
@@ -429,48 +386,6 @@ export const devopsCards: Card[] = [
     relatedTerms: ['Kubernetes', 'Kustomize', 'GitOps', 'ArgoCD'],
   },
   {
-    id: 'devops-chaos-engineering',
-    domain: 'devops',
-    title: 'Chaos Engineering',
-    subtitle: 'Break things on purpose to build resilience',
-    difficulty: 'advanced',
-    tags: ['resilience', 'testing', 'reliability'],
-    definition:
-      'Chaos engineering is the practice of intentionally injecting failures — killing pods, adding network latency, corrupting data — into production or staging systems to discover weaknesses before real outages expose them.',
-    whyItMatters:
-      'You cannot know if your system is resilient by reading architecture diagrams. Netflix popularized chaos engineering because theoretical redundancy often fails under real conditions. The only way to know is to test.',
-    analogy:
-      'Like a fire drill for your infrastructure. You do not wait for an actual fire to find out the exit is blocked — you simulate the disaster in controlled conditions to find the gaps.',
-    soundsSmartToSay:
-      '"We should run a game day where we simulate an AZ failure — I want to see if our services actually failover or if we have undocumented dependencies on the primary zone."',
-    commonConfusions: [
-      'Chaos engineering vs breaking things randomly: Chaos engineering is controlled and hypothesis-driven. You form a hypothesis ("killing this pod should not affect users"), test it, and learn. It is not just unplugging servers for fun.',
-      'Production vs staging: Ideally chaos tests run in production with blast-radius controls, since staging rarely replicates real traffic patterns. But you can start in staging to build confidence.',
-    ],
-    relatedTerms: ['SRE', 'Game Day', 'Resilience', 'Observability'],
-  },
-  {
-    id: 'devops-pipeline-as-code',
-    domain: 'devops',
-    title: 'Pipeline as Code',
-    subtitle: 'Version your build pipeline like your application',
-    difficulty: 'beginner',
-    tags: ['ci-cd', 'automation', 'versioning'],
-    definition:
-      'Pipeline as Code means defining your CI/CD pipeline in a configuration file (like a Jenkinsfile, .github/workflows YAML, or .gitlab-ci.yml) that lives in the same repository as your application code. Changes to the pipeline go through code review just like application changes.',
-    whyItMatters:
-      'When pipelines are configured through a web UI, they become tribal knowledge that only one person understands. Pipeline as Code makes your build process reviewable, auditable, and reproducible — if you can clone the repo, you can build the project.',
-    analogy:
-      'The same principle as Infrastructure as Code, applied to your build system. Just as Terraform makes infrastructure reproducible, Pipeline as Code makes your CI/CD reproducible.',
-    soundsSmartToSay:
-      '"Our pipeline definition should live in the repo — if we need to rebuild from six months ago, we need the pipeline version that matches that code version."',
-    commonConfusions: [
-      'Pipeline as Code vs Infrastructure as Code: IaC provisions infrastructure (servers, databases). Pipeline as Code defines how software is built, tested, and deployed. Both follow the same "define it in version-controlled files" principle.',
-      'Declarative vs scripted: Most Pipeline as Code systems support both declarative (structured YAML) and scripted (imperative) styles. Declarative is easier to read; scripted offers more flexibility.',
-    ],
-    relatedTerms: ['CI/CD', 'GitOps', 'Infrastructure as Code', 'GitHub Actions'],
-  },
-  {
     id: 'devops-immutable-infra',
     domain: 'devops',
     title: 'Immutable Infrastructure',
@@ -490,26 +405,5 @@ export const devopsCards: Card[] = [
       'Immutable does not mean no state: Servers are immutable, but databases and persistent volumes still hold mutable state. The pattern applies to compute, not storage.',
     ],
     relatedTerms: ['Containers', 'Infrastructure as Code', 'AMI', 'Configuration Drift'],
-  },
-  {
-    id: 'devops-devsecops',
-    domain: 'devops',
-    title: 'DevSecOps',
-    subtitle: 'Security as a first-class CI/CD citizen',
-    difficulty: 'beginner',
-    tags: ['security', 'ci-cd', 'shift-left'],
-    definition:
-      'DevSecOps integrates security practices directly into the DevOps pipeline — automated vulnerability scanning, dependency checks, secret detection, and compliance gates run on every commit rather than being bolted on at the end.',
-    whyItMatters:
-      'Finding a vulnerability in production costs 100x more to fix than catching it during development. DevSecOps shifts security left so vulnerabilities are caught when they are cheapest to fix — at the pull request, not the pentest.',
-    analogy:
-      'Like adding quality inspections at every station on the assembly line rather than only checking the finished car. DevOps already added automated testing; DevSecOps adds automated security testing to the same pipeline.',
-    soundsSmartToSay:
-      '"We should add SAST and dependency scanning to the PR pipeline so developers get security feedback in the same workflow they already use for tests."',
-    commonConfusions: [
-      'DevSecOps vs a security team: DevSecOps does not replace security engineers. It empowers developers to catch common issues early so the security team can focus on architecture reviews, threat modeling, and incident response.',
-      'DevSecOps is a culture, not a tool: Tools like Snyk, Trivy, and Semgrep enable it, but without developer buy-in and security training, adding scanners to the pipeline just creates ignored alerts.',
-    ],
-    relatedTerms: ['CI/CD', 'SAST', 'Shift Left', 'Supply Chain Security'],
   },
 ];

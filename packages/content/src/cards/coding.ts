@@ -346,48 +346,6 @@ export const codingCards: Card[] = [
     relatedTerms: ['REST API', 'Backward Compatibility', 'Deprecation', 'OpenAPI'],
   },
   {
-    id: 'coding-code-review',
-    domain: 'coding',
-    title: 'Code Review',
-    subtitle: 'Catch bugs and share knowledge before merging',
-    difficulty: 'beginner',
-    tags: ['quality', 'collaboration', 'process'],
-    definition:
-      'Code review is the practice of having one or more developers examine a proposed code change (pull request) before it merges into the main branch. Reviewers check for correctness, readability, security issues, and adherence to team conventions.',
-    whyItMatters:
-      'Code review catches bugs that automated tests miss — logic errors, security vulnerabilities, and design problems. It also spreads knowledge across the team so no single person is the only one who understands a subsystem.',
-    analogy:
-      'Like peer review in academic publishing. A paper (code change) is reviewed by peers before it is published (merged). The goal is not gatekeeping — it is improving quality and catching blind spots the author cannot see.',
-    soundsSmartToSay:
-      '"Code review is a conversation, not an approval gate. If the review is just rubber-stamping, we are not getting the quality or knowledge-sharing benefits."',
-    commonConfusions: [
-      'Code review vs testing: Tests verify that code works correctly. Code review checks whether the approach is right, the code is maintainable, and edge cases are handled. Both are necessary; neither replaces the other.',
-      'Nitpicking vs valuable feedback: Good code reviews focus on logic, design, and potential bugs. Formatting and style should be enforced by automated linters, not reviewers.',
-    ],
-    relatedTerms: ['Pull Request', 'Git', 'CI/CD', 'Pair Programming'],
-  },
-  {
-    id: 'coding-dependency-injection',
-    domain: 'coding',
-    title: 'Dependency Injection',
-    subtitle: 'Pass dependencies in, do not create them inside',
-    difficulty: 'intermediate',
-    tags: ['design', 'testing', 'decoupling'],
-    definition:
-      'Dependency injection (DI) is a design pattern where a component receives its dependencies from the outside rather than creating them internally. Instead of a class instantiating its own database connection, the connection is passed in — making the component testable, configurable, and loosely coupled.',
-    whyItMatters:
-      'Without DI, components are tightly coupled to their dependencies — you cannot swap a real database for a mock in tests, or change from Postgres to MySQL without rewriting the class. DI is what makes unit testing and modular architecture practical.',
-    analogy:
-      'Like a restaurant kitchen (your class) that receives ingredients from a supplier (injected dependency) instead of growing its own food. Changing suppliers is easy; growing your own food locks you into one source.',
-    soundsSmartToSay:
-      '"This class is instantiating its own HTTP client — we should inject it so we can mock it in tests and swap the implementation for different environments."',
-    commonConfusions: [
-      'DI vs DI framework: Dependency injection is a design pattern. DI frameworks (Spring, Guice, InversifyJS) automate the wiring. You can practice DI without a framework — just pass dependencies through constructors.',
-      'DI vs Service Locator: A service locator is a registry where components ask for their dependencies. DI pushes dependencies into components. DI is preferred because dependencies are explicit in the constructor signature.',
-    ],
-    relatedTerms: ['SOLID Principles', 'Inversion of Control', 'Unit Testing', 'Mocking'],
-  },
-  {
     id: 'coding-static-analysis',
     domain: 'coding',
     title: 'Static Analysis',
@@ -470,47 +428,5 @@ export const codingCards: Card[] = [
       'Async/await vs threading: async/await is a concurrency model that uses a single thread and an event loop (Node.js, Python asyncio). Threading uses multiple OS threads. Async is better for I/O-bound work; threads are better for CPU-bound work.',
     ],
     relatedTerms: ['Async Programming', 'Threading', 'Race Condition', 'Mutex'],
-  },
-  {
-    id: 'coding-event-sourcing',
-    domain: 'coding',
-    title: 'Event Sourcing',
-    subtitle: 'Store what happened, not just the current state',
-    difficulty: 'advanced',
-    tags: ['architecture', 'patterns', 'data'],
-    definition:
-      'Event sourcing stores every state change as an immutable event (OrderPlaced, PaymentReceived, ItemShipped) rather than overwriting the current state. The current state is derived by replaying events. This gives you a complete audit trail and the ability to reconstruct state at any point in time.',
-    whyItMatters:
-      'Traditional CRUD overwrites data — once you update a record, the previous state is gone. Event sourcing preserves the full history, enabling audit trails (finance, healthcare), temporal queries (what was the balance last Tuesday?), and event replay for debugging.',
-    analogy:
-      'Like a bank ledger vs a bank balance. A balance (CRUD) tells you you have $500 now. A ledger (event sourcing) tells you every deposit and withdrawal — you can always recalculate the balance and know exactly how you got there.',
-    soundsSmartToSay:
-      '"Event sourcing gives us a natural audit trail and the ability to rebuild read models — but the trade-off is eventual consistency and more complex query patterns."',
-    commonConfusions: [
-      'Event sourcing vs event-driven architecture: Event-driven architecture uses events for communication between services. Event sourcing uses events as the primary data storage mechanism. You can use event-driven architecture without event sourcing.',
-      'Event sourcing adds complexity: Replaying millions of events to rebuild state is slow — you need snapshots. Querying events directly is hard — you need materialized views (CQRS). Only use event sourcing when the audit trail or temporal queries justify the complexity.',
-    ],
-    relatedTerms: ['CQRS', 'Event-Driven Architecture', 'Audit Trail', 'Immutability'],
-  },
-  {
-    id: 'coding-api-versioning',
-    domain: 'coding',
-    title: 'API Versioning',
-    subtitle: 'Evolving APIs without breaking consumers',
-    difficulty: 'intermediate',
-    tags: ['api', 'compatibility', 'design'],
-    definition:
-      'API versioning is the practice of managing changes to an API so that existing consumers continue working while new consumers can use updated functionality. Common strategies include URL versioning (/api/v2/), header versioning (Accept: application/vnd.api+json;version=2), and additive-only changes that avoid versioning entirely.',
-    whyItMatters:
-      'Once an API has consumers, breaking changes break their code. API versioning lets you evolve your API while giving consumers time to migrate — without it, every change requires coordinated deployments across all consumers.',
-    analogy:
-      'Like maintaining backward compatibility in electrical outlets. When a country adopts a new plug standard, old outlets still work with adapters. API versioning is the adapter — old consumers keep working while new ones use the updated interface.',
-    soundsSmartToSay:
-      '"We should favor additive, non-breaking changes — new fields, new endpoints — over versioning. When we do need a breaking change, deprecate v1 with a sunset date rather than removing it immediately."',
-    commonConfusions: [
-      'URL vs header versioning: URL versioning (/v1/users) is the most common and easiest to understand. Header versioning keeps URLs clean but is harder to test in a browser. Neither is objectively better — pick one and be consistent.',
-      'Semantic versioning (semver) for libraries and API versioning for services solve the same problem — communicating change impact — but operate differently. Semver has major.minor.patch; API versions are typically just a single integer (v1, v2).',
-    ],
-    relatedTerms: ['REST API', 'Backward Compatibility', 'Deprecation', 'OpenAPI'],
   },
 ];

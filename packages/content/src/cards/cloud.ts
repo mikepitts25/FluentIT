@@ -407,27 +407,6 @@ export const cloudCards: Card[] = [
     relatedTerms: ['Microservices', 'Containers', '12-Factor App', 'Kubernetes'],
   },
   {
-    id: 'cloud-landing-zones',
-    domain: 'cloud',
-    title: 'Landing Zones',
-    subtitle: 'A well-architected foundation for cloud accounts',
-    difficulty: 'advanced',
-    tags: ['governance', 'architecture', 'multi-account'],
-    definition:
-      'A landing zone is a pre-configured, multi-account cloud environment that enforces security baselines, networking topology, identity federation, and governance guardrails before any workloads are deployed. AWS Control Tower, Azure Landing Zones, and GCP Foundation Toolkit provide reference implementations.',
-    whyItMatters:
-      'Without a landing zone, teams create ad-hoc accounts with inconsistent security, networking that cannot peer, and billing that cannot be attributed. Retrofitting governance after hundreds of accounts exist is exponentially harder than starting with a solid foundation.',
-    analogy:
-      'Like zoning and building codes for a city. Before anyone builds a house (deploys a workload), the city establishes zones (accounts), road networks (VPC peering), utility connections (shared services), and safety codes (security guardrails).',
-    soundsSmartToSay:
-      '"We need a landing zone with guardrails before we let teams self-service their own accounts — otherwise we will end up with sprawl that is impossible to govern."',
-    commonConfusions: [
-      'Landing zone vs single account: Small companies can start in one account, but any organization with multiple teams or environments needs account isolation for blast-radius control and billing attribution.',
-      'Landing zone vs IaC: A landing zone uses IaC (Terraform, CloudFormation) to provision itself, but it is a higher-level concept — it defines the account structure, OU hierarchy, and shared services, not just individual resources.',
-    ],
-    relatedTerms: ['Multi-Account', 'Guardrails', 'Control Tower', 'Cloud Governance'],
-  },
-  {
     id: 'cloud-egress',
     domain: 'cloud',
     title: 'Egress Costs',
@@ -449,27 +428,6 @@ export const cloudCards: Card[] = [
     relatedTerms: ['FinOps', 'CDN', 'Data Transfer', 'Multi-Region'],
   },
   {
-    id: 'cloud-service-models',
-    domain: 'cloud',
-    title: 'IaaS / PaaS / SaaS',
-    subtitle: 'The three layers of cloud responsibility',
-    difficulty: 'beginner',
-    tags: ['models', 'fundamentals', 'shared-responsibility'],
-    definition:
-      'IaaS (Infrastructure as a Service) gives you VMs and networks. PaaS (Platform as a Service) gives you a managed runtime — deploy code, not servers. SaaS (Software as a Service) gives you a finished application. As you move from IaaS to SaaS, you manage less and the provider manages more.',
-    whyItMatters:
-      'Choosing the right service model determines your operational burden, cost, and flexibility. IaaS gives maximum control but maximum responsibility. SaaS gives zero ops but zero customization. PaaS is the sweet spot for most application teams.',
-    analogy:
-      'IaaS is renting a kitchen (you cook). PaaS is a meal-kit delivery (ingredients prepped, you assemble). SaaS is a restaurant (you just eat). Each level trades control for convenience.',
-    soundsSmartToSay:
-      '"We are running on IaaS and patching OS images ourselves — we should evaluate a PaaS like App Service or Cloud Run so we can stop managing infrastructure and focus on shipping features."',
-    commonConfusions: [
-      'PaaS vs serverless: Serverless (FaaS) is a subset of PaaS that scales to zero and charges per invocation. Traditional PaaS (Heroku, App Service) keeps instances running even at idle.',
-      'Shared responsibility: In IaaS, you secure the OS and up. In PaaS, you secure the application and data. In SaaS, you secure your configuration and access. The provider secures everything below your layer.',
-    ],
-    relatedTerms: ['Shared Responsibility', 'Serverless', 'Managed Services', 'Cloud Migration'],
-  },
-  {
     id: 'cloud-managed-k8s',
     domain: 'cloud',
     title: 'Managed Kubernetes',
@@ -489,26 +447,5 @@ export const cloudCards: Card[] = [
       'EKS vs AKS vs GKE: All three provide managed Kubernetes, but they differ in default networking (VPC-native vs overlay), upgrade experience, and add-on ecosystem. GKE is generally considered the most opinionated and easiest to operate.',
     ],
     relatedTerms: ['Kubernetes', 'Containers as a Service', 'Helm', 'Cloud-Native'],
-  },
-  {
-    id: 'cloud-data-sovereignty',
-    domain: 'cloud',
-    title: 'Data Sovereignty',
-    subtitle: 'Where your data lives determines which laws apply',
-    difficulty: 'advanced',
-    tags: ['compliance', 'regulation', 'residency'],
-    definition:
-      'Data sovereignty means data is subject to the laws of the country where it is physically stored. Regulations like GDPR, LGPD, and China\'s PIPL require certain data to remain within national or regional borders, limiting where cloud workloads can run.',
-    whyItMatters:
-      'A global cloud deployment that stores EU customer data in a US region may violate GDPR. Financial services, healthcare, and government workloads often have strict data residency requirements that constrain cloud architecture decisions.',
-    analogy:
-      'Like currency that can only be spent in the country it was issued. Your data is "minted" in a jurisdiction and the local government controls whether it can cross the border — regardless of who owns it or which cloud provider hosts it.',
-    soundsSmartToSay:
-      '"We need to ensure our data residency requirements are enforced at the infrastructure level — not just policy documents, but actual region-lock guardrails in our landing zone."',
-    commonConfusions: [
-      'Data sovereignty vs data residency: Data residency is about where data is stored. Data sovereignty adds the legal dimension — which laws govern that data based on its location.',
-      'Sovereign cloud offerings (AWS GovCloud, Google Distributed Cloud, Azure Confidential Computing) exist specifically for regulated workloads, but they come with reduced service availability and higher costs.',
-    ],
-    relatedTerms: ['GDPR', 'Data Residency', 'CLOUD Act', 'Sovereign Cloud'],
   },
 ];
