@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { ALL_CARDS, DOMAINS } from '../../src/content';
+import { ALL_CARDS } from '../../src/content';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { getStabilityLabel } from '../../src/store/srs-store';
 
@@ -12,7 +12,7 @@ const STATUS_COLOR: Record<string, string> = {
 };
 
 export default function ProgressScreen() {
-  const { states, streak, dueCardIds } = useSRSStore();
+  const { states, streak } = useSRSStore();
 
   const totalStudied = Object.keys(states).length;
   const totalCards = ALL_CARDS.length;
@@ -32,16 +32,6 @@ export default function ProgressScreen() {
     return counts;
   }, [states]);
 
-  const domainStats = useMemo(
-    () =>
-      DOMAINS.map((domain) => {
-        const cards = ALL_CARDS.filter((c) => c.domain === domain.id);
-        const studied = cards.filter((c) => states[c.id]).length;
-        return { domain, total: cards.length, studied };
-      }),
-    [states],
-  );
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Streak */}
@@ -50,7 +40,6 @@ export default function ProgressScreen() {
         <View style={styles.statRow}>
           <StatBox label="Current" value={streak.currentStreak} unit="days" />
           <StatBox label="Longest" value={streak.longestStreak} unit="days" />
-          <StatBox label="Due today" value={dueCardIds.length} unit="cards" />
         </View>
       </View>
 
@@ -66,8 +55,7 @@ export default function ProgressScreen() {
           />
         </View>
         <Text style={styles.progressLabel}>
-          {totalStudied} / {totalCards} concepts studied (
-          {Math.round((totalStudied / totalCards) * 100)}%)
+          {Math.round((totalStudied / totalCards) * 100)}% completed
         </Text>
 
         {/* Stability breakdown */}
@@ -84,34 +72,6 @@ export default function ProgressScreen() {
         </View>
       </View>
 
-      {/* Domain breakdown */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>📚 By Domain</Text>
-        {domainStats.map(({ domain, total, studied }) => (
-          <View key={domain.id} style={styles.domainRow}>
-            <Text style={{ fontSize: 18 }}>{domain.icon}</Text>
-            <View style={{ flex: 1, gap: 4 }}>
-              <View style={styles.domainLabelRow}>
-                <Text style={styles.domainName}>{domain.label}</Text>
-                <Text style={styles.domainCount}>
-                  {studied}/{total}
-                </Text>
-              </View>
-              <View style={styles.miniBarBg}>
-                <View
-                  style={[
-                    styles.miniBar,
-                    {
-                      width: `${Math.round((studied / total) * 100)}%`,
-                      backgroundColor: domain.color,
-                    },
-                  ]}
-                />
-              </View>
-            </View>
-          </View>
-        ))}
-      </View>
     </ScrollView>
   );
 }
@@ -156,15 +116,4 @@ const styles = StyleSheet.create({
   breakdownDot: { width: 10, height: 10, borderRadius: 5 },
   breakdownLabel: { color: '#94A3B8', fontSize: 12 },
   breakdownCount: { fontSize: 16, fontWeight: '700' },
-  domainRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  domainLabelRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  domainName: { color: '#E2E8F0', fontSize: 14, fontWeight: '600' },
-  domainCount: { color: '#64748B', fontSize: 13 },
-  miniBarBg: {
-    height: 6,
-    backgroundColor: '#0F172A',
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  miniBar: { height: '100%', borderRadius: 3 },
 });
