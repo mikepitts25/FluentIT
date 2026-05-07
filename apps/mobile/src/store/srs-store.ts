@@ -98,8 +98,9 @@ export function performReview(
 }
 
 export function getDueCardIds(states: SRSStateMap, now = new Date()): string[] {
+  const cutoff = new Date(now.getTime() + 10 * 60 * 1000);
   return Object.values(states)
-    .filter((s) => s.fsrsCard.due <= now)
+    .filter((s) => s.fsrsCard.due <= cutoff)
     .map((s) => s.cardId);
 }
 
