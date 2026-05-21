@@ -1,8 +1,19 @@
 {
   "name": "fluentit",
   "private": true,
+  "scripts": {
+    "dev": "npm run start -w mobile",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "workspaces": [
+    "apps/mobile",
     "packages/content",
     "packages/srs"
-  ]
+  ],
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.0"
+  }
 }

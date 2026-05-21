@@ -31,7 +31,7 @@
 Run:
 
 ```bash
-npx expo install --check -w mobile
+npm exec --workspace mobile -- expo install --check
 npm ls --workspace mobile --depth=0
 ```
 
@@ -70,7 +70,7 @@ Pending until SDK 54 verification completes.
 Run:
 
 ```bash
-npx expo install expo@~54.0.0 -w mobile
+npm exec --workspace mobile -- expo install expo@~54.0.0
 ```
 
 Expected: `apps/mobile/package.json` changes the `expo` dependency to SDK 54 and `package-lock.json` updates workspace dependency resolution.
@@ -80,7 +80,7 @@ Expected: `apps/mobile/package.json` changes the `expo` dependency to SDK 54 and
 Run:
 
 ```bash
-npx expo install --fix -w mobile
+npm exec --workspace mobile -- expo install --fix
 ```
 
 Expected: React, React Native, Expo Router, Expo modules, Reanimated, Worklets, and compatible native peer packages resolve to the SDK 54-compatible versions.
@@ -183,7 +183,7 @@ Expected: only SDK-aligned dependencies, lockfile updates, and the default confi
 Run:
 
 ```bash
-npx expo install --check -w mobile
+npm exec --workspace mobile -- expo install --check
 ```
 
 Expected: Expo reports dependencies are aligned with the installed SDK.
@@ -214,7 +214,7 @@ Expected: Vitest and TypeScript checks exit successfully or expose concrete comp
 Run:
 
 ```bash
-npx expo export -p ios --clear -w mobile
+npm exec --workspace mobile -- expo export -p ios --clear
 ```
 
 Expected: Expo produces the iOS export without SDK 54 bundling failures.
@@ -239,6 +239,6 @@ Update the Validation section in `docs/superpowers/reports/2026-05-21-expo-sdk-5
 
 | Command | Result |
 | --- | --- |
-| `npx expo install --check -w mobile` | Pass |
+| `npm exec --workspace mobile -- expo install --check` | Pass |
 | `npx expo-doctor apps/mobile` | Pass |
 ```
