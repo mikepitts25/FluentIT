@@ -17,7 +17,7 @@
 - Create `docs/superpowers/reports/2026-05-21-expo-sdk-54-dependency-inventory.md` to capture the before/after mobile dependency inventory and dependency validation commands.
 - Delete `apps/mobile/package-lock.json` so the npm workspace has one canonical resolved dependency record at the repository root.
 - Delete `apps/mobile/babel.config.js` after removing the default-only `babel-preset-expo` dependency entry.
-- Delete `apps/mobile/metro.config.js` because it only returns Expo's default Metro config.
+- Delete `apps/mobile/metro.config.js` after Expo doctor confirms its manual monorepo Metro overrides conflict with Expo's SDK 52+ Metro defaults.
 - Keep product code unchanged unless diagnostics identify a concrete SDK 54 compatibility break.
 
 ### Task 1: Align the Mobile Workspace to SDK 54
@@ -102,11 +102,11 @@ Expected: the diff changes dependency versions and lockfile resolution for the m
 - Modify: `apps/mobile/package.json`
 - Delete: `apps/mobile/package-lock.json`
 - Delete: `apps/mobile/babel.config.js`
-- Delete: `apps/mobile/metro.config.js`
+- Inspect: `apps/mobile/metro.config.js`
 - Modify: `package-lock.json`
 - Modify: `docs/superpowers/reports/2026-05-21-expo-sdk-54-dependency-inventory.md`
 
-- [ ] **Step 1: Re-read the default-only config files before deleting them**
+- [ ] **Step 1: Re-read Expo config files before deleting them**
 
 Run:
 
@@ -115,7 +115,7 @@ sed -n '1,120p' apps/mobile/babel.config.js
 sed -n '1,120p' apps/mobile/metro.config.js
 ```
 
-Expected:
+Expected Babel config:
 
 ```js
 module.exports = function (api) {
@@ -126,7 +126,7 @@ module.exports = function (api) {
 };
 ```
 
-and:
+Metro config may still contain manual monorepo overrides. If it does, preserve it until Expo diagnostics can validate whether those overrides should be removed for SDK 54.
 
 ```js
 const { getDefaultConfig } = require('expo/metro-config');
@@ -134,15 +134,14 @@ const { getDefaultConfig } = require('expo/metro-config');
 module.exports = getDefaultConfig(__dirname);
 ```
 
-- [ ] **Step 2: Delete stale nested mobile package metadata and default-only Expo config**
+- [ ] **Step 2: Delete stale nested mobile package metadata and default-only Babel config**
 
-Delete `apps/mobile/package-lock.json`, `apps/mobile/babel.config.js`, and `apps/mobile/metro.config.js` with a focused patch. The repository-root `package-lock.json` remains the full workspace dependency record.
+Delete `apps/mobile/package-lock.json` and `apps/mobile/babel.config.js` with a focused patch. The repository-root `package-lock.json` remains the full workspace dependency record. Keep a non-default Metro config until verification decides whether it can be removed safely.
 
 - [ ] **Step 3: Remove implicit Expo package entries**
 
 Edit `apps/mobile/package.json` so:
 
-- `expo-constants` is removed from `dependencies`.
 - `babel-preset-expo` is removed from `devDependencies`.
 
 Run:
@@ -151,7 +150,7 @@ Run:
 npm install
 ```
 
-Expected: `package-lock.json` removes those direct mobile workspace dependency edges while preserving transitive SDK dependencies required by Expo.
+Expected: `package-lock.json` removes the direct mobile `babel-preset-expo` edge while preserving transitive SDK dependencies required by Expo.
 
 - [ ] **Step 4: Update the SDK 54 dependency inventory**
 
@@ -244,3 +243,47 @@ Update the Validation section in `docs/superpowers/reports/2026-05-21-expo-sdk-5
 | `npm exec --workspace mobile -- expo install --check` | Pass |
 | `npx expo-doctor apps/mobile` | Pass |
 ```
+
+### Task 4: Resolve Expo Doctor Migration Blockers
+
+**Files:**
+- Modify: `apps/mobile/package.json`
+- Delete: `apps/mobile/metro.config.js`
+- Modify: `package-lock.json`
+- Modify: `docs/superpowers/reports/2026-05-21-expo-sdk-54-dependency-inventory.md`
+
+- [ ] **Step 1: Add the missing Expo Router native peer dependency**
+
+Run:
+
+```bash
+npm exec --workspace mobile -- expo install expo-constants
+```
+
+Expected: `apps/mobile/package.json` adds the SDK 54-compatible direct `expo-constants` dependency and root `package-lock.json` records it for the mobile workspace.
+
+- [ ] **Step 2: Remove manual Metro monorepo overrides flagged by Expo doctor**
+
+Delete `apps/mobile/metro.config.js`. Expo SDK 52+ configures Metro for npm workspaces automatically, and doctor reports this file's `watchFolders` and `resolver.nodeModulesPaths` overrides do not include Expo defaults.
+
+- [ ] **Step 3: Re-run migration diagnostics and bundle verification**
+
+Run:
+
+```bash
+npm exec --workspace mobile -- expo install --check
+npx expo-doctor apps/mobile
+npm exec --workspace mobile -- expo export -p ios --clear
+```
+
+Expected: dependency alignment remains clean and iOS export still bundles. If Expo doctor still reports duplicate native dependencies because this project-local worktree can see the parent checkout's SDK 55 `node_modules`, record that environment-specific result in the dependency inventory report.
+
+- [ ] **Step 4: Refresh the dependency inventory report**
+
+Run:
+
+```bash
+npm ls --workspace mobile --depth=0
+```
+
+Update the SDK 54 After table and Validation notes so they reflect the direct `expo-constants` dependency and the latest doctor result after Metro cleanup.
