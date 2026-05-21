@@ -15,6 +15,7 @@
 - Modify `apps/mobile/package.json` for the SDK 54 Expo dependency set.
 - Modify `package-lock.json` through npm and Expo tooling so workspace resolution matches the mobile package.
 - Create `docs/superpowers/reports/2026-05-21-expo-sdk-54-dependency-inventory.md` to capture the before/after mobile dependency inventory and dependency validation commands.
+- Delete `apps/mobile/package-lock.json` so the npm workspace has one canonical resolved dependency record at the repository root.
 - Delete `apps/mobile/babel.config.js` after removing the default-only `babel-preset-expo` dependency entry.
 - Delete `apps/mobile/metro.config.js` because it only returns Expo's default Metro config.
 - Keep product code unchanged unless diagnostics identify a concrete SDK 54 compatibility break.
@@ -99,6 +100,7 @@ Expected: the diff changes dependency versions and lockfile resolution for the m
 
 **Files:**
 - Modify: `apps/mobile/package.json`
+- Delete: `apps/mobile/package-lock.json`
 - Delete: `apps/mobile/babel.config.js`
 - Delete: `apps/mobile/metro.config.js`
 - Modify: `package-lock.json`
@@ -132,9 +134,9 @@ const { getDefaultConfig } = require('expo/metro-config');
 module.exports = getDefaultConfig(__dirname);
 ```
 
-- [ ] **Step 2: Delete the default-only Babel and Metro config files**
+- [ ] **Step 2: Delete stale nested mobile package metadata and default-only Expo config**
 
-Delete `apps/mobile/babel.config.js` and `apps/mobile/metro.config.js` with a focused patch.
+Delete `apps/mobile/package-lock.json`, `apps/mobile/babel.config.js`, and `apps/mobile/metro.config.js` with a focused patch. The repository-root `package-lock.json` remains the full workspace dependency record.
 
 - [ ] **Step 3: Remove implicit Expo package entries**
 
@@ -166,7 +168,7 @@ Replace the pending SDK 54 section in `docs/superpowers/reports/2026-05-21-expo-
 Run:
 
 ```bash
-git diff -- apps/mobile/package.json apps/mobile/babel.config.js apps/mobile/metro.config.js package-lock.json
+git diff -- apps/mobile/package.json apps/mobile/package-lock.json apps/mobile/babel.config.js apps/mobile/metro.config.js package-lock.json
 ```
 
 Expected: only SDK-aligned dependencies, lockfile updates, and the default config removals appear.
@@ -225,7 +227,7 @@ Run:
 
 ```bash
 git diff --stat
-git diff -- apps/mobile/package.json apps/mobile/babel.config.js apps/mobile/metro.config.js package-lock.json
+git diff -- apps/mobile/package.json apps/mobile/package-lock.json apps/mobile/babel.config.js apps/mobile/metro.config.js package-lock.json
 ```
 
 Expected: the final diff is attributable to the SDK 54 downgrade and default Expo config cleanup.
