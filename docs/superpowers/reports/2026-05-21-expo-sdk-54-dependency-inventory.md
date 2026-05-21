@@ -58,4 +58,12 @@
 
 ## Validation
 
-Pending until later task.
+| Command | Result | Notes |
+| --- | --- | --- |
+| `npm exec --workspace mobile -- expo install --check` | Pass | Reported `Dependencies are up to date`. |
+| `npx expo-doctor apps/mobile` | Fail | `15/18` checks passed. Doctor flagged preserved Metro config overrides, missing direct `expo-constants` peer dependency required by `expo-router`, and duplicate native module dependencies visible from another `node_modules` tree. |
+| `npm test` | Fail | Vitest found no test files and exited `1`. |
+| `npm run typecheck` | Fail | TypeScript exited `2` on three implicit `focused` bindings in `apps/mobile/app/(tabs)/_layout.tsx`. |
+| `npm exec --workspace mobile -- expo export -p ios --clear` | Pass | Exported the iOS bundle to ignored `apps/mobile/dist/`; Node emitted repeated `NO_COLOR` ignored because `FORCE_COLOR` is set warnings during bundling. |
+
+The repository checks remain non-clean after migration verification: the test and typecheck failures match the known pre-migration branch baseline described for this task.
