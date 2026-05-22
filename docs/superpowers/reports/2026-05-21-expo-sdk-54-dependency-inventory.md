@@ -41,6 +41,7 @@
 | `@react-native-async-storage/async-storage` | `2.2.0` |
 | `@types/react` | `19.1.17` |
 | `expo` | `54.0.34` |
+| `expo-constants` | `18.0.13` |
 | `expo-haptics` | `15.0.8` |
 | `expo-linking` | `8.0.12` |
 | `expo-router` | `6.0.23` |
@@ -61,7 +62,7 @@
 | Command | Result | Notes |
 | --- | --- | --- |
 | `npm exec --workspace mobile -- expo install --check` | Pass | Reported `Dependencies are up to date`. |
-| `npx expo-doctor apps/mobile` | Fail | `15/18` checks passed. Doctor flagged preserved Metro config overrides, missing direct `expo-constants` peer dependency required by `expo-router`, and duplicate native module dependencies visible from another `node_modules` tree. |
+| `npx expo-doctor apps/mobile` | Fail | `17/18` checks passed after removing the manual Metro override config and restoring direct `expo-constants`. The remaining duplicate native module finding comes from this project-local worktree also seeing the parent checkout's SDK 55 `node_modules` tree. |
 | `npm test` | Fail | Vitest found no test files and exited `1`. |
 | `npm run typecheck` | Fail | TypeScript exited `2` on three implicit `focused` bindings in `apps/mobile/app/(tabs)/_layout.tsx`. |
 | `npm exec --workspace mobile -- expo export -p ios --clear` | Pass | Exported the iOS bundle to ignored `apps/mobile/dist/`; Node emitted repeated `NO_COLOR` ignored because `FORCE_COLOR` is set warnings during bundling. |
