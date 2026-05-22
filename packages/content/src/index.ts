@@ -1,5 +1,6 @@
 export type { Card, Domain, Difficulty, DomainMeta } from './types';
 export { DOMAINS } from './domains';
+export { validateCards } from './validation';
 export { cyberCards } from './cards/cyber';
 export { devopsCards } from './cards/devops';
 export { cloudCards } from './cards/cloud';
@@ -11,6 +12,13 @@ export { codingCards } from './cards/coding';
 export { integrationCards } from './cards/integration';
 export { agileCards } from './cards/agile';
 export { governanceCards } from './cards/governance';
+export { expansionCards } from './cards/expansions';
+export {
+  observabilityCards,
+  identityCards,
+  architectureCards,
+  appsecCards,
+} from './cards/meeting-prep';
 
 import { cyberCards } from './cards/cyber';
 import { devopsCards } from './cards/devops';
@@ -23,6 +31,13 @@ import { codingCards } from './cards/coding';
 import { integrationCards } from './cards/integration';
 import { agileCards } from './cards/agile';
 import { governanceCards } from './cards/governance';
+import { expansionCards } from './cards/expansions';
+import {
+  observabilityCards,
+  identityCards,
+  architectureCards,
+  appsecCards,
+} from './cards/meeting-prep';
 import type { Card, Domain } from './types';
 
 export const ALL_CARDS: Card[] = [
@@ -37,6 +52,11 @@ export const ALL_CARDS: Card[] = [
   ...integrationCards,
   ...agileCards,
   ...governanceCards,
+  ...expansionCards,
+  ...observabilityCards,
+  ...identityCards,
+  ...architectureCards,
+  ...appsecCards,
 ];
 
 export function getCardsByDomain(domain: Domain): Card[] {

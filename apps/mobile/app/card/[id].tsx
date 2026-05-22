@@ -2,6 +2,7 @@ import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useState } from 'react';
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,8 +10,9 @@ import {
   View,
   Animated,
 } from 'react-native';
-import { Rating, type Grade } from 'ts-fsrs';
+import { Rating, type Grade } from '@fluentit/srs';
 import { getCardById, DOMAINS } from '../../src/content';
+import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { getStabilityLabel } from '../../src/store/srs-store';
 
@@ -72,7 +74,11 @@ export default function CardScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Domain chip */}
       <View style={[styles.domainChip, { backgroundColor: domain.color + '22' }]}>
-        <Text style={{ fontSize: 14 }}>{domain.icon}</Text>
+        <Image
+          source={getDomainIconImage(domain.id)}
+          style={styles.domainChipIcon}
+          resizeMode="contain"
+        />
         <Text style={[styles.domainLabel, { color: domain.color }]}>{domain.label}</Text>
       </View>
 
@@ -187,6 +193,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginBottom: 16,
   },
+  domainChipIcon: { width: 20, height: 20 },
   domainLabel: { fontSize: 13, fontWeight: '600' },
   title: { color: '#F8FAFC', fontSize: 30, fontWeight: '800', marginBottom: 4 },
   subtitle: { color: '#64748B', fontSize: 15, marginBottom: 24 },

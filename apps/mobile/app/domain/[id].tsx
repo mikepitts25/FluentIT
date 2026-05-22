@@ -2,12 +2,14 @@ import { useLocalSearchParams, useRouter, useNavigation } from 'expo-router';
 import { useEffect } from 'react';
 import {
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { DOMAINS, getCardsByDomain, type Card } from '../../src/content';
+import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { getStabilityLabel } from '../../src/store/srs-store';
 
@@ -38,11 +40,21 @@ export default function DomainScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: domain.color }]}>
-        <Text style={styles.headerIcon}>{domain.icon}</Text>
+        <Image
+          source={getDomainIconImage(domain.id)}
+          style={styles.headerIcon}
+          resizeMode="contain"
+        />
         <View style={{ flex: 1 }}>
           <Text style={[styles.headerTitle, { color: domain.color }]}>{domain.label}</Text>
           <Text style={styles.headerDesc}>{domain.description}</Text>
         </View>
+        <TouchableOpacity
+          style={[styles.sessionButton, { borderColor: domain.color }]}
+          onPress={() => router.push({ pathname: '/session', params: { domain: domain.id } })}
+        >
+          <Text style={[styles.sessionButtonText, { color: domain.color }]}>Start</Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -112,9 +124,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor: '#1E293B',
   },
-  headerIcon: { fontSize: 36 },
+  headerIcon: { width: 52, height: 52 },
   headerTitle: { fontSize: 20, fontWeight: '800' },
   headerDesc: { color: '#94A3B8', fontSize: 13, marginTop: 2 },
+  sessionButton: {
+    backgroundColor: '#0F172A',
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+  },
+  sessionButtonText: { fontSize: 13, fontWeight: '800' },
   list: { padding: 16, gap: 12 },
   row: {
     backgroundColor: '#1E293B',

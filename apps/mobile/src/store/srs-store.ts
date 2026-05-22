@@ -1,32 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  createEmptyCard,
-  fsrs,
-  generatorParameters,
+  createNewCardState,
+  getDueCardIds as getSharedDueCardIds,
+  getStabilityLabel,
   Rating,
-  type Card as FSRSCard,
-  type ReviewLog,
+  reviewCard,
+  type CardSRSState,
   type Grade,
-} from 'ts-fsrs';
-
-const f = fsrs(generatorParameters({ enable_fuzz: true }));
+  type SRSStateMap,
+} from '@fluentit/srs';
 
 export type { Grade };
 export { Rating };
-
-export interface CardSRSState {
-  cardId: string;
-  fsrsCard: FSRSCard;
-  logs: ReviewLog[];
-}
+export type { CardSRSState, SRSStateMap };
 
 export interface StreakData {
   lastStudyDate: string;
   currentStreak: number;
   longestStreak: number;
 }
-
-export type SRSStateMap = Record<string, CardSRSState>;
 
 // ---------- Persistence ----------
 
@@ -75,7 +67,7 @@ export async function saveStreak(data: StreakData): Promise<void> {
 // ---------- Operations ----------
 
 export function getOrCreateCardState(states: SRSStateMap, cardId: string): CardSRSState {
-  return states[cardId] ?? { cardId, fsrsCard: createEmptyCard(), logs: [] };
+  return states[cardId] ?? createNewCardState(cardId);
 }
 
 export function performReview(
@@ -84,24 +76,15 @@ export function performReview(
   grade: Grade,
 ): { states: SRSStateMap; nextReviewDate: Date } {
   const current = getOrCreateCardState(states, cardId);
-  const now = new Date();
-  const item = f.next(current.fsrsCard, now, grade);
-  const newState: CardSRSState = {
-    cardId,
-    fsrsCard: item.card,
-    logs: [...current.logs, item.log],
-  };
+  const result = reviewCard(current, grade);
   return {
-    states: { ...states, [cardId]: newState },
-    nextReviewDate: item.card.due,
+    states: { ...states, [cardId]: result.state },
+    nextReviewDate: result.nextReviewDate,
   };
 }
 
 export function getDueCardIds(states: SRSStateMap, now = new Date()): string[] {
-  const cutoff = new Date(now.getTime() + 10 * 60 * 1000);
-  return Object.values(states)
-    .filter((s) => s.fsrsCard.due <= cutoff)
-    .map((s) => s.cardId);
+  return getSharedDueCardIds(states, now);
 }
 
 export function updateStreak(streak: StreakData): StreakData {
@@ -116,10 +99,4 @@ export function updateStreak(streak: StreakData): StreakData {
   };
 }
 
-export function getStabilityLabel(state: CardSRSState): string {
-  const s = state.fsrsCard.stability;
-  if (!s || s < 1) return 'New';
-  if (s < 7) return 'Learning';
-  if (s < 30) return 'Familiar';
-  return 'Mastered';
-}
+export { getStabilityLabel };

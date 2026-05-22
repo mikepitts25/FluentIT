@@ -14,6 +14,10 @@ export {
   integrationCards,
   agileCards,
   governanceCards,
+  observabilityCards,
+  identityCards,
+  architectureCards,
+  appsecCards,
 } from '@fluentit/content';
 
 export type { Card, Domain, Difficulty, DomainMeta } from '@fluentit/content';

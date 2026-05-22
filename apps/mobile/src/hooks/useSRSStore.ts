@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Grade } from 'ts-fsrs';
+import type { Grade } from '@fluentit/srs';
 import {
   loadSRSStates,
   loadStreak,

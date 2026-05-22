@@ -2,13 +2,14 @@ import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import {
   FlatList,
-  type ListRenderItem,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { ALL_CARDS, DOMAINS, type Card } from '../../src/content';
+import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 
 export default function ReviewScreen() {
@@ -61,12 +62,14 @@ export default function ReviewScreen() {
               style={styles.row}
               onPress={() => router.push(`/card/${item.id}`)}
             >
-              <View style={[styles.domainDot, { backgroundColor: domain.color }]} />
+              <Image
+                source={getDomainIconImage(domain.id)}
+                style={styles.domainIcon}
+                resizeMode="contain"
+              />
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardDomain}>
-                  {domain.icon} {domain.label}
-                </Text>
+                <Text style={styles.cardDomain}>{domain.label}</Text>
               </View>
               <Text style={styles.arrow}>›</Text>
             </TouchableOpacity>
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#334155',
   },
-  domainDot: { width: 10, height: 10, borderRadius: 5 },
+  domainIcon: { width: 34, height: 34 },
   cardTitle: { color: '#F8FAFC', fontSize: 16, fontWeight: '600', marginBottom: 3 },
   cardDomain: { color: '#64748B', fontSize: 13 },
   arrow: { color: '#334155', fontSize: 24, fontWeight: '300' },

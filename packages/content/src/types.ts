@@ -9,7 +9,11 @@ export type Domain =
   | 'coding'
   | 'integration'
   | 'agile'
-  | 'governance';
+  | 'governance'
+  | 'observability'
+  | 'identity'
+  | 'architecture'
+  | 'appsec';
 
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
 

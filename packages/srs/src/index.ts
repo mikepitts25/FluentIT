@@ -17,6 +17,8 @@ export interface CardSRSState {
   logs: ReviewLog[];
 }
 
+export type SRSStateMap = Record<string, CardSRSState>;
+
 const f = fsrs(generatorParameters({ enable_fuzz: true }));
 
 export function createNewCardState(cardId: string): CardSRSState {
@@ -53,6 +55,17 @@ export function getDueCards(
   now: Date = new Date(),
 ): CardSRSState[] {
   return states.filter((s) => isDue(s, now));
+}
+
+export function getDueCardIds(
+  states: SRSStateMap,
+  now: Date = new Date(),
+  reviewWindowMinutes = 10,
+): string[] {
+  const cutoff = new Date(now.getTime() + reviewWindowMinutes * 60 * 1000);
+  return Object.values(states)
+    .filter((state) => state.fsrsCard.due <= cutoff)
+    .map((state) => state.cardId);
 }
 
 export function getStabilityLabel(state: CardSRSState): string {

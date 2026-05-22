@@ -25,7 +25,9 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'Learn',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="📚" focused={focused} />,
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <TabIcon emoji="📚" focused={focused} />
+          ),
           headerTitle: 'FluentIT',
         }}
       />
@@ -33,7 +35,9 @@ export default function TabsLayout() {
         name="review"
         options={{
           title: 'Review',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="🔁" focused={focused} />,
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <TabIcon emoji="🔁" focused={focused} />
+          ),
           headerTitle: 'Daily Review',
         }}
       />
@@ -41,7 +45,9 @@ export default function TabsLayout() {
         name="progress"
         options={{
           title: 'Progress',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="📈" focused={focused} />,
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <TabIcon emoji="📈" focused={focused} />
+          ),
           headerTitle: 'My Progress',
         }}
       />

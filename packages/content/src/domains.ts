@@ -78,4 +78,32 @@ export const DOMAINS: DomainMeta[] = [
     color: '#A78BFA',
     description: 'ITIL, compliance, risk, and change management',
   },
+  {
+    id: 'observability',
+    label: 'Observability & SRE',
+    icon: 'pulse',
+    color: '#22C55E',
+    description: 'Telemetry, reliability, incidents, and SLO trade-offs',
+  },
+  {
+    id: 'identity',
+    label: 'Identity & Access',
+    icon: 'key',
+    color: '#06B6D4',
+    description: 'Authentication, authorization, federation, and trust',
+  },
+  {
+    id: 'architecture',
+    label: 'Architecture & System Design',
+    icon: 'blocks',
+    color: '#FB7185',
+    description: 'Scale, boundaries, trade-offs, and resilient designs',
+  },
+  {
+    id: 'appsec',
+    label: 'App Security & DevSecOps',
+    icon: 'shield',
+    color: '#F59E0B',
+    description: 'Secure software delivery, threat models, and flaws',
+  },
 ];
