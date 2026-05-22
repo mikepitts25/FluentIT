@@ -62,7 +62,7 @@
 | Command | Result | Notes |
 | --- | --- | --- |
 | `npm exec --workspace mobile -- expo install --check` | Pass | Reported `Dependencies are up to date`. |
-| `npx expo-doctor apps/mobile` | Fail | `17/18` checks passed after removing the manual Metro override config and restoring direct `expo-constants`. The remaining duplicate native module finding comes from this project-local worktree also seeing the parent checkout's SDK 55 `node_modules` tree. |
+| `npx expo-doctor apps/mobile` | Pass in detached verification | The project-local `.worktrees` run reached `17/18` after removing the manual Metro override config and restoring direct `expo-constants`; its remaining duplicate native module finding came from the parent checkout's SDK 55 `node_modules` tree. A detached `/tmp` worktree installed from the same commit then passed `18/18`. |
 | `npm test` | Fail | Vitest found no test files and exited `1`. |
 | `npm run typecheck` | Fail | TypeScript exited `2` on three implicit `focused` bindings in `apps/mobile/app/(tabs)/_layout.tsx`. |
 | `npm exec --workspace mobile -- expo export -p ios --clear` | Pass | Exported the iOS bundle to ignored `apps/mobile/dist/`; Node emitted repeated `NO_COLOR` ignored because `FORCE_COLOR` is set warnings during bundling. |
