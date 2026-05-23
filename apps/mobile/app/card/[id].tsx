@@ -1,26 +1,25 @@
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import {
-  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Animated,
 } from 'react-native';
 import { Rating, type Grade } from '@fluentit/srs';
 import { getCardById, DOMAINS } from '../../src/content';
-import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { getStabilityLabel } from '../../src/store/srs-store';
+import { C, GRAD_GREEN_CYAN } from '../../src/theme';
 
-const RATING_CONFIG: { rating: Grade; label: string; color: string; emoji: string }[] = [
-  { rating: Rating.Again, label: 'Again', color: '#EF4444', emoji: '😬' },
-  { rating: Rating.Hard, label: 'Hard', color: '#F59E0B', emoji: '😅' },
-  { rating: Rating.Good, label: 'Good', color: '#10B981', emoji: '👍' },
-  { rating: Rating.Easy, label: 'Easy', color: '#38BDF8', emoji: '⚡' },
+const RATING_CONFIG: { rating: Grade; label: string; color: string; key: string }[] = [
+  { rating: Rating.Again, label: 'Again', color: C.red,   key: 'again' },
+  { rating: Rating.Hard,  label: 'Hard',  color: C.amber, key: 'hard' },
+  { rating: Rating.Good,  label: 'Good',  color: C.green, key: 'good' },
+  { rating: Rating.Easy,  label: 'Easy',  color: C.cyan,  key: 'easy' },
 ];
 
 export default function CardScreen() {
@@ -52,13 +51,15 @@ export default function CardScreen() {
   if (done) {
     return (
       <View style={styles.center}>
-        <Text style={{ fontSize: 48 }}>✅</Text>
-        <Text style={styles.doneTitle}>Card reviewed!</Text>
+        <View style={styles.doneIconWrap}>
+          <Text style={styles.doneIconText}>✓</Text>
+        </View>
+        <Text style={styles.doneTitle}>Card Reviewed</Text>
         <Text style={styles.doneSub}>
           Stability: {state ? getStabilityLabel(state) : '—'}
         </Text>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Text style={styles.backBtnText}>Back to Domain</Text>
+          <Text style={styles.backBtnText}>← Back to Domain</Text>
         </TouchableOpacity>
       </View>
     );
@@ -73,57 +74,58 @@ export default function CardScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Domain chip */}
-      <View style={[styles.domainChip, { backgroundColor: domain.color + '22' }]}>
-        <Image
-          source={getDomainIconImage(domain.id)}
-          style={styles.domainChipIcon}
-          resizeMode="contain"
-        />
-        <Text style={[styles.domainLabel, { color: domain.color }]}>{domain.label}</Text>
+      <View style={[styles.domainChip, { backgroundColor: domain.color + '18', borderColor: domain.color + '44' }]}>
+        <View style={[styles.chipDot, { backgroundColor: domain.color }]} />
+        <Text style={[styles.chipLabel, { color: domain.color }]}>
+          {domain.label.toUpperCase()}
+        </Text>
       </View>
 
-      {/* Title */}
       <Text style={styles.title}>{card.title}</Text>
       <Text style={styles.subtitle}>{card.subtitle}</Text>
 
-      {/* Definition */}
-      <Section label="What it is" icon="📖">
+      <Section label="What it is" accent={C.green}>
         <Text style={styles.bodyText}>{card.definition}</Text>
       </Section>
 
-      {/* Why it matters */}
-      <Section label="Why it matters" icon="💡">
+      <Section label="Why it matters" accent={C.cyan}>
         <Text style={styles.bodyText}>{card.whyItMatters}</Text>
       </Section>
 
-      {/* Reveal button or full content */}
       {!revealed ? (
-        <TouchableOpacity style={styles.revealButton} onPress={() => setReveal(true)}>
-          <Text style={styles.revealButtonText}>Reveal Analogy & Quiz →</Text>
+        <TouchableOpacity activeOpacity={0.85} onPress={() => setReveal(true)}>
+          <LinearGradient
+            colors={GRAD_GREEN_CYAN}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.revealBtn}
+          >
+            <Text style={styles.revealBtnText}>Reveal Analogy & Quiz →</Text>
+          </LinearGradient>
         </TouchableOpacity>
       ) : (
         <>
-          <Section label="Analogy" icon="🧠">
+          <Section label="Analogy" accent={C.purple}>
             <Text style={styles.bodyText}>{card.analogy}</Text>
           </Section>
 
-          <Section label="Sounds smart to say" icon="🗣️">
+          <Section label="Sounds smart to say" accent={C.cyan}>
             <View style={styles.quoteBox}>
               <Text style={styles.quoteText}>{card.soundsSmartToSay}</Text>
             </View>
           </Section>
 
-          <Section label="Common confusions" icon="⚠️">
+          <Section label="Common confusions" accent={C.amber}>
             {card.commonConfusions.map((c, i) => (
               <View key={i} style={styles.bulletRow}>
-                <Text style={styles.bullet}>•</Text>
+                <Text style={[styles.bullet, { color: C.amber }]}>›</Text>
                 <Text style={styles.bulletText}>{c}</Text>
               </View>
             ))}
           </Section>
 
           {card.relatedTerms.length > 0 && (
-            <Section label="Related terms" icon="🔗">
+            <Section label="Related terms" accent={C.purple}>
               <View style={styles.pills}>
                 {card.relatedTerms.map((t) => (
                   <View key={t} style={styles.pill}>
@@ -134,17 +136,17 @@ export default function CardScreen() {
             </Section>
           )}
 
-          {/* SRS Rating */}
           <View style={styles.ratingBox}>
-            <Text style={styles.ratingTitle}>How well did you know this?</Text>
+            <Text style={styles.ratingTitle}>HOW WELL DID YOU KNOW THIS?</Text>
             <View style={styles.ratingRow}>
               {RATING_CONFIG.map((r) => (
                 <TouchableOpacity
-                  key={r.label}
-                  style={[styles.ratingBtn, { borderColor: r.color }]}
+                  key={r.key}
+                  style={[styles.ratingBtn, { borderColor: r.color + '66' }]}
                   onPress={() => handleRate(r.rating)}
+                  activeOpacity={0.75}
                 >
-                  <Text style={{ fontSize: 20 }}>{r.emoji}</Text>
+                  <View style={[styles.ratingDot, { backgroundColor: r.color + '22' }]} />
                   <Text style={[styles.ratingLabel, { color: r.color }]}>{r.label}</Text>
                 </TouchableOpacity>
               ))}
@@ -160,101 +162,121 @@ export default function CardScreen() {
 
 function Section({
   label,
-  icon,
+  accent,
   children,
 }: {
   label: string;
-  icon: string;
+  accent: string;
   children: React.ReactNode;
 }) {
   return (
-    <View style={styles.section}>
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionIcon}>{icon}</Text>
-        <Text style={styles.sectionLabel}>{label}</Text>
-      </View>
+    <View style={[styles.section, { borderColor: accent + '22' }]}>
+      <Text style={[styles.sectionLabel, { color: accent }]}>{label.toUpperCase()}</Text>
       {children}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  content: { padding: 20 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12 },
-  errorText: { color: '#94A3B8', fontSize: 16 },
+  container: { flex: 1, backgroundColor: C.bgPrimary },
+  content: { padding: 16, gap: 14 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 14, backgroundColor: C.bgPrimary },
+  errorText: { color: C.textMuted, fontSize: 16 },
+
+  doneIconWrap: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: C.green + '18',
+    borderWidth: 1,
+    borderColor: C.green + '44',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  doneIconText: { color: C.green, fontSize: 32, fontWeight: '800' },
+  doneTitle: { color: C.textPrimary, fontSize: 22, fontWeight: '800' },
+  doneSub: { color: C.textSecondary, fontSize: 14 },
+  backBtn: {
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: C.borderCard,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    marginTop: 4,
+  },
+  backBtnText: { color: C.textSecondary, fontWeight: '700', fontSize: 14 },
+
   domainChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 7,
     alignSelf: 'flex-start',
     borderRadius: 20,
+    borderWidth: 1,
     paddingHorizontal: 12,
     paddingVertical: 5,
-    marginBottom: 16,
   },
-  domainChipIcon: { width: 20, height: 20 },
-  domainLabel: { fontSize: 13, fontWeight: '600' },
-  title: { color: '#F8FAFC', fontSize: 30, fontWeight: '800', marginBottom: 4 },
-  subtitle: { color: '#64748B', fontSize: 15, marginBottom: 24 },
+  chipDot: { width: 6, height: 6, borderRadius: 3 },
+  chipLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.5 },
+  title: { color: C.textPrimary, fontSize: 28, fontWeight: '800' },
+  subtitle: { color: C.textSecondary, fontSize: 14 },
+
   section: {
-    marginBottom: 20,
-    backgroundColor: '#1E293B',
+    backgroundColor: C.bgCard,
     borderRadius: 14,
     padding: 16,
+    gap: 10,
+    borderWidth: 1,
   },
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 },
-  sectionIcon: { fontSize: 16 },
-  sectionLabel: { color: '#94A3B8', fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
-  bodyText: { color: '#CBD5E1', fontSize: 15, lineHeight: 23 },
+  sectionLabel: { fontSize: 9, fontWeight: '700', letterSpacing: 2.5 },
+  bodyText: { color: C.textSecondary, fontSize: 15, lineHeight: 23 },
+
+  revealBtn: { borderRadius: 14, padding: 16, alignItems: 'center' },
+  revealBtnText: { color: '#000000', fontSize: 16, fontWeight: '800' },
+
   quoteBox: {
-    backgroundColor: '#0F172A',
+    backgroundColor: C.bgPrimary,
     borderRadius: 10,
     padding: 14,
     borderLeftWidth: 3,
-    borderLeftColor: '#38BDF8',
+    borderLeftColor: C.cyan,
   },
-  quoteText: { color: '#E2E8F0', fontSize: 14, fontStyle: 'italic', lineHeight: 21 },
-  bulletRow: { flexDirection: 'row', gap: 8, marginBottom: 10 },
-  bullet: { color: '#38BDF8', fontSize: 15, lineHeight: 23 },
-  bulletText: { color: '#CBD5E1', fontSize: 14, lineHeight: 21, flex: 1 },
+  quoteText: { color: C.textSecondary, fontSize: 14, fontStyle: 'italic', lineHeight: 21 },
+  bulletRow: { flexDirection: 'row', gap: 8, marginBottom: 6 },
+  bullet: { fontSize: 15, lineHeight: 23 },
+  bulletText: { color: C.textSecondary, fontSize: 14, lineHeight: 21, flex: 1 },
+
   pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  pill: { backgroundColor: '#0F172A', borderRadius: 20, paddingHorizontal: 12, paddingVertical: 5 },
-  pillText: { color: '#38BDF8', fontSize: 13 },
-  revealButton: {
-    backgroundColor: '#1D4ED8',
-    borderRadius: 14,
-    padding: 16,
-    alignItems: 'center',
-    marginBottom: 24,
+  pill: {
+    backgroundColor: C.bgPrimary,
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: C.purple + '44',
   },
-  revealButtonText: { color: '#F8FAFC', fontSize: 16, fontWeight: '700' },
+  pillText: { color: C.purple, fontSize: 12 },
+
   ratingBox: {
-    backgroundColor: '#1E293B',
+    backgroundColor: C.bgCard,
     borderRadius: 16,
-    padding: 20,
-    marginTop: 8,
+    padding: 18,
+    gap: 14,
+    borderWidth: 1,
+    borderColor: C.borderCard,
+    marginTop: 4,
   },
-  ratingTitle: { color: '#94A3B8', fontSize: 13, fontWeight: '600', textAlign: 'center', marginBottom: 16 },
-  ratingRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 10 },
+  ratingTitle: { color: C.textMuted, fontSize: 9, fontWeight: '700', letterSpacing: 2.5, textAlign: 'center' },
+  ratingRow: { flexDirection: 'row', gap: 8 },
   ratingBtn: {
     flex: 1,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderRadius: 12,
-    paddingVertical: 12,
+    paddingVertical: 14,
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#0F172A',
+    gap: 6,
+    backgroundColor: C.bgPrimary,
   },
-  ratingLabel: { fontSize: 12, fontWeight: '700' },
-  doneTitle: { color: '#F8FAFC', fontSize: 22, fontWeight: '800' },
-  doneSub: { color: '#94A3B8', fontSize: 15 },
-  backBtn: {
-    marginTop: 8,
-    backgroundColor: '#1D4ED8',
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-  },
-  backBtnText: { color: '#F8FAFC', fontWeight: '700', fontSize: 15 },
+  ratingDot: { width: 20, height: 20, borderRadius: 10 },
+  ratingLabel: { fontSize: 11, fontWeight: '700' },
 });

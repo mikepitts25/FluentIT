@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
+import { C } from '../src/theme';
 
 export default function RootLayout() {
   return (
@@ -8,16 +9,17 @@ export default function RootLayout() {
       <StatusBar style="light" />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: '#0F172A' },
-          headerTintColor: '#F8FAFC',
+          headerStyle: { backgroundColor: C.bgPrimary },
+          headerTintColor: C.textPrimary,
           headerTitleStyle: { fontWeight: '700' },
-          contentStyle: { backgroundColor: '#0F172A' },
+          contentStyle: { backgroundColor: C.bgPrimary },
+          headerShadowVisible: false,
         }}
       >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Home' }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="domain/[id]" options={{ title: '' }} />
         <Stack.Screen name="card/[id]" options={{ title: '' }} />
-        <Stack.Screen name="session" options={{ title: 'Daily Session' }} />
+        <Stack.Screen name="session" options={{ title: 'Session' }} />
         <Stack.Screen name="meeting-prep" options={{ title: 'Meeting Prep' }} />
         <Stack.Screen name="review" options={{ title: 'Daily Review' }} />
       </Stack>
@@ -26,5 +28,5 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
+  container: { flex: 1, backgroundColor: C.bgPrimary },
 });

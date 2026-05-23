@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   FlatList,
   Image,
@@ -11,10 +12,11 @@ import {
 import { ALL_CARDS, DOMAINS, type Card } from '../../src/content';
 import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
+import { C, GRAD_GREEN_CYAN } from '../../src/theme';
 
 export default function ReviewScreen() {
   const router = useRouter();
-  const { dueCardIds, isLoaded, states } = useSRSStore();
+  const { dueCardIds, isLoaded } = useSRSStore();
 
   const dueCards = useMemo(
     () => ALL_CARDS.filter((c) => dueCardIds.includes(c.id)),
@@ -24,7 +26,7 @@ export default function ReviewScreen() {
   if (!isLoaded) {
     return (
       <View style={styles.center}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>Initializing...</Text>
       </View>
     );
   }
@@ -32,13 +34,22 @@ export default function ReviewScreen() {
   if (dueCards.length === 0) {
     return (
       <View style={styles.center}>
-        <Text style={{ fontSize: 56 }}>🎉</Text>
+        <View style={styles.emptyIconBg}>
+          <Text style={{ fontSize: 44 }}>✓</Text>
+        </View>
         <Text style={styles.emptyTitle}>All caught up!</Text>
         <Text style={styles.emptySub}>
           No cards due for review. Come back later or learn new concepts.
         </Text>
-        <TouchableOpacity style={styles.learnBtn} onPress={() => router.push('/(tabs)')}>
-          <Text style={styles.learnBtnText}>Browse Domains →</Text>
+        <TouchableOpacity activeOpacity={0.85} onPress={() => router.push('/(tabs)')}>
+          <LinearGradient
+            colors={GRAD_GREEN_CYAN}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.learnBtn}
+          >
+            <Text style={styles.learnBtnText}>Browse Domains →</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     );
@@ -47,8 +58,13 @@ export default function ReviewScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.dueCount}>{dueCards.length} due today</Text>
-        <Text style={styles.dueHint}>Tap to study each card</Text>
+        <View>
+          <Text style={styles.dueCount}>{dueCards.length} cards due</Text>
+          <Text style={styles.dueHint}>Tap a card to study</Text>
+        </View>
+        <View style={styles.dueBadge}>
+          <Text style={styles.dueBadgeText}>{dueCards.length}</Text>
+        </View>
       </View>
 
       <FlatList
@@ -61,15 +77,20 @@ export default function ReviewScreen() {
             <TouchableOpacity
               style={styles.row}
               onPress={() => router.push(`/card/${item.id}`)}
+              activeOpacity={0.8}
             >
-              <Image
-                source={getDomainIconImage(domain.id)}
-                style={styles.domainIcon}
-                resizeMode="contain"
-              />
+              <View style={[styles.domainIconWrap, { backgroundColor: domain.color + '18' }]}>
+                <Image
+                  source={getDomainIconImage(domain.id)}
+                  style={styles.domainIcon}
+                  resizeMode="contain"
+                />
+              </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardDomain}>{domain.label}</Text>
+                <Text style={[styles.cardDomain, { color: domain.color + 'AA' }]}>
+                  {domain.label.toUpperCase()}
+                </Text>
               </View>
               <Text style={styles.arrow}>›</Text>
             </TouchableOpacity>
@@ -81,50 +102,72 @@ export default function ReviewScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
+  container: { flex: 1, backgroundColor: C.bgPrimary },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
-    gap: 12,
-    backgroundColor: '#0F172A',
+    gap: 14,
+    backgroundColor: C.bgPrimary,
   },
-  loadingText: { color: '#64748B', fontSize: 16 },
-  emptyTitle: { color: '#F8FAFC', fontSize: 24, fontWeight: '800', textAlign: 'center' },
-  emptySub: { color: '#94A3B8', fontSize: 15, textAlign: 'center', lineHeight: 22 },
-  learnBtn: {
-    marginTop: 8,
-    backgroundColor: '#1D4ED8',
-    borderRadius: 14,
-    paddingHorizontal: 24,
-    paddingVertical: 14,
+  loadingText: { color: C.textMuted, fontSize: 14, letterSpacing: 1 },
+  emptyIconBg: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: C.green + '18',
+    borderWidth: 1,
+    borderColor: C.green + '44',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  learnBtnText: { color: '#F8FAFC', fontWeight: '700', fontSize: 16 },
+  emptyTitle: { color: C.textPrimary, fontSize: 22, fontWeight: '800' },
+  emptySub: { color: C.textSecondary, fontSize: 14, textAlign: 'center', lineHeight: 22 },
+  learnBtn: { borderRadius: 14, paddingHorizontal: 28, paddingVertical: 14 },
+  learnBtnText: { color: '#000000', fontWeight: '800', fontSize: 15 },
+
   headerRow: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 18,
     borderBottomWidth: 1,
-    borderBottomColor: '#1E293B',
+    borderBottomColor: C.borderCardAlt,
   },
-  dueCount: { color: '#F8FAFC', fontSize: 18, fontWeight: '700' },
-  dueHint: { color: '#475569', fontSize: 13 },
+  dueCount: { color: C.textPrimary, fontSize: 20, fontWeight: '800' },
+  dueHint: { color: C.textMuted, fontSize: 12, marginTop: 2 },
+  dueBadge: {
+    backgroundColor: C.green + '22',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: C.green + '44',
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+  },
+  dueBadgeText: { color: C.green, fontSize: 16, fontWeight: '800' },
+
   list: { padding: 16, gap: 10 },
   row: {
-    backgroundColor: '#1E293B',
+    backgroundColor: C.bgCard,
     borderRadius: 14,
-    padding: 16,
+    padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: C.borderCard,
   },
-  domainIcon: { width: 34, height: 34 },
-  cardTitle: { color: '#F8FAFC', fontSize: 16, fontWeight: '600', marginBottom: 3 },
-  cardDomain: { color: '#64748B', fontSize: 13 },
-  arrow: { color: '#334155', fontSize: 24, fontWeight: '300' },
+  domainIconWrap: {
+    width: 42,
+    height: 42,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  domainIcon: { width: 28, height: 28 },
+  cardTitle: { color: C.textPrimary, fontSize: 15, fontWeight: '600', marginBottom: 3 },
+  cardDomain: { fontSize: 9, fontWeight: '700', letterSpacing: 1.5 },
+  arrow: { color: C.textMuted, fontSize: 22, fontWeight: '300' },
 });

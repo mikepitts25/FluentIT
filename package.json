@@ -18,5 +18,8 @@
     "@types/node": "^24.0.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.0"
+  },
+  "dependencies": {
+    "expo-linear-gradient": "^56.0.4"
   }
 }

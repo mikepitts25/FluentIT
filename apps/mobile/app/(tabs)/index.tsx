@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   Image,
   ScrollView,
@@ -11,71 +12,100 @@ import { DOMAINS, getCardsByDomain } from '../../src/content';
 import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { usePreferencesStore } from '../../src/hooks/usePreferencesStore';
+import { C, GRAD_GREEN_CYAN } from '../../src/theme';
 import type { DomainMeta } from '../../src/content';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { streak, dueCardIds, isLoaded } = useSRSStore();
+  const { streak, dueCardIds } = useSRSStore();
   const { preferences, toggleDomain } = usePreferencesStore();
   const selectedCount = preferences.selectedDomains.length;
+  const xpEarned = Object.keys(useSRSStore().states).length * 40;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Streak Banner */}
-      <View style={styles.streakBanner}>
-        <Text style={styles.streakFire}>🔥</Text>
-        <View>
-          <Text style={styles.streakCount}>{streak.currentStreak} day streak</Text>
-          <Text style={styles.streakSub}>
-            {dueCardIds.length > 0
-              ? `${dueCardIds.length} cards due for review`
-              : 'All caught up! Great work.'}
-          </Text>
+      {/* XP / Streak Banner */}
+      <View style={styles.statsBanner}>
+        <View style={styles.statItem}>
+          <Text style={styles.statValue}>{streak.currentStreak}</Text>
+          <Text style={styles.statLabel}>DAY STREAK</Text>
         </View>
-        {dueCardIds.length > 0 && (
-          <TouchableOpacity
-            style={styles.reviewButton}
-            onPress={() => router.push('/(tabs)/review')}
-          >
-            <Text style={styles.reviewButtonText}>Review</Text>
-          </TouchableOpacity>
-        )}
+        <View style={styles.statDivider} />
+        <View style={styles.statItem}>
+          <Text style={styles.statValue}>{dueCardIds.length}</Text>
+          <Text style={styles.statLabel}>DUE TODAY</Text>
+        </View>
+        <View style={styles.statDivider} />
+        <View style={styles.statItem}>
+          <Text style={[styles.statValue, { color: C.green }]}>{xpEarned}</Text>
+          <Text style={styles.statLabel}>TOTAL XP</Text>
+        </View>
       </View>
 
+      {/* Primary CTA */}
       <TouchableOpacity
-        style={styles.meetingPrepButton}
-        onPress={() => router.push('/meeting-prep')}
+        activeOpacity={0.85}
+        onPress={() => router.push('/session')}
       >
-        <Text style={styles.meetingPrepButtonText}>Prep for a meeting</Text>
-        <Text style={styles.meetingPrepButtonSub}>Turn agenda terms into a concept pack</Text>
+        <LinearGradient
+          colors={GRAD_GREEN_CYAN}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.primaryCta}
+        >
+          <View>
+            <Text style={styles.primaryCtaTitle}>Start 5-min Session</Text>
+            <Text style={styles.primaryCtaSub}>
+              {selectedCount > 0
+                ? `${selectedCount} focus ${selectedCount === 1 ? 'domain' : 'domains'}`
+                : 'Reviews first, then new concepts'}
+            </Text>
+          </View>
+          <Text style={styles.primaryCtaArrow}>▶</Text>
+        </LinearGradient>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.sessionButton} onPress={() => router.push('/session')}>
-        <Text style={styles.sessionButtonText}>Start 5-min session</Text>
-        <Text style={styles.sessionButtonSub}>
-          {selectedCount > 0
-            ? `${selectedCount} focus ${selectedCount === 1 ? 'domain' : 'domains'}`
-            : 'Reviews first, then new concepts'}
-        </Text>
+      {/* Meeting Prep */}
+      <TouchableOpacity
+        style={styles.secondaryCta}
+        onPress={() => router.push('/meeting-prep')}
+        activeOpacity={0.8}
+      >
+        <View>
+          <Text style={styles.secondaryCtaTitle}>Prep for a Meeting</Text>
+          <Text style={styles.secondaryCtaSub}>Turn agenda terms into a concept pack</Text>
+        </View>
+        <Text style={styles.secondaryCtaArrow}>→</Text>
       </TouchableOpacity>
 
-      {/* Domain Grid */}
-      <Text style={styles.sectionTitle}>Pick a Domain</Text>
-      <Text style={styles.sectionSub}>
-        Tap a card to browse. Use Focus to shape daily sessions.
-      </Text>
+      {/* Due review nudge */}
+      {dueCardIds.length > 0 && (
+        <TouchableOpacity
+          style={styles.reviewNudge}
+          onPress={() => router.push('/(tabs)/review')}
+          activeOpacity={0.8}
+        >
+          <View style={styles.reviewNudgeDot} />
+          <Text style={styles.reviewNudgeText}>
+            {dueCardIds.length} cards due for review
+          </Text>
+          <Text style={styles.reviewNudgeArrow}>→</Text>
+        </TouchableOpacity>
+      )}
 
+      {/* Domain grid */}
+      <Text style={styles.sectionLabel}>KNOWLEDGE BASE</Text>
       <View style={styles.grid}>
         {DOMAINS.map((d) => {
           const isFocused = preferences.selectedDomains.includes(d.id);
           return (
-          <DomainCard
-            key={d.id}
-            domain={d}
-            isFocused={isFocused}
-            onPress={() => router.push(`/domain/${d.id}`)}
-            onToggleFocus={() => toggleDomain(d.id)}
-          />
+            <DomainCard
+              key={d.id}
+              domain={d}
+              isFocused={isFocused}
+              onPress={() => router.push(`/domain/${d.id}`)}
+              onToggleFocus={() => toggleDomain(d.id)}
+            />
           );
         })}
       </View>
@@ -100,27 +130,37 @@ function DomainCard({
     <TouchableOpacity
       style={[
         styles.domainCard,
-        { borderColor: isFocused ? domain.color : '#334155' },
+        { borderColor: isFocused ? domain.color + '66' : C.borderCard },
       ]}
       onPress={onPress}
+      activeOpacity={0.8}
     >
+      {/* Category label */}
+      <View style={styles.domainCatRow}>
+        <View style={[styles.domainDot, { backgroundColor: domain.color }]} />
+        <Text style={[styles.domainCat, { color: domain.color + 'AA' }]}>
+          {domain.label.toUpperCase()}
+        </Text>
+      </View>
+
       <Image
         source={getDomainIconImage(domain.id)}
         style={styles.domainIcon}
         resizeMode="contain"
       />
-      <Text style={[styles.domainLabel, { color: domain.color }]}>{domain.label}</Text>
-      <Text style={styles.domainDesc}>{domain.description}</Text>
+      <Text style={styles.domainDesc} numberOfLines={2}>{domain.description}</Text>
+
       <View style={styles.domainFooter}>
         <Text style={styles.domainCount}>{cardCount} concepts</Text>
         <TouchableOpacity
           style={[
             styles.focusButton,
-            isFocused && { backgroundColor: domain.color, borderColor: domain.color },
+            isFocused && { backgroundColor: domain.color + '22', borderColor: domain.color + '66' },
           ]}
           onPress={onToggleFocus}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <Text style={[styles.focusButtonText, isFocused && styles.focusButtonTextActive]}>
+          <Text style={[styles.focusButtonText, isFocused && { color: domain.color }]}>
             {isFocused ? 'Focused' : 'Focus'}
           </Text>
         </TouchableOpacity>
@@ -130,90 +170,105 @@ function DomainCard({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  content: { padding: 20, paddingBottom: 40 },
-  streakBanner: {
+  container: { flex: 1, backgroundColor: C.bgPrimary },
+  content: { padding: 16, paddingBottom: 48, gap: 12 },
+
+  statsBanner: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 28,
-    gap: 12,
-  },
-  streakFire: { fontSize: 32 },
-  streakCount: { color: '#F8FAFC', fontSize: 17, fontWeight: '700' },
-  streakSub: { color: '#94A3B8', fontSize: 13, marginTop: 2 },
-  reviewButton: {
-    marginLeft: 'auto',
-    backgroundColor: '#38BDF8',
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  reviewButtonText: { color: '#0F172A', fontWeight: '700', fontSize: 13 },
-  meetingPrepButton: {
-    backgroundColor: '#0F766E',
+    backgroundColor: C.bgCard,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#2DD4BF',
-    padding: 18,
-    marginBottom: 14,
+    borderColor: C.borderCard,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
   },
-  meetingPrepButtonText: { color: '#F0FDFA', fontSize: 18, fontWeight: '800' },
-  meetingPrepButtonSub: { color: '#99F6E4', fontSize: 13, marginTop: 4 },
-  sessionButton: {
-    backgroundColor: '#1D4ED8',
+  statItem: { flex: 1, alignItems: 'center', gap: 4 },
+  statValue: { color: C.textPrimary, fontSize: 22, fontWeight: '800' },
+  statLabel: { color: C.textMuted, fontSize: 9, fontWeight: '700', letterSpacing: 1.5 },
+  statDivider: { width: 1, backgroundColor: C.borderCard, marginVertical: 4 },
+
+  primaryCta: {
     borderRadius: 16,
-    padding: 18,
-    marginBottom: 28,
-    borderWidth: 1,
-    borderColor: '#38BDF8',
-  },
-  sessionButtonText: { color: '#F8FAFC', fontSize: 18, fontWeight: '800' },
-  sessionButtonSub: { color: '#BFDBFE', fontSize: 13, marginTop: 4 },
-  sectionTitle: {
-    color: '#F8FAFC',
-    fontSize: 22,
-    fontWeight: '800',
-    marginBottom: 4,
-  },
-  sectionSub: {
-    color: '#64748B',
-    fontSize: 14,
-    marginBottom: 20,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 14,
-  },
-  domainCard: {
-    width: '47%',
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1.5,
-    gap: 6,
-  },
-  domainIcon: { width: 40, height: 40 },
-  domainLabel: { fontSize: 15, fontWeight: '700' },
-  domainDesc: { color: '#94A3B8', fontSize: 12, lineHeight: 16 },
-  domainCount: { color: '#475569', fontSize: 11, marginTop: 4 },
-  domainFooter: {
-    marginTop: 6,
+    padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  primaryCtaTitle: { color: '#000000', fontSize: 18, fontWeight: '800' },
+  primaryCtaSub: { color: '#00000066', fontSize: 13, marginTop: 3 },
+  primaryCtaArrow: { color: '#000000', fontSize: 22, fontWeight: '300' },
+
+  secondaryCta: {
+    backgroundColor: C.bgCard,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: C.borderCard,
+    padding: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  secondaryCtaTitle: { color: C.textPrimary, fontSize: 16, fontWeight: '700' },
+  secondaryCtaSub: { color: C.textSecondary, fontSize: 13, marginTop: 3 },
+  secondaryCtaArrow: { color: C.textMuted, fontSize: 20 },
+
+  reviewNudge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: C.bgCard,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: C.borderActive,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  reviewNudgeDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: C.green,
+  },
+  reviewNudgeText: { flex: 1, color: C.green, fontSize: 13, fontWeight: '600' },
+  reviewNudgeArrow: { color: C.green, fontSize: 16 },
+
+  sectionLabel: {
+    color: C.textMuted,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 2.5,
+    marginTop: 4,
+    marginBottom: 2,
+  },
+
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+
+  domainCard: {
+    width: '47.5%',
+    backgroundColor: C.bgCard,
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
     gap: 8,
+  },
+  domainCatRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  domainDot: { width: 6, height: 6, borderRadius: 3 },
+  domainCat: { fontSize: 8, fontWeight: '700', letterSpacing: 1.5 },
+  domainIcon: { width: 36, height: 36 },
+  domainDesc: { color: C.textSecondary, fontSize: 11, lineHeight: 15 },
+  domainCount: { color: C.textMuted, fontSize: 10 },
+  domainFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 2,
   },
   focusButton: {
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#475569',
+    borderColor: C.borderCard,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
-  focusButtonText: { color: '#94A3B8', fontSize: 11, fontWeight: '700' },
-  focusButtonTextActive: { color: '#0F172A' },
+  focusButtonText: { color: C.textMuted, fontSize: 10, fontWeight: '700' },
 });

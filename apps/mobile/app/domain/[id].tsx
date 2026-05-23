@@ -1,22 +1,29 @@
 import { useLocalSearchParams, useRouter, useNavigation } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
 import {
   FlatList,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { DOMAINS, getCardsByDomain, type Card } from '../../src/content';
-import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { getStabilityLabel } from '../../src/store/srs-store';
+import { C, GRAD_GREEN_CYAN } from '../../src/theme';
 
 const DIFFICULTY_COLOR: Record<string, string> = {
-  beginner: '#10B981',
-  intermediate: '#F59E0B',
-  advanced: '#EF4444',
+  beginner:     C.green,
+  intermediate: C.amber,
+  advanced:     C.red,
+};
+
+const STATUS_COLOR: Record<string, string> = {
+  New:      C.textMuted,
+  Learning: C.amber,
+  Familiar: C.cyan,
+  Mastered: C.green,
 };
 
 export default function DomainScreen() {
@@ -29,31 +36,58 @@ export default function DomainScreen() {
   const cards = getCardsByDomain(id as any);
 
   useEffect(() => {
-    if (domain) {
-      navigation.setOptions({ title: domain.label });
-    }
+    if (domain) navigation.setOptions({ title: domain.label });
   }, [domain]);
 
   if (!domain) return null;
 
+  const masteredCount = cards.filter((c) => {
+    const s = states[c.id];
+    return s && getStabilityLabel(s) === 'Mastered';
+  }).length;
+
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, { borderBottomColor: domain.color }]}>
-        <Image
-          source={getDomainIconImage(domain.id)}
-          style={styles.headerIcon}
-          resizeMode="contain"
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.headerTitle, { color: domain.color }]}>{domain.label}</Text>
-          <Text style={styles.headerDesc}>{domain.description}</Text>
+      <View style={[styles.header, { borderBottomColor: domain.color + '44' }]}>
+        <View style={styles.headerMain}>
+          <View style={[styles.headerDot, { backgroundColor: domain.color }]} />
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.headerCat, { color: domain.color + 'AA' }]}>
+              {domain.label.toUpperCase()}
+            </Text>
+            <Text style={styles.headerDesc}>{domain.description}</Text>
+          </View>
         </View>
+
+        {/* Mini progress */}
+        <View style={styles.headerStats}>
+          <Text style={styles.headerStatText}>
+            <Text style={{ color: domain.color, fontWeight: '800' }}>{masteredCount}</Text>
+            <Text style={{ color: C.textMuted }}> / {cards.length} mastered</Text>
+          </Text>
+          <View style={styles.miniTrack}>
+            <View
+              style={[
+                styles.miniFill,
+                { width: `${Math.round((masteredCount / cards.length) * 100)}%`, backgroundColor: domain.color },
+              ]}
+            />
+          </View>
+        </View>
+
         <TouchableOpacity
-          style={[styles.sessionButton, { borderColor: domain.color }]}
+          activeOpacity={0.85}
           onPress={() => router.push({ pathname: '/session', params: { domain: domain.id } })}
         >
-          <Text style={[styles.sessionButtonText, { color: domain.color }]}>Start</Text>
+          <LinearGradient
+            colors={[domain.color, domain.color + 'BB']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.startBtn}
+          >
+            <Text style={styles.startBtnText}>▶  Start Session</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
 
@@ -61,13 +95,17 @@ export default function DomainScreen() {
         data={cards}
         keyExtractor={(c: Card) => c.id}
         contentContainerStyle={styles.list}
-        renderItem={({ item }: { item: Card }) => (
-          <ConceptRow
-            card={item}
-            stabilityLabel={states[item.id] ? getStabilityLabel(states[item.id]!) : 'New'}
-            onPress={() => router.push(`/card/${item.id}`)}
-          />
-        )}
+        renderItem={({ item }: { item: Card }) => {
+          const stabilityLabel = states[item.id] ? getStabilityLabel(states[item.id]!) : 'New';
+          return (
+            <ConceptRow
+              card={item}
+              stabilityLabel={stabilityLabel}
+              domainColor={domain.color}
+              onPress={() => router.push(`/card/${item.id}`)}
+            />
+          );
+        }}
       />
     </View>
   );
@@ -76,29 +114,25 @@ export default function DomainScreen() {
 function ConceptRow({
   card,
   stabilityLabel,
+  domainColor,
   onPress,
 }: {
   card: Card;
   stabilityLabel: string;
+  domainColor: string;
   onPress: () => void;
 }) {
+  const diffColor = DIFFICULTY_COLOR[card.difficulty] ?? C.textMuted;
+  const statusColor = STATUS_COLOR[stabilityLabel] ?? C.textMuted;
+
   return (
-    <TouchableOpacity style={styles.row} onPress={onPress}>
-      <View style={{ flex: 1 }}>
+    <TouchableOpacity style={styles.row} onPress={onPress} activeOpacity={0.8}>
+      <View style={{ flex: 1, gap: 4 }}>
         <Text style={styles.cardTitle}>{card.title}</Text>
-        <Text style={styles.cardSubtitle}>{card.subtitle}</Text>
+        <Text style={styles.cardSubtitle} numberOfLines={1}>{card.subtitle}</Text>
         <View style={styles.tags}>
-          <View
-            style={[
-              styles.diffTag,
-              { backgroundColor: DIFFICULTY_COLOR[card.difficulty] + '22' },
-            ]}
-          >
-            <Text
-              style={[styles.diffTagText, { color: DIFFICULTY_COLOR[card.difficulty] }]}
-            >
-              {card.difficulty}
-            </Text>
+          <View style={[styles.diffTag, { backgroundColor: diffColor + '18', borderColor: diffColor + '44' }]}>
+            <Text style={[styles.diffTagText, { color: diffColor }]}>{card.difficulty}</Text>
           </View>
           {card.tags.slice(0, 2).map((t) => (
             <View key={t} style={styles.tag}>
@@ -107,62 +141,55 @@ function ConceptRow({
           ))}
         </View>
       </View>
-      <View style={styles.statusBadge}>
-        <Text style={styles.statusText}>{stabilityLabel}</Text>
+      <View style={[styles.statusBadge, { backgroundColor: statusColor + '18', borderColor: statusColor + '33' }]}>
+        <Text style={[styles.statusText, { color: statusColor }]}>{stabilityLabel}</Text>
       </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
+  container: { flex: 1, backgroundColor: C.bgPrimary },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
     padding: 20,
     borderBottomWidth: 1,
-    backgroundColor: '#1E293B',
+    backgroundColor: C.bgCard,
+    gap: 14,
   },
-  headerIcon: { width: 52, height: 52 },
-  headerTitle: { fontSize: 20, fontWeight: '800' },
-  headerDesc: { color: '#94A3B8', fontSize: 13, marginTop: 2 },
-  sessionButton: {
-    backgroundColor: '#0F172A',
-    borderRadius: 10,
-    borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-  },
-  sessionButtonText: { fontSize: 13, fontWeight: '800' },
-  list: { padding: 16, gap: 12 },
+  headerMain: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  headerDot: { width: 10, height: 10, borderRadius: 5, marginTop: 2 },
+  headerCat: { fontSize: 9, fontWeight: '700', letterSpacing: 2.5 },
+  headerDesc: { color: C.textSecondary, fontSize: 13, marginTop: 2 },
+  headerStats: { gap: 6 },
+  headerStatText: { fontSize: 12 },
+  miniTrack: { height: 4, backgroundColor: C.bgCardAlt, borderRadius: 2, overflow: 'hidden' },
+  miniFill: { height: '100%', borderRadius: 2 },
+  startBtn: { borderRadius: 12, paddingVertical: 12, paddingHorizontal: 20, alignItems: 'center' },
+  startBtnText: { color: '#000000', fontWeight: '800', fontSize: 14 },
+
+  list: { padding: 14, gap: 10 },
   row: {
-    backgroundColor: '#1E293B',
+    backgroundColor: C.bgCard,
     borderRadius: 14,
-    padding: 16,
+    padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: C.borderCard,
   },
-  cardTitle: { color: '#F8FAFC', fontSize: 16, fontWeight: '700', marginBottom: 2 },
-  cardSubtitle: { color: '#94A3B8', fontSize: 12, marginBottom: 8 },
-  tags: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
-  diffTag: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
-  diffTagText: { fontSize: 11, fontWeight: '600' },
-  tag: {
-    backgroundColor: '#0F172A',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  tagText: { color: '#64748B', fontSize: 11 },
+  cardTitle: { color: C.textPrimary, fontSize: 15, fontWeight: '700' },
+  cardSubtitle: { color: C.textSecondary, fontSize: 12 },
+  tags: { flexDirection: 'row', gap: 6, flexWrap: 'wrap', marginTop: 2 },
+  diffTag: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, borderWidth: 1 },
+  diffTagText: { fontSize: 10, fontWeight: '700' },
+  tag: { backgroundColor: C.bgPrimary, borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
+  tagText: { color: C.textMuted, fontSize: 10 },
   statusBadge: {
-    backgroundColor: '#0F172A',
     borderRadius: 10,
+    borderWidth: 1,
     paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingVertical: 5,
   },
-  statusText: { color: '#38BDF8', fontSize: 12, fontWeight: '600' },
+  statusText: { fontSize: 11, fontWeight: '700' },
 });
