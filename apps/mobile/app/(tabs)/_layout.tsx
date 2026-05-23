@@ -51,7 +51,9 @@ export default function TabsLayout() {
         options={{
           title: 'Review',
           tabBarIcon: ({ focused }: { focused: boolean }) => <TabIcon label="Review" focused={focused} />,
-          headerTitle: 'Daily Review',
+          headerTitle: '// Daily Review',
+          headerTitleAlign: 'left',
+          headerTitleStyle: { fontWeight: '800', color: C.green, letterSpacing: 1 },
         }}
       />
       <Tabs.Screen
