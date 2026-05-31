@@ -15,7 +15,10 @@
     },
     "ios": {
       "bundleIdentifier": "com.mikepitts25.fluentit",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
