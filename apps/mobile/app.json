@@ -14,6 +14,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "bundleIdentifier": "com.mikepitts25.fluentit",
       "supportsTablet": true
     },
     "android": {
@@ -26,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "47b6908b-723d-4814-b9f4-9e4dcc785359"
+      }
+    },
+    "owner": "mikepitts25"
   }
 }
