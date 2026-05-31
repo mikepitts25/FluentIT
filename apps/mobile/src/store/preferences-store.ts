@@ -3,14 +3,18 @@ import type { Domain } from '../content';
 
 const STORAGE_KEY = '@fluentit:preferences';
 
+export type ColorMode = 'dark' | 'light';
+
 export interface UserPreferences {
   selectedDomains: Domain[];
   dailySessionSize: number;
+  colorMode: ColorMode;
 }
 
 export const DEFAULT_PREFERENCES: UserPreferences = {
   selectedDomains: [],
   dailySessionSize: 5,
+  colorMode: 'dark',
 };
 
 export async function loadPreferences(): Promise<UserPreferences> {
@@ -41,5 +45,15 @@ export function toggleSelectedDomain(
   return {
     ...preferences,
     selectedDomains: Array.from(selected),
+  };
+}
+
+export function setColorModePreference(
+  preferences: UserPreferences,
+  colorMode: ColorMode,
+): UserPreferences {
+  return {
+    ...preferences,
+    colorMode,
   };
 }

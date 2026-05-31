@@ -100,7 +100,7 @@ export default function CardScreen() {
             end={{ x: 1, y: 0 }}
             style={styles.revealBtn}
           >
-            <Text style={styles.revealBtnText}>Reveal Analogy & Quiz →</Text>
+            <Text style={styles.revealBtnText}>Reveal Analogy & Rate →</Text>
           </LinearGradient>
         </TouchableOpacity>
       ) : (
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: C.bgPrimary },
   content: { padding: 16, gap: 14 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 14, backgroundColor: C.bgPrimary },
-  errorText: { color: C.textMuted, fontSize: 16 },
+  errorText: { color: C.textMuted, fontSize: 18 },
 
   doneIconWrap: {
     width: 72,
@@ -193,9 +193,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  doneIconText: { color: C.green, fontSize: 32, fontWeight: '800' },
-  doneTitle: { color: C.textPrimary, fontSize: 22, fontWeight: '800' },
-  doneSub: { color: C.textSecondary, fontSize: 14 },
+  doneIconText: { color: C.green, fontSize: 34, fontWeight: '800' },
+  doneTitle: { color: C.textPrimary, fontSize: 24, fontWeight: '800' },
+  doneSub: { color: C.textSecondary, fontSize: 16 },
   backBtn: {
     borderRadius: 12,
     borderWidth: 1,
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginTop: 4,
   },
-  backBtnText: { color: C.textSecondary, fontWeight: '700', fontSize: 14 },
+  backBtnText: { color: C.textSecondary, fontWeight: '700', fontSize: 16 },
 
   domainChip: {
     flexDirection: 'row',
@@ -217,9 +217,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   chipDot: { width: 6, height: 6, borderRadius: 3 },
-  chipLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.5 },
-  title: { color: C.textPrimary, fontSize: 28, fontWeight: '800' },
-  subtitle: { color: C.textSecondary, fontSize: 14 },
+  chipLabel: { fontSize: 12, fontWeight: '700', letterSpacing: 1.5 },
+  title: { color: C.textPrimary, fontSize: 30, fontWeight: '800' },
+  subtitle: { color: C.textSecondary, fontSize: 16 },
 
   section: {
     backgroundColor: C.bgCard,
@@ -228,11 +228,11 @@ const styles = StyleSheet.create({
     gap: 10,
     borderWidth: 1,
   },
-  sectionLabel: { fontSize: 9, fontWeight: '700', letterSpacing: 2.5 },
-  bodyText: { color: C.textSecondary, fontSize: 15, lineHeight: 23 },
+  sectionLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 2.5 },
+  bodyText: { color: C.textSecondary, fontSize: 17, lineHeight: 26 },
 
   revealBtn: { borderRadius: 14, padding: 16, alignItems: 'center' },
-  revealBtnText: { color: '#000000', fontSize: 16, fontWeight: '800' },
+  revealBtnText: { color: '#000000', fontSize: 18, fontWeight: '800' },
 
   quoteBox: {
     backgroundColor: C.bgPrimary,
@@ -241,10 +241,10 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: C.cyan,
   },
-  quoteText: { color: C.textSecondary, fontSize: 14, fontStyle: 'italic', lineHeight: 21 },
+  quoteText: { color: C.textSecondary, fontSize: 16, fontStyle: 'italic', lineHeight: 24 },
   bulletRow: { flexDirection: 'row', gap: 8, marginBottom: 6 },
-  bullet: { fontSize: 15, lineHeight: 23 },
-  bulletText: { color: C.textSecondary, fontSize: 14, lineHeight: 21, flex: 1 },
+  bullet: { fontSize: 17, lineHeight: 26 },
+  bulletText: { color: C.textSecondary, fontSize: 16, lineHeight: 24, flex: 1 },
 
   pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   pill: {
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: C.purple + '44',
   },
-  pillText: { color: C.purple, fontSize: 12 },
+  pillText: { color: C.purple, fontSize: 14 },
 
   ratingBox: {
     backgroundColor: C.bgCard,
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     borderColor: C.borderCard,
     marginTop: 4,
   },
-  ratingTitle: { color: C.textMuted, fontSize: 9, fontWeight: '700', letterSpacing: 2.5, textAlign: 'center' },
+  ratingTitle: { color: C.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 2.5, textAlign: 'center' },
   ratingRow: { flexDirection: 'row', gap: 8 },
   ratingBtn: {
     flex: 1,
@@ -278,5 +278,5 @@ const styles = StyleSheet.create({
     backgroundColor: C.bgPrimary,
   },
   ratingDot: { width: 20, height: 20, borderRadius: 10 },
-  ratingLabel: { fontSize: 11, fontWeight: '700' },
+  ratingLabel: { fontSize: 13, fontWeight: '700' },
 });

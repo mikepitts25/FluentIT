@@ -35,7 +35,7 @@ export default function ReviewScreen() {
     return (
       <View style={styles.center}>
         <View style={styles.emptyIconBg}>
-          <Text style={{ fontSize: 44 }}>✓</Text>
+          <Text style={{ fontSize: 46 }}>✓</Text>
         </View>
         <Text style={styles.emptyTitle}>All caught up!</Text>
         <Text style={styles.emptySub}>
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     gap: 14,
     backgroundColor: C.bgPrimary,
   },
-  loadingText: { color: C.textMuted, fontSize: 14, letterSpacing: 1 },
+  loadingText: { color: C.textMuted, fontSize: 16, letterSpacing: 1 },
   emptyIconBg: {
     width: 80,
     height: 80,
@@ -122,10 +122,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  emptyTitle: { color: C.textPrimary, fontSize: 22, fontWeight: '800' },
-  emptySub: { color: C.textSecondary, fontSize: 14, textAlign: 'center', lineHeight: 22 },
+  emptyTitle: { color: C.textPrimary, fontSize: 24, fontWeight: '800' },
+  emptySub: { color: C.textSecondary, fontSize: 16, textAlign: 'center', lineHeight: 25 },
   learnBtn: { borderRadius: 14, paddingHorizontal: 28, paddingVertical: 14 },
-  learnBtnText: { color: '#000000', fontWeight: '800', fontSize: 15 },
+  learnBtnText: { color: '#000000', fontWeight: '800', fontSize: 17 },
 
   headerRow: {
     flexDirection: 'row',
@@ -136,8 +136,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: C.borderCardAlt,
   },
-  dueCount: { color: C.textPrimary, fontSize: 20, fontWeight: '800' },
-  dueHint: { color: C.textMuted, fontSize: 12, marginTop: 2 },
+  dueCount: { color: C.textPrimary, fontSize: 22, fontWeight: '800' },
+  dueHint: { color: C.textMuted, fontSize: 14, marginTop: 2 },
   dueBadge: {
     backgroundColor: C.green + '22',
     borderRadius: 12,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
   },
-  dueBadgeText: { color: C.green, fontSize: 16, fontWeight: '800' },
+  dueBadgeText: { color: C.green, fontSize: 18, fontWeight: '800' },
 
   list: { padding: 16, gap: 10 },
   row: {
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   domainIcon: { width: 28, height: 28 },
-  cardTitle: { color: C.textPrimary, fontSize: 15, fontWeight: '600', marginBottom: 3 },
-  cardDomain: { fontSize: 9, fontWeight: '700', letterSpacing: 1.5 },
-  arrow: { color: C.textMuted, fontSize: 22, fontWeight: '300' },
+  cardTitle: { color: C.textPrimary, fontSize: 17, fontWeight: '600', marginBottom: 3 },
+  cardDomain: { fontSize: 11, fontWeight: '700', letterSpacing: 1.5 },
+  arrow: { color: C.textMuted, fontSize: 24, fontWeight: '300' },
 });

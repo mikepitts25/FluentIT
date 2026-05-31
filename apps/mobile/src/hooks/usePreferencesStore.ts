@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Domain } from '../content';
 import {
+  type ColorMode,
   DEFAULT_PREFERENCES,
   loadPreferences,
   savePreferences,
+  setColorModePreference,
   toggleSelectedDomain,
   type UserPreferences,
 } from '../store/preferences-store';
@@ -12,6 +14,7 @@ export interface PreferencesStore {
   preferences: UserPreferences;
   isLoaded: boolean;
   toggleDomain: (domain: Domain) => Promise<void>;
+  setColorMode: (colorMode: ColorMode) => Promise<void>;
 }
 
 export function usePreferencesStore(): PreferencesStore {
@@ -33,5 +36,13 @@ export function usePreferencesStore(): PreferencesStore {
     });
   }, []);
 
-  return { preferences, isLoaded, toggleDomain };
+  const setColorMode = useCallback(async (colorMode: ColorMode) => {
+    setPreferences((current) => {
+      const next = setColorModePreference(current, colorMode);
+      savePreferences(next);
+      return next;
+    });
+  }, []);
+
+  return { preferences, isLoaded, toggleDomain, setColorMode };
 }

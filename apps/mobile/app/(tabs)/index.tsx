@@ -1,9 +1,11 @@
+import { useMemo, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Image,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -12,18 +14,65 @@ import { DOMAINS, getCardsByDomain } from '../../src/content';
 import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { usePreferencesStore } from '../../src/hooks/usePreferencesStore';
-import { C, GRAD_GREEN_CYAN } from '../../src/theme';
+import { GRAD_GREEN_CYAN, getThemeColors, type ThemeColors } from '../../src/theme';
 import type { DomainMeta } from '../../src/content';
+
+type HomeStyles = ReturnType<typeof createStyles>;
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const { streak, dueCardIds } = useSRSStore();
-  const { preferences, toggleDomain } = usePreferencesStore();
+  const { preferences, toggleDomain, setColorMode } = usePreferencesStore();
+  const colors = getThemeColors(preferences.colorMode);
+  const styles = useMemo(() => createStyles(colors), [colors]);
+  const isLightMode = preferences.colorMode === 'light';
   const selectedCount = preferences.selectedDomains.length;
   const xpEarned = Object.keys(useSRSStore().states).length * 40;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      contentInsetAdjustmentBehavior="automatic"
+    >
+      <View style={styles.homeHeader}>
+        <TouchableOpacity
+          accessibilityLabel="Open settings menu"
+          accessibilityRole="button"
+          activeOpacity={0.8}
+          style={styles.settingsButton}
+          onPress={() => setSettingsOpen((open) => !open)}
+        >
+          <View style={styles.hamburgerLine} />
+          <View style={styles.hamburgerLine} />
+          <View style={styles.hamburgerLine} />
+        </TouchableOpacity>
+
+        {settingsOpen && (
+          <View style={styles.settingsMenu}>
+            <Text style={styles.settingsMenuTitle}>Settings</Text>
+            <View style={styles.settingsOptionRow}>
+              <View style={styles.settingsOptionTextBlock}>
+                <Text style={styles.settingsOptionLabel}>Light mode</Text>
+                <Text style={styles.settingsOptionSub}>
+                  {isLightMode ? 'Light theme active' : 'Dark theme active'}
+                </Text>
+              </View>
+              <Switch
+                value={isLightMode}
+                onValueChange={(enabled) => {
+                  void setColorMode(enabled ? 'light' : 'dark');
+                }}
+                trackColor={{ false: colors.bgCardAlt, true: colors.borderActive }}
+                thumbColor={isLightMode ? colors.green : colors.textMuted}
+                ios_backgroundColor={colors.bgCardAlt}
+              />
+            </View>
+          </View>
+        )}
+      </View>
+
       {/* XP / Streak Banner */}
       <View style={styles.statsBanner}>
         <View style={styles.statItem}>
@@ -37,7 +86,7 @@ export default function HomeScreen() {
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
-          <Text style={[styles.statValue, { color: C.green }]}>{xpEarned}</Text>
+          <Text style={[styles.statValue, { color: colors.green }]}>{xpEarned}</Text>
           <Text style={styles.statLabel}>TOTAL XP</Text>
         </View>
       </View>
@@ -105,6 +154,8 @@ export default function HomeScreen() {
               isFocused={isFocused}
               onPress={() => router.push(`/domain/${d.id}`)}
               onToggleFocus={() => toggleDomain(d.id)}
+              colors={colors}
+              styles={styles}
             />
           );
         })}
@@ -118,11 +169,15 @@ function DomainCard({
   isFocused,
   onPress,
   onToggleFocus,
+  colors,
+  styles,
 }: {
   domain: DomainMeta;
   isFocused: boolean;
   onPress: () => void;
   onToggleFocus: () => void;
+  colors: ThemeColors;
+  styles: HomeStyles;
 }) {
   const cardCount = getCardsByDomain(domain.id).length;
 
@@ -130,7 +185,7 @@ function DomainCard({
     <TouchableOpacity
       style={[
         styles.domainCard,
-        { borderColor: isFocused ? domain.color + '66' : C.borderCard },
+        { borderColor: isFocused ? domain.color + '66' : colors.borderCard },
       ]}
       onPress={onPress}
       activeOpacity={0.8}
@@ -169,23 +224,79 @@ function DomainCard({
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: C.bgPrimary },
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.bgPrimary },
   content: { padding: 16, paddingBottom: 48, gap: 12 },
+
+  homeHeader: {
+    alignItems: 'flex-end',
+    minHeight: 42,
+    position: 'relative',
+    zIndex: 5,
+  },
+  settingsButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.borderCard,
+    backgroundColor: colors.bgCard,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+  },
+  hamburgerLine: {
+    width: 18,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: colors.textPrimary,
+  },
+  settingsMenu: {
+    position: 'absolute',
+    top: 48,
+    right: 0,
+    width: 250,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.borderCard,
+    backgroundColor: colors.bgPrimary,
+    padding: 14,
+    gap: 12,
+    boxShadow: '0 12px 28px rgba(0, 0, 0, 0.22)',
+  },
+  settingsMenuTitle: {
+    color: colors.textPrimary,
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  settingsOptionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  settingsOptionTextBlock: { flex: 1, gap: 2 },
+  settingsOptionLabel: {
+    color: colors.textPrimary,
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  settingsOptionSub: { color: colors.textSecondary, fontSize: 15 },
 
   statsBanner: {
     flexDirection: 'row',
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: C.borderCard,
+    borderColor: colors.borderCard,
     paddingVertical: 16,
     paddingHorizontal: 12,
   },
   statItem: { flex: 1, alignItems: 'center', gap: 4 },
-  statValue: { color: C.textPrimary, fontSize: 22, fontWeight: '800' },
-  statLabel: { color: C.textMuted, fontSize: 9, fontWeight: '700', letterSpacing: 1.5 },
-  statDivider: { width: 1, backgroundColor: C.borderCard, marginVertical: 4 },
+  statValue: { color: colors.textPrimary, fontSize: 25, fontWeight: '800' },
+  statLabel: { color: colors.textMuted, fontSize: 13, fontWeight: '700', letterSpacing: 1.5 },
+  statDivider: { width: 1, backgroundColor: colors.borderCard, marginVertical: 4 },
 
   primaryCta: {
     borderRadius: 16,
@@ -194,32 +305,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  primaryCtaTitle: { color: '#000000', fontSize: 18, fontWeight: '800' },
-  primaryCtaSub: { color: '#00000066', fontSize: 13, marginTop: 3 },
-  primaryCtaArrow: { color: '#000000', fontSize: 22, fontWeight: '300' },
+  primaryCtaTitle: { color: '#000000', fontSize: 21, fontWeight: '800' },
+  primaryCtaSub: { color: '#00000066', fontSize: 16, marginTop: 3 },
+  primaryCtaArrow: { color: '#000000', fontSize: 25, fontWeight: '300' },
 
   secondaryCta: {
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: C.borderCard,
+    borderColor: colors.borderCard,
     padding: 18,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  secondaryCtaTitle: { color: C.textPrimary, fontSize: 16, fontWeight: '700' },
-  secondaryCtaSub: { color: C.textSecondary, fontSize: 13, marginTop: 3 },
-  secondaryCtaArrow: { color: C.textMuted, fontSize: 20 },
+  secondaryCtaTitle: { color: colors.textPrimary, fontSize: 19, fontWeight: '700' },
+  secondaryCtaSub: { color: colors.textSecondary, fontSize: 16, marginTop: 3 },
+  secondaryCtaArrow: { color: colors.textMuted, fontSize: 23 },
 
   reviewNudge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: C.borderActive,
+    borderColor: colors.borderActive,
     paddingVertical: 12,
     paddingHorizontal: 16,
   },
@@ -227,14 +338,14 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: C.green,
+    backgroundColor: colors.green,
   },
-  reviewNudgeText: { flex: 1, color: C.green, fontSize: 13, fontWeight: '600' },
-  reviewNudgeArrow: { color: C.green, fontSize: 16 },
+  reviewNudgeText: { flex: 1, color: colors.green, fontSize: 16, fontWeight: '600' },
+  reviewNudgeArrow: { color: colors.green, fontSize: 19 },
 
   sectionLabel: {
-    color: C.textMuted,
-    fontSize: 10,
+    color: colors.textMuted,
+    fontSize: 14,
     fontWeight: '700',
     letterSpacing: 2.5,
     marginTop: 4,
@@ -245,7 +356,7 @@ const styles = StyleSheet.create({
 
   domainCard: {
     width: '47.5%',
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
@@ -253,10 +364,10 @@ const styles = StyleSheet.create({
   },
   domainCatRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   domainDot: { width: 6, height: 6, borderRadius: 3 },
-  domainCat: { fontSize: 8, fontWeight: '700', letterSpacing: 1.5 },
+  domainCat: { fontSize: 12, fontWeight: '700', letterSpacing: 1.5 },
   domainIcon: { width: 36, height: 36 },
-  domainDesc: { color: C.textSecondary, fontSize: 11, lineHeight: 15 },
-  domainCount: { color: C.textMuted, fontSize: 10 },
+  domainDesc: { color: colors.textSecondary, fontSize: 15, lineHeight: 21 },
+  domainCount: { color: colors.textMuted, fontSize: 14 },
   domainFooter: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -266,9 +377,10 @@ const styles = StyleSheet.create({
   focusButton: {
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: C.borderCard,
+    borderColor: colors.borderCard,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
-  focusButtonText: { color: C.textMuted, fontSize: 10, fontWeight: '700' },
-});
+  focusButtonText: { color: colors.textMuted, fontSize: 14, fontWeight: '700' },
+  });
+}

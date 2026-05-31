@@ -124,7 +124,7 @@ function StatBox({
 }) {
   return (
     <View style={[styles.statBox, { borderColor: color + '33' }]}>
-      <Text style={{ fontSize: 20, marginBottom: 4 }}>{icon}</Text>
+      <Text style={{ fontSize: 22, marginBottom: 4 }}>{icon}</Text>
       <Text style={[styles.statValue, { color }]}>{value}</Text>
       <Text style={styles.statUnit}>{unit}</Text>
       <Text style={styles.statLabel}>{label}</Text>
@@ -157,9 +157,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarText: { color: C.textPrimary, fontSize: 16, fontWeight: '800' },
-  operativeLabel: { color: C.green, fontSize: 10, fontWeight: '700', letterSpacing: 2 },
-  levelText: { color: C.textPrimary, fontSize: 16, fontWeight: '700', marginTop: 2 },
+  avatarText: { color: C.textPrimary, fontSize: 18, fontWeight: '800' },
+  operativeLabel: { color: C.green, fontSize: 12, fontWeight: '700', letterSpacing: 2 },
+  levelText: { color: C.textPrimary, fontSize: 18, fontWeight: '700', marginTop: 2 },
 
   card: {
     backgroundColor: C.bgCard,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     color: C.textMuted,
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: '700',
     letterSpacing: 2.5,
   },
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   xpFill: { height: '100%', borderRadius: 4 },
-  xpSub: { color: C.textMuted, fontSize: 12, textAlign: 'center' },
+  xpSub: { color: C.textMuted, fontSize: 14, textAlign: 'center' },
 
   statsRow: { flexDirection: 'row', gap: 10 },
   statBox: {
@@ -195,16 +195,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 2,
   },
-  statValue: { fontSize: 24, fontWeight: '800' },
-  statUnit: { color: C.textMuted, fontSize: 10 },
-  statLabel: { color: C.textMuted, fontSize: 9, fontWeight: '700', letterSpacing: 1.5 },
+  statValue: { fontSize: 26, fontWeight: '800' },
+  statUnit: { color: C.textMuted, fontSize: 12 },
+  statLabel: { color: C.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 1.5 },
 
   breakdownGrid: { gap: 10 },
   breakdownItem: { gap: 6 },
   breakdownHeader: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   breakdownDot: { width: 8, height: 8, borderRadius: 4 },
-  breakdownLabel: { flex: 1, fontSize: 12, fontWeight: '600' },
-  breakdownCount: { fontSize: 13, fontWeight: '700' },
+  breakdownLabel: { flex: 1, fontSize: 14, fontWeight: '600' },
+  breakdownCount: { fontSize: 15, fontWeight: '700' },
   breakdownTrack: {
     height: 4,
     backgroundColor: C.bgCardAlt,

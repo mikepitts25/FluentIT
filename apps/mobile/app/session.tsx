@@ -262,13 +262,13 @@ const styles = StyleSheet.create({
     padding: 28,
     backgroundColor: C.bgPrimary,
   },
-  loadingText: { color: C.textMuted, fontSize: 14, letterSpacing: 1 },
-  doneIcon: { color: C.green, fontSize: 52, fontWeight: '800' },
-  doneTitle: { color: C.textPrimary, fontSize: 24, fontWeight: '800', textAlign: 'center' },
-  doneSub: { color: C.textSecondary, fontSize: 14, textAlign: 'center', lineHeight: 22 },
+  loadingText: { color: C.textMuted, fontSize: 16, letterSpacing: 1 },
+  doneIcon: { color: C.green, fontSize: 54, fontWeight: '800' },
+  doneTitle: { color: C.textPrimary, fontSize: 26, fontWeight: '800', textAlign: 'center' },
+  doneSub: { color: C.textSecondary, fontSize: 16, textAlign: 'center', lineHeight: 25 },
   doneActions: { gap: 10, alignItems: 'center' },
   gradBtn: { borderRadius: 14, paddingHorizontal: 28, paddingVertical: 14, minWidth: 200, alignItems: 'center' },
-  gradBtnText: { color: '#000000', fontWeight: '800', fontSize: 15 },
+  gradBtnText: { color: '#000000', fontWeight: '800', fontSize: 17 },
   ghostBtn: {
     borderRadius: 14,
     paddingHorizontal: 28,
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     minWidth: 200,
     alignItems: 'center',
   },
-  ghostBtnText: { color: C.textSecondary, fontWeight: '700', fontSize: 15 },
+  ghostBtnText: { color: C.textSecondary, fontWeight: '700', fontSize: 17 },
 
   progressHeader: {
     backgroundColor: C.bgCard,
@@ -289,8 +289,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   progressMeta: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  progressEyebrow: { fontSize: 10, fontWeight: '700', letterSpacing: 2 },
-  progressCount: { color: C.textSecondary, fontSize: 12, fontWeight: '600' },
+  progressEyebrow: { fontSize: 12, fontWeight: '700', letterSpacing: 2 },
+  progressCount: { color: C.textSecondary, fontSize: 14, fontWeight: '600' },
   progressTrack: { flexDirection: 'row', gap: 3, flexWrap: 'wrap' },
   progressPip: { height: 4, flex: 1, borderRadius: 2, minWidth: 8 },
   progressPipDone: { backgroundColor: C.green },
@@ -307,9 +307,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   chipDot: { width: 6, height: 6, borderRadius: 3 },
-  chipLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.5 },
-  cardTitle: { color: C.textPrimary, fontSize: 28, fontWeight: '800' },
-  cardSubtitle: { color: C.textSecondary, fontSize: 14, marginTop: 2 },
+  chipLabel: { fontSize: 12, fontWeight: '700', letterSpacing: 1.5 },
+  cardTitle: { color: C.textPrimary, fontSize: 30, fontWeight: '800' },
+  cardSubtitle: { color: C.textSecondary, fontSize: 16, marginTop: 2 },
 
   section: {
     backgroundColor: C.bgCard,
@@ -318,11 +318,11 @@ const styles = StyleSheet.create({
     gap: 10,
     borderWidth: 1,
   },
-  sectionLabel: { fontSize: 9, fontWeight: '700', letterSpacing: 2.5 },
-  bodyText: { color: C.textSecondary, fontSize: 15, lineHeight: 23 },
+  sectionLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 2.5 },
+  bodyText: { color: C.textSecondary, fontSize: 17, lineHeight: 26 },
 
   revealBtn: { borderRadius: 14, padding: 16, alignItems: 'center' },
-  revealBtnText: { color: '#000000', fontSize: 16, fontWeight: '800' },
+  revealBtnText: { color: '#000000', fontSize: 18, fontWeight: '800' },
 
   quoteBox: {
     backgroundColor: C.bgPrimary,
@@ -331,10 +331,10 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: C.cyan,
   },
-  quoteText: { color: C.textSecondary, fontSize: 14, fontStyle: 'italic', lineHeight: 21 },
+  quoteText: { color: C.textSecondary, fontSize: 16, fontStyle: 'italic', lineHeight: 24 },
   bulletRow: { flexDirection: 'row', gap: 8, marginBottom: 6 },
-  bullet: { fontSize: 15, lineHeight: 23 },
-  bulletText: { color: C.textSecondary, fontSize: 14, lineHeight: 21, flex: 1 },
+  bullet: { fontSize: 17, lineHeight: 26 },
+  bulletText: { color: C.textSecondary, fontSize: 16, lineHeight: 24, flex: 1 },
 
   ratingBox: {
     backgroundColor: C.bgCard,
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: C.borderCard,
   },
-  ratingTitle: { color: C.textMuted, fontSize: 9, fontWeight: '700', letterSpacing: 2.5, textAlign: 'center' },
+  ratingTitle: { color: C.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 2.5, textAlign: 'center' },
   ratingRow: { flexDirection: 'row', gap: 8 },
   ratingBtn: {
     flex: 1,
@@ -356,5 +356,5 @@ const styles = StyleSheet.create({
     backgroundColor: C.bgPrimary,
   },
   ratingDot: { width: 20, height: 20, borderRadius: 10 },
-  ratingLabel: { fontSize: 11, fontWeight: '700' },
+  ratingLabel: { fontSize: 13, fontWeight: '700' },
 });
