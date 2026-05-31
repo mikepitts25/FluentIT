@@ -105,7 +105,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
             <TabIcon name="learn" color={color} focused={focused} />
           ),
-          headerTitle: '// FluentIT',
+          headerTitle: '// FluentOps',
           headerTitleAlign: 'left',
           headerTitleStyle: { fontWeight: '800', color: C.green, letterSpacing: 1 },
         }}

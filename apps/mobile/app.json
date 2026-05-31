@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "FluentIT",
+    "name": "FluentOps",
     "slug": "fluentit",
     "scheme": "fluentit",
     "version": "1.0.0",
@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0A0A0F"
     },
     "ios": {
       "bundleIdentifier": "com.mikepitts25.fluentit",
@@ -23,7 +23,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0A0A0F"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
