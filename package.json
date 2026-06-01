@@ -2,7 +2,7 @@
   "name": "fluentit",
   "private": true,
   "engines": {
-    "node": ">=24.16.0 <25"
+    "node": ">=20.19.0 <25"
   },
   "scripts": {
     "dev": "npm run start -w mobile",
@@ -19,7 +19,5 @@
     "typescript": "~5.9.2",
     "vitest": "^4.0.0"
   },
-  "dependencies": {
-    "expo-linear-gradient": "^56.0.4"
-  }
+  "dependencies": {}
 }
