@@ -20,7 +20,8 @@ export function SessionCompleteNativeAd() {
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
   const [loadState, setLoadState] = useState<'loading' | 'hidden' | 'failed'>('loading');
   const adWidth = Math.max(280, Math.min(360, Math.floor(windowWidth - 56)));
-  const mediaHeight = Math.max(158, Math.floor((adWidth - 24) * 9 / 16));
+  const contentWidth = adWidth - 24;
+  const mediaHeight = Math.max(158, Math.floor(contentWidth * 9 / 16));
 
   useEffect(() => {
     let isMounted = true;
@@ -87,37 +88,42 @@ export function SessionCompleteNativeAd() {
 
   return (
     <NativeAdView nativeAd={nativeAd} style={[styles.card, { width: adWidth }]}>
-      <View style={styles.header}>
-        {nativeAd.icon && (
-          <NativeAsset assetType={NativeAssetType.ICON}>
-            <Image source={{ uri: nativeAd.icon.url }} style={styles.icon} />
+      <View style={styles.inner}>
+        <View style={styles.header}>
+          {nativeAd.icon && (
+            <NativeAsset assetType={NativeAssetType.ICON}>
+              <Image source={{ uri: nativeAd.icon.url }} style={styles.icon} />
+            </NativeAsset>
+          )}
+          <View style={styles.titleBlock}>
+            <View style={styles.labelRow}>
+              <Text style={styles.adBadge}>Ad</Text>
+            </View>
+            <NativeAsset assetType={NativeAssetType.HEADLINE}>
+              <Text style={styles.headline} numberOfLines={2}>
+                {nativeAd.headline}
+              </Text>
+            </NativeAsset>
+          </View>
+        </View>
+
+        <NativeMediaView
+          style={[styles.media, { width: contentWidth, height: mediaHeight }]}
+          resizeMode="contain"
+        />
+
+        <NativeAsset assetType={NativeAssetType.BODY}>
+          <Text style={styles.body} numberOfLines={3}>
+            {nativeAd.body}
+          </Text>
+        </NativeAsset>
+
+        {nativeAd.callToAction && (
+          <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
+            <Text style={styles.cta}>{nativeAd.callToAction}</Text>
           </NativeAsset>
         )}
-        <View style={styles.titleBlock}>
-          <View style={styles.labelRow}>
-            <Text style={styles.adBadge}>Ad</Text>
-          </View>
-          <NativeAsset assetType={NativeAssetType.HEADLINE}>
-            <Text style={styles.headline} numberOfLines={2}>
-              {nativeAd.headline}
-            </Text>
-          </NativeAsset>
-        </View>
       </View>
-
-      <NativeMediaView style={[styles.media, { height: mediaHeight }]} resizeMode="contain" />
-
-      <NativeAsset assetType={NativeAssetType.BODY}>
-        <Text style={styles.body} numberOfLines={3}>
-          {nativeAd.body}
-        </Text>
-      </NativeAsset>
-
-      {nativeAd.callToAction && (
-        <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
-          <Text style={styles.cta}>{nativeAd.callToAction}</Text>
-        </NativeAsset>
-      )}
     </NativeAdView>
   );
 }
@@ -151,6 +157,10 @@ const styles = StyleSheet.create({
     borderColor: C.borderCard,
     backgroundColor: C.bgCard,
     padding: 12,
+    overflow: 'hidden',
+  },
+  inner: {
+    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
@@ -191,7 +201,6 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   media: {
-    width: '100%',
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: C.bgPrimary,
