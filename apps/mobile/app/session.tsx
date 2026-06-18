@@ -13,6 +13,7 @@ import { Rating, type Grade } from '@fluentit/srs';
 import { ALL_CARDS, DOMAINS, type Card, type Domain } from '../src/content';
 import { useSRSStore } from '../src/hooks/useSRSStore';
 import { usePreferencesStore } from '../src/hooks/usePreferencesStore';
+import { SessionCompleteNativeAd } from '../src/ads/session-complete-native-ad';
 import { buildSessionQueue, type SessionItem } from '../src/session/session-queue';
 import { C, GRAD_GREEN_CYAN } from '../src/theme';
 
@@ -91,6 +92,7 @@ export default function SessionScreen() {
         <Text style={styles.doneSub}>
           {reviewedCount} reviewed · {learnedCount} new · {streak.currentStreak} day streak
         </Text>
+        <SessionCompleteNativeAd />
         <View style={styles.doneActions}>
           <TouchableOpacity activeOpacity={0.85} onPress={() => router.replace('/(tabs)')}>
             <LinearGradient colors={GRAD_GREEN_CYAN} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.gradBtn}>

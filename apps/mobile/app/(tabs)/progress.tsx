@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ALL_CARDS } from '../../src/content';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { getStabilityLabel } from '../../src/store/srs-store';
@@ -16,7 +15,6 @@ const STATUS: Record<string, { color: string; label: string }> = {
 
 export default function ProgressScreen() {
   const { states, streak } = useSRSStore();
-  const insets = useSafeAreaInsets();
 
   const totalStudied = Object.keys(states).length;
   const totalCards = ALL_CARDS.length;
@@ -33,28 +31,21 @@ export default function ProgressScreen() {
   }, [states]);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingTop: insets.top + 12 }]}>
-      {/* Avatar / identity row */}
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      contentInsetAdjustmentBehavior="automatic"
+    >
+      {/* Identity row */}
       <View style={styles.profileRow}>
-        <View style={styles.avatarRing}>
-          <View style={styles.avatarInner}>
-            <Text style={styles.avatarText}>ME</Text>
-          </View>
-        </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.operativeLabel}>// OPERATIVE FILE</Text>
           <Text style={styles.levelText}>Level {Math.floor(totalStudied / 10) + 1} · IT Learner</Text>
         </View>
       </View>
 
-      {/* XP bar */}
+      {/* Library progress */}
       <View style={styles.card}>
-        <View style={styles.xpLabelRow}>
-          <Text style={styles.cardLabel}>XP PROGRESS</Text>
-          <Text style={[styles.cardLabel, { color: C.green }]}>
-            {totalStudied * 40} XP
-          </Text>
-        </View>
+        <Text style={styles.cardLabel}>LIBRARY EXPLORED</Text>
         <View style={styles.xpTrack}>
           <LinearGradient
             colors={GRAD_GREEN_CYAN}
@@ -142,23 +133,6 @@ const styles = StyleSheet.create({
     gap: 14,
     paddingVertical: 8,
   },
-  avatarRing: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    borderWidth: 2,
-    borderColor: C.green + '88',
-    padding: 3,
-  },
-  avatarInner: {
-    flex: 1,
-    borderRadius: 28,
-    backgroundColor: C.bgCard,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: { color: C.textPrimary, fontSize: 18, fontWeight: '800' },
-  operativeLabel: { color: C.green, fontSize: 12, fontWeight: '700', letterSpacing: 2 },
   levelText: { color: C.textPrimary, fontSize: 18, fontWeight: '700', marginTop: 2 },
 
   card: {
@@ -175,7 +149,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 2.5,
   },
-  xpLabelRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   xpTrack: {
     height: 8,
     backgroundColor: C.bgCardAlt,

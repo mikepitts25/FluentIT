@@ -15,9 +15,9 @@
     "packages/srs"
   ],
   "devDependencies": {
+    "@expo/config-plugins": "^54.0.4",
     "@types/node": "^24.0.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.0"
-  },
-  "dependencies": {}
+  }
 }

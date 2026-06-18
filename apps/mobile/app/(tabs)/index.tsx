@@ -1,16 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Image,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { DOMAINS, getCardsByDomain } from '../../src/content';
+import { DOMAINS } from '../../src/content';
 import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { usePreferencesStore } from '../../src/hooks/usePreferencesStore';
@@ -21,14 +20,12 @@ type HomeStyles = ReturnType<typeof createStyles>;
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const { streak, dueCardIds } = useSRSStore();
+  const { dueCardIds } = useSRSStore();
   const { preferences, toggleDomain, setColorMode } = usePreferencesStore();
   const colors = getThemeColors(preferences.colorMode);
   const styles = useMemo(() => createStyles(colors), [colors]);
   const isLightMode = preferences.colorMode === 'light';
   const selectedCount = preferences.selectedDomains.length;
-  const xpEarned = Object.keys(useSRSStore().states).length * 40;
 
   return (
     <ScrollView
@@ -38,57 +35,23 @@ export default function HomeScreen() {
     >
       <View style={styles.homeHeader}>
         <TouchableOpacity
-          accessibilityLabel="Open settings menu"
+          accessibilityLabel={isLightMode ? 'Switch to dark mode' : 'Switch to light mode'}
           accessibilityRole="button"
           activeOpacity={0.8}
-          style={styles.settingsButton}
-          onPress={() => setSettingsOpen((open) => !open)}
+          style={styles.themeToggleButton}
+          onPress={() => {
+            void setColorMode(isLightMode ? 'dark' : 'light');
+          }}
         >
-          <View style={styles.hamburgerLine} />
-          <View style={styles.hamburgerLine} />
-          <View style={styles.hamburgerLine} />
+          <Text
+            style={[
+              styles.themeToggleIcon,
+              { color: isLightMode ? colors.amber : colors.cyan },
+            ]}
+          >
+            {isLightMode ? '☀' : '☾'}
+          </Text>
         </TouchableOpacity>
-
-        {settingsOpen && (
-          <View style={styles.settingsMenu}>
-            <Text style={styles.settingsMenuTitle}>Settings</Text>
-            <View style={styles.settingsOptionRow}>
-              <View style={styles.settingsOptionTextBlock}>
-                <Text style={styles.settingsOptionLabel}>Light mode</Text>
-                <Text style={styles.settingsOptionSub}>
-                  {isLightMode ? 'Light theme active' : 'Dark theme active'}
-                </Text>
-              </View>
-              <Switch
-                value={isLightMode}
-                onValueChange={(enabled) => {
-                  void setColorMode(enabled ? 'light' : 'dark');
-                }}
-                trackColor={{ false: colors.bgCardAlt, true: colors.borderActive }}
-                thumbColor={isLightMode ? colors.green : colors.textMuted}
-                ios_backgroundColor={colors.bgCardAlt}
-              />
-            </View>
-          </View>
-        )}
-      </View>
-
-      {/* XP / Streak Banner */}
-      <View style={styles.statsBanner}>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{streak.currentStreak}</Text>
-          <Text style={styles.statLabel}>DAY STREAK</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{dueCardIds.length}</Text>
-          <Text style={styles.statLabel}>DUE TODAY</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text style={[styles.statValue, { color: colors.green }]}>{xpEarned}</Text>
-          <Text style={styles.statLabel}>TOTAL XP</Text>
-        </View>
       </View>
 
       {/* Primary CTA */}
@@ -179,8 +142,6 @@ function DomainCard({
   colors: ThemeColors;
   styles: HomeStyles;
 }) {
-  const cardCount = getCardsByDomain(domain.id).length;
-
   return (
     <TouchableOpacity
       style={[
@@ -206,7 +167,6 @@ function DomainCard({
       <Text style={styles.domainDesc} numberOfLines={2}>{domain.description}</Text>
 
       <View style={styles.domainFooter}>
-        <Text style={styles.domainCount}>{cardCount} concepts</Text>
         <TouchableOpacity
           style={[
             styles.focusButton,
@@ -235,7 +195,7 @@ function createStyles(colors: ThemeColors) {
     position: 'relative',
     zIndex: 5,
   },
-  settingsButton: {
+  themeToggleButton: {
     width: 42,
     height: 42,
     borderRadius: 10,
@@ -244,59 +204,8 @@ function createStyles(colors: ThemeColors) {
     backgroundColor: colors.bgCard,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 4,
   },
-  hamburgerLine: {
-    width: 18,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: colors.textPrimary,
-  },
-  settingsMenu: {
-    position: 'absolute',
-    top: 48,
-    right: 0,
-    width: 250,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.borderCard,
-    backgroundColor: colors.bgPrimary,
-    padding: 14,
-    gap: 12,
-    boxShadow: '0 12px 28px rgba(0, 0, 0, 0.22)',
-  },
-  settingsMenuTitle: {
-    color: colors.textPrimary,
-    fontSize: 18,
-    fontWeight: '800',
-  },
-  settingsOptionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 12,
-  },
-  settingsOptionTextBlock: { flex: 1, gap: 2 },
-  settingsOptionLabel: {
-    color: colors.textPrimary,
-    fontSize: 17,
-    fontWeight: '700',
-  },
-  settingsOptionSub: { color: colors.textSecondary, fontSize: 15 },
-
-  statsBanner: {
-    flexDirection: 'row',
-    backgroundColor: colors.bgCard,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.borderCard,
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-  },
-  statItem: { flex: 1, alignItems: 'center', gap: 4 },
-  statValue: { color: colors.textPrimary, fontSize: 25, fontWeight: '800' },
-  statLabel: { color: colors.textMuted, fontSize: 13, fontWeight: '700', letterSpacing: 1.5 },
-  statDivider: { width: 1, backgroundColor: colors.borderCard, marginVertical: 4 },
+  themeToggleIcon: { fontSize: 23, fontWeight: '800', lineHeight: 25 },
 
   primaryCta: {
     borderRadius: 16,
@@ -361,17 +270,29 @@ function createStyles(colors: ThemeColors) {
     padding: 14,
     borderWidth: 1,
     gap: 8,
+    alignItems: 'center',
   },
-  domainCatRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  domainDot: { width: 6, height: 6, borderRadius: 3 },
-  domainCat: { fontSize: 12, fontWeight: '700', letterSpacing: 1.5 },
-  domainIcon: { width: 36, height: 36 },
-  domainDesc: { color: colors.textSecondary, fontSize: 15, lineHeight: 21 },
-  domainCount: { color: colors.textMuted, fontSize: 14 },
-  domainFooter: {
+  domainCatRow: {
+    alignSelf: 'stretch',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  domainDot: { width: 6, height: 6, borderRadius: 3 },
+  domainCat: { fontSize: 12, fontWeight: '700', letterSpacing: 1.5, textAlign: 'center' },
+  domainIcon: { width: 48, height: 48 },
+  domainDesc: {
+    alignSelf: 'stretch',
+    color: colors.textSecondary,
+    fontSize: 15,
+    lineHeight: 21,
+    textAlign: 'center',
+  },
+  domainFooter: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    gap: 6,
     marginTop: 2,
   },
   focusButton: {

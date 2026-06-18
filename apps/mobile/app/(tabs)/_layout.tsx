@@ -4,6 +4,13 @@ import { C } from '../../src/theme';
 
 type TabIconName = 'learn' | 'review' | 'stats';
 
+const SCREEN_HEADER_TITLE_STYLE = {
+  fontSize: 22,
+  fontWeight: '800' as const,
+  color: C.green,
+  letterSpacing: 1,
+};
+
 function TabIcon({
   name,
   focused,
@@ -107,7 +114,7 @@ export default function TabsLayout() {
           ),
           headerTitle: '// FluentOps',
           headerTitleAlign: 'left',
-          headerTitleStyle: { fontWeight: '800', color: C.green, letterSpacing: 1 },
+          headerTitleStyle: SCREEN_HEADER_TITLE_STYLE,
         }}
       />
       <Tabs.Screen
@@ -119,7 +126,7 @@ export default function TabsLayout() {
           ),
           headerTitle: '// Daily Review',
           headerTitleAlign: 'left',
-          headerTitleStyle: { fontWeight: '800', color: C.green, letterSpacing: 1 },
+          headerTitleStyle: SCREEN_HEADER_TITLE_STYLE,
         }}
       />
       <Tabs.Screen
@@ -129,7 +136,9 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
             <TabIcon name="stats" color={color} focused={focused} />
           ),
-          headerShown: false,
+          headerTitle: '// Operative File',
+          headerTitleAlign: 'left',
+          headerTitleStyle: SCREEN_HEADER_TITLE_STYLE,
         }}
       />
     </Tabs>

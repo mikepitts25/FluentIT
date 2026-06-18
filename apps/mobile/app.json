@@ -9,7 +9,7 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "backgroundColor": "#0A0A0F"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "bundleIdentifier": "com.mikepitts25.fluentit",
@@ -29,6 +29,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
+          "iosAppId": "ca-app-pub-5950430918685177~4708228312"
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "47b6908b-723d-4814-b9f4-9e4dcc785359"

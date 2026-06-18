@@ -3,14 +3,13 @@ import { useMemo } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   FlatList,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { ALL_CARDS, DOMAINS, type Card } from '../../src/content';
-import { getDomainIconImage } from '../../src/domain-icons';
+import { DomainIconBadge } from '../../src/domain-icon-badge';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { C, GRAD_GREEN_CYAN } from '../../src/theme';
 
@@ -79,13 +78,7 @@ export default function ReviewScreen() {
               onPress={() => router.push(`/card/${item.id}`)}
               activeOpacity={0.8}
             >
-              <View style={[styles.domainIconWrap, { backgroundColor: domain.color + '18' }]}>
-                <Image
-                  source={getDomainIconImage(domain.id)}
-                  style={styles.domainIcon}
-                  resizeMode="contain"
-                />
-              </View>
+              <DomainIconBadge domain={domain} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{item.title}</Text>
                 <Text style={[styles.cardDomain, { color: domain.color + 'AA' }]}>
@@ -159,14 +152,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: C.borderCard,
   },
-  domainIconWrap: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  domainIcon: { width: 28, height: 28 },
   cardTitle: { color: C.textPrimary, fontSize: 17, fontWeight: '600', marginBottom: 3 },
   cardDomain: { fontSize: 11, fontWeight: '700', letterSpacing: 1.5 },
   arrow: { color: C.textMuted, fontSize: 24, fontWeight: '300' },

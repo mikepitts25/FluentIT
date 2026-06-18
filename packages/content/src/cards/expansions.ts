@@ -142,7 +142,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'devops-progressive-delivery-expansion',
     domain: 'devops',
-    title: 'Progressive Delivery',
+    title: 'Progressive Delivery Automation',
     subtitle: 'Releasing changes gradually with automated safety checks',
     difficulty: 'intermediate',
     tags: ['release', 'automation', 'deployment'],
@@ -172,7 +172,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'devops-feature-flags-expansion',
     domain: 'devops',
-    title: 'Feature Flags',
+    title: 'Feature Flag Operations',
     subtitle: 'Separating deployment from release',
     difficulty: 'beginner',
     tags: ['release', 'experimentation', 'configuration'],
@@ -277,7 +277,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'devops-policy-as-code-expansion',
     domain: 'devops',
-    title: 'Policy as Code',
+    title: 'Policy Enforcement as Code',
     subtitle: 'Enforcing operational rules through versioned code',
     difficulty: 'intermediate',
     tags: ['governance', 'automation', 'security'],
@@ -292,7 +292,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'devops-platform-engineering-expansion',
     domain: 'devops',
-    title: 'Platform Engineering',
+    title: 'Internal Platform Engineering',
     subtitle: 'Building internal platforms that make delivery easier',
     difficulty: 'intermediate',
     tags: ['platform', 'developer experience', 'operations'],
@@ -352,7 +352,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'devops-immutable-infrastructure-expansion',
     domain: 'devops',
-    title: 'Immutable Infrastructure',
+    title: 'Immutable Deployment Images',
     subtitle: 'Replacing servers instead of changing them in place',
     difficulty: 'intermediate',
     tags: ['infrastructure', 'deployment', 'reliability'],
@@ -667,7 +667,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'cloud-spot-instances-expansion',
     domain: 'cloud',
-    title: 'Spot Instances',
+    title: 'Spot Market Compute',
     subtitle: 'Discounted compute that can be interrupted',
     difficulty: 'intermediate',
     tags: ['compute', 'cost', 'batch'],
@@ -832,7 +832,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'networking-bgp',
     domain: 'networking',
-    title: 'BGP',
+    title: 'External BGP',
     subtitle: 'The routing protocol that connects networks on the internet',
     difficulty: 'advanced',
     tags: ['routing', 'internet', 'protocol'],
@@ -862,7 +862,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'networking-dhcp',
     domain: 'networking',
-    title: 'DHCP',
+    title: 'Dynamic Host Configuration Protocol',
     subtitle: 'Automatically assigning network configuration to devices',
     difficulty: 'beginner',
     tags: ['IP', 'LAN', 'configuration'],
@@ -877,7 +877,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'networking-nat',
     domain: 'networking',
-    title: 'NAT',
+    title: 'Network Address Translation',
     subtitle: 'Translating private addresses to reachable addresses',
     difficulty: 'beginner',
     tags: ['IP', 'routing', 'firewall'],
@@ -937,7 +937,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'networking-vpn',
     domain: 'networking',
-    title: 'VPN',
+    title: 'Site-to-Site VPN',
     subtitle: 'Encrypted tunnels between users, sites, or networks',
     difficulty: 'beginner',
     tags: ['remote access', 'encryption', 'connectivity'],
@@ -952,7 +952,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'networking-sd-wan',
     domain: 'networking',
-    title: 'SD-WAN',
+    title: 'SD-WAN Overlay',
     subtitle: 'Software-defined control over wide area networks',
     difficulty: 'intermediate',
     tags: ['WAN', 'routing', 'branch'],
@@ -967,7 +967,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'networking-packet-capture',
     domain: 'networking',
-    title: 'Packet Capture',
+    title: 'Packet Capture Workflow',
     subtitle: 'Recording network packets for troubleshooting',
     difficulty: 'intermediate',
     tags: ['troubleshooting', 'packets', 'analysis'],
@@ -1117,7 +1117,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'data-catalog-expansion',
     domain: 'data',
-    title: 'Data Catalog',
+    title: 'Dataset Cataloging',
     subtitle: 'Searchable inventory of datasets and data knowledge',
     difficulty: 'beginner',
     tags: ['metadata', 'discovery', 'governance'],
@@ -1492,7 +1492,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'coding-dependency-injection-expansion',
     domain: 'coding',
-    title: 'Dependency Injection',
+    title: 'Constructor Dependency Injection',
     subtitle: 'Providing collaborators from the outside instead of constructing them internally',
     difficulty: 'beginner',
     tags: ['architecture', 'testing', 'design'],
@@ -1507,7 +1507,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'coding-idempotency-expansion',
     domain: 'coding',
-    title: 'Idempotency',
+    title: 'Idempotent API Design',
     subtitle: 'Making repeated operations have the same effect as one operation',
     difficulty: 'intermediate',
     tags: ['reliability', 'API', 'distributed systems'],
@@ -1762,7 +1762,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'agile-backlog-refinement-expansion',
     domain: 'agile',
-    title: 'Backlog Refinement',
+    title: 'Refinement Session',
     subtitle: 'Preparing future work before sprint planning',
     difficulty: 'beginner',
     tags: ['planning', 'backlog', 'scrum'],
@@ -1822,7 +1822,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'agile-velocity-expansion',
     domain: 'agile',
-    title: 'Velocity',
+    title: 'Throughput Velocity',
     subtitle: 'A team-local measure of completed work per iteration',
     difficulty: 'beginner',
     tags: ['metrics', 'planning', 'scrum'],
@@ -2017,7 +2017,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'governance-segregation-of-duties',
     domain: 'governance',
-    title: 'Segregation of Duties',
+    title: 'Separation of Duties Control',
     subtitle: 'Splitting sensitive responsibilities across people or roles',
     difficulty: 'intermediate',
     tags: ['controls', 'fraud', 'access'],

@@ -13,6 +13,7 @@ export { integrationCards } from './cards/integration';
 export { agileCards } from './cards/agile';
 export { governanceCards } from './cards/governance';
 export { expansionCards } from './cards/expansions';
+export { deepExpansionCards } from './cards/deep-expansions';
 export {
   observabilityCards,
   identityCards,
@@ -32,6 +33,7 @@ import { integrationCards } from './cards/integration';
 import { agileCards } from './cards/agile';
 import { governanceCards } from './cards/governance';
 import { expansionCards } from './cards/expansions';
+import { deepExpansionCards } from './cards/deep-expansions';
 import {
   observabilityCards,
   identityCards,
@@ -53,6 +55,7 @@ export const ALL_CARDS: Card[] = [
   ...agileCards,
   ...governanceCards,
   ...expansionCards,
+  ...deepExpansionCards,
   ...observabilityCards,
   ...identityCards,
   ...architectureCards,

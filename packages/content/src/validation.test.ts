@@ -16,6 +16,27 @@ describe('content validation', () => {
     }
   });
 
+  it('includes at least 1,200 total cards', () => {
+    expect(ALL_CARDS.length).toBeGreaterThanOrEqual(1200);
+  });
+
+  it('does not repeat term titles within a domain', () => {
+    const seenTitlesByDomain = new Map<string, Set<string>>();
+
+    for (const card of ALL_CARDS) {
+      const normalizedTitle = card.title.toLowerCase().replace(/\s+/g, ' ').trim();
+      const seenTitles = seenTitlesByDomain.get(card.domain) ?? new Set<string>();
+
+      expect(
+        seenTitles.has(normalizedTitle),
+        `${card.domain} repeats title "${card.title}"`,
+      ).toBe(false);
+
+      seenTitles.add(normalizedTitle);
+      seenTitlesByDomain.set(card.domain, seenTitles);
+    }
+  });
+
   it('includes the first meeting-prep focus domains', () => {
     expect(DOMAINS.map((domain) => domain.id)).toEqual(
       expect.arrayContaining(['observability', 'identity', 'architecture', 'appsec']),
