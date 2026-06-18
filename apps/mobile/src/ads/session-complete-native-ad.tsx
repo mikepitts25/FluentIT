@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Image, Platform, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import type { NativeAd } from 'react-native-google-mobile-ads';
 import { C } from '../theme';
 import {
@@ -13,6 +20,8 @@ const IOS_SESSION_COMPLETE_NATIVE_AD_UNIT_ID = 'ca-app-pub-5950430918685177/7938
 const ADS_DISABLED = process.env.EXPO_PUBLIC_ADMOB_DISABLED === 'true';
 const FORCE_TEST_ADS = process.env.EXPO_PUBLIC_ADMOB_FORCE_TEST_ADS === 'true';
 const SHOW_AD_PLACEHOLDER = process.env.EXPO_PUBLIC_ADMOB_SHOW_AD_PLACEHOLDER === 'true';
+const CARD_SIDE_INSET = 28;
+const CARD_VERTICAL_EXTRA_SPACE = 260;
 
 export function SessionCompleteNativeAd() {
   const { width: windowWidth } = useWindowDimensions();
@@ -20,8 +29,9 @@ export function SessionCompleteNativeAd() {
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
   const [loadState, setLoadState] = useState<'loading' | 'hidden' | 'failed'>('loading');
   const adWidth = Math.max(280, Math.min(360, Math.floor(windowWidth - 56)));
-  const contentWidth = adWidth - 24;
+  const contentWidth = adWidth - CARD_SIDE_INSET * 2;
   const mediaHeight = Math.max(158, Math.floor(contentWidth * 9 / 16));
+  const minAdHeight = mediaHeight + CARD_VERTICAL_EXTRA_SPACE;
 
   useEffect(() => {
     let isMounted = true;
@@ -87,9 +97,12 @@ export function SessionCompleteNativeAd() {
   const { NativeAdView, NativeAsset, NativeAssetType, NativeMediaView } = adsModule;
 
   return (
-    <NativeAdView nativeAd={nativeAd} style={[styles.card, { width: adWidth }]}>
+    <NativeAdView
+      nativeAd={nativeAd}
+      style={[styles.card, { width: adWidth, minHeight: minAdHeight }]}
+    >
       <View style={styles.inner}>
-        <View style={styles.header}>
+        <View style={[styles.header, { width: contentWidth }]}>
           {nativeAd.icon && (
             <NativeAsset assetType={NativeAssetType.ICON}>
               <Image source={{ uri: nativeAd.icon.url }} style={styles.icon} />
@@ -113,14 +126,14 @@ export function SessionCompleteNativeAd() {
         />
 
         <NativeAsset assetType={NativeAssetType.BODY}>
-          <Text style={styles.body} numberOfLines={3}>
+          <Text style={[styles.body, { width: contentWidth }]} numberOfLines={3}>
             {nativeAd.body}
           </Text>
         </NativeAsset>
 
         {nativeAd.callToAction && (
           <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
-            <Text style={styles.cta}>{nativeAd.callToAction}</Text>
+            <Text style={[styles.cta, { width: contentWidth }]}>{nativeAd.callToAction}</Text>
           </NativeAsset>
         )}
       </View>
@@ -156,11 +169,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: C.borderCard,
     backgroundColor: C.bgCard,
-    padding: 12,
-    overflow: 'hidden',
+    paddingTop: 14,
+    paddingBottom: 24,
   },
   inner: {
-    overflow: 'hidden',
+    alignSelf: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -226,6 +239,7 @@ const styles = StyleSheet.create({
   placeholderCard: {
     borderStyle: 'dashed',
     alignItems: 'flex-start',
+    paddingHorizontal: CARD_SIDE_INSET,
   },
   placeholderBadge: {
     overflow: 'hidden',
