@@ -3,6 +3,7 @@ export {
   DOMAINS,
   getCardsByDomain,
   getCardById,
+  getCardByTitle,
   cyberCards,
   devopsCards,
   cloudCards,

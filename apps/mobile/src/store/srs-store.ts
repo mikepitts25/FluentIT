@@ -20,6 +20,25 @@ export interface StreakData {
   longestStreak: number;
 }
 
+export interface SRSCache {
+  states: SRSStateMap;
+  streak: StreakData;
+}
+
+export const DEFAULT_STREAK: StreakData = {
+  lastStudyDate: '',
+  currentStreak: 0,
+  longestStreak: 0,
+};
+
+type SRSListener = (cache: SRSCache) => void;
+
+const srsListeners = new Set<SRSListener>();
+let cachedSRS: SRSCache = { states: {}, streak: DEFAULT_STREAK };
+let hasLoadedCachedSRS = false;
+let loadCachedSRSPromise: Promise<SRSCache> | null = null;
+let srsRevision = 0;
+
 // ---------- Persistence ----------
 
 export async function loadSRSStates(): Promise<SRSStateMap> {
@@ -53,15 +72,81 @@ export async function saveSRSStates(states: SRSStateMap): Promise<void> {
 export async function loadStreak(): Promise<StreakData> {
   try {
     const raw = await AsyncStorage.getItem('@fluentit:streak');
-    if (!raw) return { lastStudyDate: '', currentStreak: 0, longestStreak: 0 };
-    return JSON.parse(raw) as StreakData;
+    if (!raw) return { ...DEFAULT_STREAK };
+    return { ...DEFAULT_STREAK, ...(JSON.parse(raw) as Partial<StreakData>) };
   } catch {
-    return { lastStudyDate: '', currentStreak: 0, longestStreak: 0 };
+    return { ...DEFAULT_STREAK };
   }
 }
 
 export async function saveStreak(data: StreakData): Promise<void> {
   await AsyncStorage.setItem('@fluentit:streak', JSON.stringify(data));
+}
+
+export function getCachedSRS(): SRSCache {
+  return cachedSRS;
+}
+
+export function isSRSCacheLoaded(): boolean {
+  return hasLoadedCachedSRS;
+}
+
+export function subscribeSRS(listener: SRSListener): () => void {
+  srsListeners.add(listener);
+  return () => {
+    srsListeners.delete(listener);
+  };
+}
+
+export function cacheSRS(cache: SRSCache): SRSCache {
+  srsRevision += 1;
+  cachedSRS = cache;
+  hasLoadedCachedSRS = true;
+  srsListeners.forEach((listener) => listener(cache));
+  return cache;
+}
+
+export async function loadCachedSRS(): Promise<SRSCache> {
+  if (hasLoadedCachedSRS) return cachedSRS;
+  if (loadCachedSRSPromise) return loadCachedSRSPromise;
+
+  const loadRevision = srsRevision;
+  loadCachedSRSPromise = Promise.all([loadSRSStates(), loadStreak()])
+    .then(([states, streak]) => {
+      if (hasLoadedCachedSRS && srsRevision !== loadRevision) {
+        return cachedSRS;
+      }
+
+      return cacheSRS({ states, streak });
+    })
+    .finally(() => {
+      loadCachedSRSPromise = null;
+    });
+
+  return loadCachedSRSPromise;
+}
+
+export async function updateCachedSRS(
+  updater: (cache: SRSCache) => SRSCache,
+  persistence: { states?: boolean; streak?: boolean } = { states: true, streak: true },
+): Promise<SRSCache> {
+  const previous = cachedSRS;
+  const next = updater(cachedSRS);
+
+  if (next !== previous) {
+    cacheSRS(next);
+  }
+
+  const writes: Promise<void>[] = [];
+  if (persistence.states && next.states !== previous.states) {
+    writes.push(saveSRSStates(next.states));
+  }
+  if (persistence.streak && next.streak !== previous.streak) {
+    writes.push(saveStreak(next.streak));
+  }
+
+  await Promise.all(writes);
+  return next;
 }
 
 // ---------- Operations ----------
@@ -87,11 +172,28 @@ export function getDueCardIds(states: SRSStateMap, now = new Date()): string[] {
   return getSharedDueCardIds(states, now);
 }
 
-export function updateStreak(streak: StreakData): StreakData {
-  const today = new Date().toISOString().split('T')[0];
+export function getLocalDateKey(date = new Date()): string {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getPreviousLocalDateKey(date: Date): string {
+  const previous = new Date(date);
+  previous.setDate(previous.getDate() - 1);
+  return getLocalDateKey(previous);
+}
+
+export function updateStreak(streak: StreakData, now = new Date()): StreakData {
+  const today = getLocalDateKey(now);
   if (streak.lastStudyDate === today) return streak;
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-  const newStreak = streak.lastStudyDate === yesterday ? streak.currentStreak + 1 : 1;
+
+  const yesterday = getPreviousLocalDateKey(now);
+  const newStreak = streak.lastStudyDate === yesterday
+    ? Math.max(streak.currentStreak + 1, 1)
+    : 1;
+
   return {
     lastStudyDate: today,
     currentStreak: newStreak,

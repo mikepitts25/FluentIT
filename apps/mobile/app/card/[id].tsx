@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,23 +10,33 @@ import {
   View,
 } from 'react-native';
 import { Rating, type Grade } from '@fluentit/srs';
-import { getCardById, DOMAINS } from '../../src/content';
+import { ALL_CARDS, getCardById, getCardByTitle, DOMAINS } from '../../src/content';
+import { useProStore } from '../../src/hooks/useProStore';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
+import { useThemeColors } from '../../src/hooks/useThemeColors';
+import { FREE_TERMS_PER_CATEGORY, isCardAccessible } from '../../src/pro/pro-access';
 import { getStabilityLabel } from '../../src/store/srs-store';
-import { C, GRAD_GREEN_CYAN } from '../../src/theme';
+import { GRAD_GREEN_CYAN, type ThemeColors } from '../../src/theme';
 
-const RATING_CONFIG: { rating: Grade; label: string; color: string; key: string }[] = [
-  { rating: Rating.Again, label: 'Again', color: C.red,   key: 'again' },
-  { rating: Rating.Hard,  label: 'Hard',  color: C.amber, key: 'hard' },
-  { rating: Rating.Good,  label: 'Good',  color: C.green, key: 'good' },
-  { rating: Rating.Easy,  label: 'Easy',  color: C.cyan,  key: 'easy' },
-];
+type CardStyles = ReturnType<typeof createStyles>;
 
 export default function CardScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const navigation = useNavigation();
   const router = useRouter();
-  const { review, getCardState, startStudy } = useSRSStore();
+  const { review, getCardState, startStudy, isLoaded } = useSRSStore();
+  const { entitlement, isLoaded: isProLoaded } = useProStore();
+  const { colors } = useThemeColors();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+  const ratingConfig = useMemo(
+    (): { rating: Grade; label: string; color: string; key: string }[] => [
+      { rating: Rating.Again, label: 'Again', color: colors.red,   key: 'again' },
+      { rating: Rating.Hard,  label: 'Hard',  color: colors.amber, key: 'hard' },
+      { rating: Rating.Good,  label: 'Good',  color: colors.green, key: 'good' },
+      { rating: Rating.Easy,  label: 'Easy',  color: colors.cyan,  key: 'easy' },
+    ],
+    [colors],
+  );
 
   const card = getCardById(id);
   const [revealed, setReveal] = useState(false);
@@ -34,16 +44,61 @@ export default function CardScreen() {
 
   const domain = card ? DOMAINS.find((d) => d.id === card.domain) : null;
   const state = card ? getCardState(card.id) : null;
+  const canAccessCard = card ? isCardAccessible({
+    cardId: card.id,
+    cards: ALL_CARDS,
+    isPro: entitlement.isPro,
+  }) : false;
 
   useEffect(() => {
     if (card) navigation.setOptions({ title: card.title });
-    startStudy();
-  }, [card]);
+  }, [card, navigation]);
+
+  useEffect(() => {
+    if (card && isLoaded && isProLoaded && canAccessCard) {
+      void startStudy();
+    }
+  }, [canAccessCard, card, isLoaded, isProLoaded, startStudy]);
 
   if (!card || !domain) {
     return (
       <View style={styles.center}>
         <Text style={styles.errorText}>Card not found</Text>
+      </View>
+    );
+  }
+
+  if (!isLoaded || !isProLoaded) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.errorText}>Loading card...</Text>
+      </View>
+    );
+  }
+
+  if (!canAccessCard) {
+    return (
+      <View style={styles.center}>
+        <View style={styles.lockedBadge}>
+          <Text style={styles.lockedBadgeText}>PRO</Text>
+        </View>
+        <Text style={styles.doneTitle}>{card.title} is locked</Text>
+        <Text style={styles.doneSub}>
+          The first {FREE_TERMS_PER_CATEGORY} terms in each category are free. Pro unlocks the full library and removes ads.
+        </Text>
+        <TouchableOpacity activeOpacity={0.85} onPress={() => router.push('/pro')}>
+          <LinearGradient
+            colors={['#A78BFA', '#7C3AED']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.proBtn}
+          >
+            <Text style={styles.proBtnText}>Go Pro</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <Text style={styles.backBtnText}>← Back</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -81,14 +136,13 @@ export default function CardScreen() {
         </Text>
       </View>
 
-      <Text style={styles.title}>{card.title}</Text>
       <Text style={styles.subtitle}>{card.subtitle}</Text>
 
-      <Section label="What it is" accent={C.green}>
+      <Section label="What it is" accent={colors.green} styles={styles}>
         <Text style={styles.bodyText}>{card.definition}</Text>
       </Section>
 
-      <Section label="Why it matters" accent={C.cyan}>
+      <Section label="Why it matters" accent={colors.cyan} styles={styles}>
         <Text style={styles.bodyText}>{card.whyItMatters}</Text>
       </Section>
 
@@ -105,33 +159,42 @@ export default function CardScreen() {
         </TouchableOpacity>
       ) : (
         <>
-          <Section label="Analogy" accent={C.purple}>
+          <Section label="Analogy" accent={colors.purple} styles={styles}>
             <Text style={styles.bodyText}>{card.analogy}</Text>
           </Section>
 
-          <Section label="Sounds smart to say" accent={C.cyan}>
+          <Section label="Sounds smart to say" accent={colors.cyan} styles={styles}>
             <View style={styles.quoteBox}>
               <Text style={styles.quoteText}>{card.soundsSmartToSay}</Text>
             </View>
           </Section>
 
-          <Section label="Common confusions" accent={C.amber}>
+          <Section label="Common confusions" accent={colors.amber} styles={styles}>
             {card.commonConfusions.map((c, i) => (
               <View key={i} style={styles.bulletRow}>
-                <Text style={[styles.bullet, { color: C.amber }]}>›</Text>
+                <Text style={[styles.bullet, { color: colors.amber }]}>›</Text>
                 <Text style={styles.bulletText}>{c}</Text>
               </View>
             ))}
           </Section>
 
           {card.relatedTerms.length > 0 && (
-            <Section label="Related terms" accent={C.purple}>
+            <Section label="Related terms" accent={colors.purple} styles={styles}>
               <View style={styles.pills}>
-                {card.relatedTerms.map((t) => (
-                  <View key={t} style={styles.pill}>
-                    <Text style={styles.pillText}>{t}</Text>
-                  </View>
-                ))}
+                {card.relatedTerms.map((term) => {
+                  const relatedCard = getCardByTitle(term);
+                  return (
+                    <RelatedTermPill
+                      key={term}
+                      term={term}
+                      onPress={() => {
+                        if (relatedCard) router.push(`/card/${relatedCard.id}`);
+                      }}
+                      isLinked={Boolean(relatedCard)}
+                      styles={styles}
+                    />
+                  );
+                })}
               </View>
             </Section>
           )}
@@ -139,7 +202,7 @@ export default function CardScreen() {
           <View style={styles.ratingBox}>
             <Text style={styles.ratingTitle}>HOW WELL DID YOU KNOW THIS?</Text>
             <View style={styles.ratingRow}>
-              {RATING_CONFIG.map((r) => (
+              {ratingConfig.map((r) => (
                 <TouchableOpacity
                   key={r.key}
                   style={[styles.ratingBtn, { borderColor: r.color + '66' }]}
@@ -160,14 +223,48 @@ export default function CardScreen() {
   );
 }
 
+function RelatedTermPill({
+  term,
+  isLinked,
+  onPress,
+  styles,
+}: {
+  term: string;
+  isLinked: boolean;
+  onPress: () => void;
+  styles: CardStyles;
+}) {
+  if (!isLinked) {
+    return (
+      <View style={[styles.pill, styles.pillDisabled]}>
+        <Text style={[styles.pillText, styles.pillTextDisabled]}>{term}</Text>
+      </View>
+    );
+  }
+
+  return (
+    <TouchableOpacity
+      style={styles.pill}
+      onPress={onPress}
+      activeOpacity={0.75}
+      accessibilityRole="button"
+      accessibilityLabel={`Open ${term}`}
+    >
+      <Text style={styles.pillText}>{term}</Text>
+    </TouchableOpacity>
+  );
+}
+
 function Section({
   label,
   accent,
   children,
+  styles,
 }: {
   label: string;
   accent: string;
   children: React.ReactNode;
+  styles: CardStyles;
 }) {
   return (
     <View style={[styles.section, { borderColor: accent + '22' }]}>
@@ -177,34 +274,51 @@ function Section({
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: C.bgPrimary },
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.bgPrimary },
   content: { padding: 16, gap: 14 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 14, backgroundColor: C.bgPrimary },
-  errorText: { color: C.textMuted, fontSize: 18 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 14, backgroundColor: colors.bgPrimary },
+  errorText: { color: colors.textMuted, fontSize: 18 },
 
   doneIconWrap: {
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: C.green + '18',
+    backgroundColor: colors.green + '18',
     borderWidth: 1,
-    borderColor: C.green + '44',
+    borderColor: colors.green + '44',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  doneIconText: { color: C.green, fontSize: 34, fontWeight: '800' },
-  doneTitle: { color: C.textPrimary, fontSize: 24, fontWeight: '800' },
-  doneSub: { color: C.textSecondary, fontSize: 16 },
+  doneIconText: { color: colors.green, fontSize: 34, fontWeight: '800' },
+  doneTitle: { color: colors.textPrimary, fontSize: 24, fontWeight: '800' },
+  doneSub: { color: colors.textSecondary, fontSize: 16 },
   backBtn: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: C.borderCard,
+    borderColor: colors.borderCard,
     paddingHorizontal: 24,
     paddingVertical: 12,
     marginTop: 4,
   },
-  backBtnText: { color: C.textSecondary, fontWeight: '700', fontSize: 16 },
+  backBtnText: { color: colors.textSecondary, fontWeight: '700', fontSize: 16 },
+  lockedBadge: {
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.purple + '55',
+    backgroundColor: colors.purple + '18',
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+  },
+  lockedBadgeText: { color: colors.purple, fontSize: 13, fontWeight: '900', letterSpacing: 1.4 },
+  proBtn: {
+    borderRadius: 12,
+    paddingHorizontal: 36,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+  proBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '800' },
 
   domainChip: {
     flexDirection: 'row',
@@ -218,55 +332,56 @@ const styles = StyleSheet.create({
   },
   chipDot: { width: 6, height: 6, borderRadius: 3 },
   chipLabel: { fontSize: 12, fontWeight: '700', letterSpacing: 1.5 },
-  title: { color: C.textPrimary, fontSize: 30, fontWeight: '800' },
-  subtitle: { color: C.textSecondary, fontSize: 16 },
+  subtitle: { color: colors.textSecondary, fontSize: 16 },
 
   section: {
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 14,
     padding: 16,
     gap: 10,
     borderWidth: 1,
   },
   sectionLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 2.5 },
-  bodyText: { color: C.textSecondary, fontSize: 17, lineHeight: 26 },
+  bodyText: { color: colors.textSecondary, fontSize: 17, lineHeight: 26 },
 
   revealBtn: { borderRadius: 14, padding: 16, alignItems: 'center' },
   revealBtnText: { color: '#000000', fontSize: 18, fontWeight: '800' },
 
   quoteBox: {
-    backgroundColor: C.bgPrimary,
+    backgroundColor: colors.bgPrimary,
     borderRadius: 10,
     padding: 14,
     borderLeftWidth: 3,
-    borderLeftColor: C.cyan,
+    borderLeftColor: colors.cyan,
   },
-  quoteText: { color: C.textSecondary, fontSize: 16, fontStyle: 'italic', lineHeight: 24 },
+  quoteText: { color: colors.textSecondary, fontSize: 16, fontStyle: 'italic', lineHeight: 24 },
   bulletRow: { flexDirection: 'row', gap: 8, marginBottom: 6 },
   bullet: { fontSize: 17, lineHeight: 26 },
-  bulletText: { color: C.textSecondary, fontSize: 16, lineHeight: 24, flex: 1 },
+  bulletText: { color: colors.textSecondary, fontSize: 16, lineHeight: 24, flex: 1 },
 
   pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   pill: {
-    backgroundColor: C.bgPrimary,
+    backgroundColor: colors.bgPrimary,
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderWidth: 1,
-    borderColor: C.purple + '44',
+    borderColor: colors.purple + '44',
   },
-  pillText: { color: C.purple, fontSize: 14 },
+  pillText: { color: colors.purple, fontSize: 14 },
+  pillDisabled: { borderColor: colors.borderCard },
+  pillTextDisabled: { color: colors.textMuted },
 
   ratingBox: {
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 16,
     padding: 18,
     gap: 14,
     borderWidth: 1,
-    borderColor: C.borderCard,
+    borderColor: colors.borderCard,
     marginTop: 4,
   },
-  ratingTitle: { color: C.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 2.5, textAlign: 'center' },
+  ratingTitle: { color: colors.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 2.5, textAlign: 'center' },
   ratingRow: { flexDirection: 'row', gap: 8 },
   ratingBtn: {
     flex: 1,
@@ -275,8 +390,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: 'center',
     gap: 6,
-    backgroundColor: C.bgPrimary,
+    backgroundColor: colors.bgPrimary,
   },
   ratingDot: { width: 20, height: 20, borderRadius: 10 },
   ratingLabel: { fontSize: 13, fontWeight: '700' },
-});
+  });
+}

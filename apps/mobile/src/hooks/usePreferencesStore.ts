@@ -2,11 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Domain } from '../content';
 import {
   type ColorMode,
-  DEFAULT_PREFERENCES,
-  loadPreferences,
-  savePreferences,
+  getCachedPreferences,
+  isPreferenceCacheLoaded,
+  loadCachedPreferences,
   setColorModePreference,
+  subscribePreferences,
   toggleSelectedDomain,
+  updateCachedPreferences,
   type UserPreferences,
 } from '../store/preferences-store';
 
@@ -18,30 +20,29 @@ export interface PreferencesStore {
 }
 
 export function usePreferencesStore(): PreferencesStore {
-  const [preferences, setPreferences] = useState<UserPreferences>(DEFAULT_PREFERENCES);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [preferences, setPreferences] = useState<UserPreferences>(getCachedPreferences());
+  const [isLoaded, setIsLoaded] = useState(isPreferenceCacheLoaded());
 
   useEffect(() => {
-    loadPreferences().then((loaded) => {
+    const unsubscribe = subscribePreferences((next) => {
+      setPreferences(next);
+      setIsLoaded(true);
+    });
+
+    loadCachedPreferences().then((loaded) => {
       setPreferences(loaded);
       setIsLoaded(true);
     });
+
+    return unsubscribe;
   }, []);
 
   const toggleDomain = useCallback(async (domain: Domain) => {
-    setPreferences((current) => {
-      const next = toggleSelectedDomain(current, domain);
-      savePreferences(next);
-      return next;
-    });
+    await updateCachedPreferences((current) => toggleSelectedDomain(current, domain));
   }, []);
 
   const setColorMode = useCallback(async (colorMode: ColorMode) => {
-    setPreferences((current) => {
-      const next = setColorModePreference(current, colorMode);
-      savePreferences(next);
-      return next;
-    });
+    await updateCachedPreferences((current) => setColorModePreference(current, colorMode));
   }, []);
 
   return { preferences, isLoaded, toggleDomain, setColorMode };

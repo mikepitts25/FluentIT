@@ -445,7 +445,7 @@ export const agileCards: Card[] = [
   {
     id: 'agile-dora-metrics',
     domain: 'agile',
-    title: 'DORA Metrics',
+    title: 'DORA Metrics for Teams',
     subtitle: 'Four metrics that predict software delivery performance',
     difficulty: 'intermediate',
     tags: ['metrics', 'DevOps', 'delivery', 'performance', 'DORA'],
@@ -571,7 +571,7 @@ export const agileCards: Card[] = [
   {
     id: 'agile-technical-debt',
     domain: 'agile',
-    title: 'Technical Debt',
+    title: 'Technical Debt Management',
     subtitle: 'The cost of cutting corners — and how to manage it',
     difficulty: 'beginner',
     tags: ['tech debt', 'quality', 'refactoring', 'trade-offs'],

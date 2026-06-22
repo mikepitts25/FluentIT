@@ -3,7 +3,8 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import type { DomainMeta } from './content';
 import { getDomainIconFallbackLabel } from './domain-icon-fallback';
 import { getDomainIconImage } from './domain-icons';
-import { C } from './theme';
+import { useThemeColors } from './hooks/useThemeColors';
+import type { ThemeColors } from './theme';
 
 type DomainIconBadgeProps = {
   domain: DomainMeta;
@@ -11,6 +12,8 @@ type DomainIconBadgeProps = {
 
 export function DomainIconBadge({ domain }: DomainIconBadgeProps) {
   const [hasImageError, setHasImageError] = useState(false);
+  const { colors } = useThemeColors();
+  const styles = createStyles(colors);
 
   useEffect(() => {
     setHasImageError(false);
@@ -41,14 +44,15 @@ export function DomainIconBadge({ domain }: DomainIconBadgeProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: {
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    wrap: {
     width: 42,
     height: 42,
     borderRadius: 10,
     borderCurve: 'continuous',
     borderWidth: 1,
-    backgroundColor: C.bgCardAlt,
+    backgroundColor: colors.bgCardAlt,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -58,4 +62,5 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     letterSpacing: 0,
   },
-});
+  });
+}

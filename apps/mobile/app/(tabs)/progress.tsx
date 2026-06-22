@@ -1,24 +1,36 @@
 import { useMemo } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { ALL_CARDS } from '../../src/content';
+import { ALL_CARDS, DOMAINS } from '../../src/content';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
+import { useProStore } from '../../src/hooks/useProStore';
+import { useThemeColors } from '../../src/hooks/useThemeColors';
+import { FREE_TERMS_PER_CATEGORY, getLockedCardCount } from '../../src/pro/pro-access';
+import { getCategoryProgress } from '../../src/progress/category-progress';
+import { STATUS_COLORS } from '../../src/progress/status-colors';
+import { ProUpgradeCard } from '../../src/pro/pro-upgrade-card';
+import { RobotAvatarCard } from '../../src/pro/robot-avatar-card';
 import { getStabilityLabel } from '../../src/store/srs-store';
-import { C, GRAD_GREEN_CYAN } from '../../src/theme';
+import { GRAD_GREEN_CYAN, type ThemeColors } from '../../src/theme';
 
 const STATUS: Record<string, { color: string; label: string }> = {
-  New:      { color: C.textMuted,  label: 'New' },
-  Learning: { color: C.amber,      label: 'Learning' },
-  Familiar: { color: C.cyan,       label: 'Familiar' },
-  Mastered: { color: C.green,      label: 'Mastered' },
+  New:      { color: STATUS_COLORS.New,      label: 'New' },
+  Learning: { color: STATUS_COLORS.Learning, label: 'Learning' },
+  Familiar: { color: STATUS_COLORS.Familiar, label: 'Familiar' },
+  Mastered: { color: STATUS_COLORS.Mastered, label: 'Mastered' },
 };
 
 export default function ProgressScreen() {
   const { states, streak } = useSRSStore();
+  const { entitlement, grantPro } = useProStore();
+  const { colors } = useThemeColors();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+  const isPro = entitlement.isPro;
 
   const totalStudied = Object.keys(states).length;
   const totalCards = ALL_CARDS.length;
   const pct = Math.round((totalStudied / totalCards) * 100);
+  const lockedCount = getLockedCardCount({ cards: ALL_CARDS, isPro });
 
   const breakdown = useMemo(() => {
     const counts: Record<string, number> = { New: 0, Learning: 0, Familiar: 0, Mastered: 0 };
@@ -29,6 +41,14 @@ export default function ProgressScreen() {
     });
     return counts;
   }, [states]);
+  const categoryProgress = useMemo(
+    () => getCategoryProgress({
+      domains: DOMAINS,
+      cards: ALL_CARDS,
+      states,
+    }),
+    [states],
+  );
 
   return (
     <ScrollView
@@ -57,28 +77,47 @@ export default function ProgressScreen() {
         <Text style={styles.xpSub}>{pct}% of library explored</Text>
       </View>
 
+      <ProUpgradeCard
+        colors={colors}
+        freeTermsPerCategory={FREE_TERMS_PER_CATEGORY}
+        isPro={isPro}
+        lockedCount={lockedCount}
+        onGrantPro={grantPro}
+        styles={styles}
+      />
+
+      <RobotAvatarCard
+        colors={colors}
+        isPro={isPro}
+        percentExplored={pct}
+        styles={styles}
+      />
+
       {/* Streak stats */}
       <View style={styles.statsRow}>
         <StatBox
           value={streak.currentStreak}
           unit="days"
           label="STREAK"
-          color={C.amber}
+          color={colors.amber}
           icon="🔥"
+          styles={styles}
         />
         <StatBox
           value={totalStudied}
           unit="cards"
           label="STUDIED"
-          color={C.cyan}
+          color={colors.cyan}
           icon="✓"
+          styles={styles}
         />
         <StatBox
           value={streak.longestStreak}
           unit="days"
           label="BEST RUN"
-          color={C.purple}
+          color={colors.purple}
           icon="◈"
+          styles={styles}
         />
       </View>
 
@@ -104,18 +143,50 @@ export default function ProgressScreen() {
           })}
         </View>
       </View>
+
+      <View style={styles.card}>
+        <Text style={styles.cardLabel}>CATEGORY PROGRESS</Text>
+        <View style={styles.categoryGrid}>
+          {categoryProgress.map((item) => (
+            <View key={item.domain.id} style={styles.categoryItem}>
+              <View style={styles.categoryHeader}>
+                <Text style={styles.categoryLabel}>{item.domain.label}</Text>
+                <Text style={[styles.categoryCount, { color: item.domain.color }]}>
+                  {item.studiedCount}/{item.totalCount}
+                </Text>
+              </View>
+              <View style={styles.categoryTrack}>
+                <View
+                  style={[
+                    styles.categoryFill,
+                    {
+                      width: `${item.percent}%`,
+                      backgroundColor: item.domain.color,
+                    },
+                  ]}
+                />
+              </View>
+            </View>
+          ))}
+        </View>
+      </View>
     </ScrollView>
   );
 }
 
 function StatBox({
-  value, unit, label, color, icon,
+  value, unit, label, color, icon, styles,
 }: {
-  value: number; unit: string; label: string; color: string; icon: string;
+  value: number;
+  unit: string;
+  label: string;
+  color: string;
+  icon: string;
+  styles: ProgressStyles;
 }) {
   return (
     <View style={[styles.statBox, { borderColor: color + '33' }]}>
-      <Text style={{ fontSize: 22, marginBottom: 4 }}>{icon}</Text>
+      <Text style={[styles.statIcon, { color }]}>{icon}</Text>
       <Text style={[styles.statValue, { color }]}>{value}</Text>
       <Text style={styles.statUnit}>{unit}</Text>
       <Text style={styles.statLabel}>{label}</Text>
@@ -123,8 +194,11 @@ function StatBox({
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: C.bgPrimary },
+type ProgressStyles = ReturnType<typeof createStyles>;
+
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.bgPrimary },
   content: { padding: 16, paddingBottom: 48, gap: 12 },
 
   profileRow: {
@@ -133,44 +207,45 @@ const styles = StyleSheet.create({
     gap: 14,
     paddingVertical: 8,
   },
-  levelText: { color: C.textPrimary, fontSize: 18, fontWeight: '700', marginTop: 2 },
+  levelText: { color: colors.textPrimary, fontSize: 18, fontWeight: '700', marginTop: 2 },
 
   card: {
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 16,
     padding: 18,
     borderWidth: 1,
-    borderColor: C.borderCard,
+    borderColor: colors.borderCard,
     gap: 12,
   },
   cardLabel: {
-    color: C.textMuted,
+    color: colors.textMuted,
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 2.5,
   },
   xpTrack: {
     height: 8,
-    backgroundColor: C.bgCardAlt,
+    backgroundColor: colors.bgCardAlt,
     borderRadius: 4,
     overflow: 'hidden',
   },
   xpFill: { height: '100%', borderRadius: 4 },
-  xpSub: { color: C.textMuted, fontSize: 14, textAlign: 'center' },
+  xpSub: { color: colors.textMuted, fontSize: 14, textAlign: 'center' },
 
   statsRow: { flexDirection: 'row', gap: 10 },
   statBox: {
     flex: 1,
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 14,
     borderWidth: 1,
     padding: 14,
     alignItems: 'center',
     gap: 2,
   },
+  statIcon: { fontSize: 22, marginBottom: 4, fontWeight: '800' },
   statValue: { fontSize: 26, fontWeight: '800' },
-  statUnit: { color: C.textMuted, fontSize: 12 },
-  statLabel: { color: C.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 1.5 },
+  statUnit: { color: colors.textMuted, fontSize: 12 },
+  statLabel: { color: colors.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 1.5 },
 
   breakdownGrid: { gap: 10 },
   breakdownItem: { gap: 6 },
@@ -180,9 +255,23 @@ const styles = StyleSheet.create({
   breakdownCount: { fontSize: 15, fontWeight: '700' },
   breakdownTrack: {
     height: 4,
-    backgroundColor: C.bgCardAlt,
+    backgroundColor: colors.bgCardAlt,
     borderRadius: 2,
     overflow: 'hidden',
   },
   breakdownFill: { height: '100%', borderRadius: 2 },
-});
+
+  categoryGrid: { gap: 12 },
+  categoryItem: { gap: 6 },
+  categoryHeader: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  categoryLabel: { flex: 1, color: colors.textSecondary, fontSize: 14, fontWeight: '700' },
+  categoryCount: { fontSize: 14, fontWeight: '800' },
+  categoryTrack: {
+    height: 6,
+    backgroundColor: colors.bgCardAlt,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  categoryFill: { height: '100%', borderRadius: 3 },
+  });
+}

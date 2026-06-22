@@ -319,7 +319,7 @@ export const devopsCards: Card[] = [
   {
     id: 'devops-devsecops',
     domain: 'devops',
-    title: 'DevSecOps',
+    title: 'DevSecOps Pipeline Automation',
     subtitle: 'Baking security into every stage of the pipeline',
     difficulty: 'beginner',
     tags: ['security', 'automation', 'shift-left'],

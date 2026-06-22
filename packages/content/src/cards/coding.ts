@@ -425,7 +425,7 @@ export const codingCards: Card[] = [
   {
     id: 'coding-package-management',
     domain: 'coding',
-    title: 'Package Management',
+    title: 'Application Package Management',
     subtitle: 'Declaring and resolving external library dependencies',
     difficulty: 'beginner',
     tags: ['dependencies', 'npm', 'versioning'],
@@ -761,7 +761,7 @@ export const codingCards: Card[] = [
   {
     id: 'coding-feature-flags',
     domain: 'coding',
-    title: 'Feature Flags',
+    title: 'Feature Flags in Code',
     subtitle: 'Toggle features on/off without deploying new code',
     difficulty: 'intermediate',
     tags: ['deployment', 'CI/CD', 'experimentation'],

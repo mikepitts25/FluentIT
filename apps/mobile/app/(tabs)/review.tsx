@@ -11,11 +11,16 @@ import {
 import { ALL_CARDS, DOMAINS, type Card } from '../../src/content';
 import { DomainIconBadge } from '../../src/domain-icon-badge';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
-import { C, GRAD_GREEN_CYAN } from '../../src/theme';
+import { useThemeColors } from '../../src/hooks/useThemeColors';
+import { GRAD_GREEN_CYAN, type ThemeColors } from '../../src/theme';
+
+type ReviewStyles = ReturnType<typeof createStyles>;
 
 export default function ReviewScreen() {
   const router = useRouter();
   const { dueCardIds, isLoaded } = useSRSStore();
+  const { colors } = useThemeColors();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   const dueCards = useMemo(
     () => ALL_CARDS.filter((c) => dueCardIds.includes(c.id)),
@@ -94,29 +99,30 @@ export default function ReviewScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: C.bgPrimary },
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.bgPrimary },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
     gap: 14,
-    backgroundColor: C.bgPrimary,
+    backgroundColor: colors.bgPrimary,
   },
-  loadingText: { color: C.textMuted, fontSize: 16, letterSpacing: 1 },
+  loadingText: { color: colors.textMuted, fontSize: 16, letterSpacing: 1 },
   emptyIconBg: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: C.green + '18',
+    backgroundColor: colors.green + '18',
     borderWidth: 1,
-    borderColor: C.green + '44',
+    borderColor: colors.green + '44',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  emptyTitle: { color: C.textPrimary, fontSize: 24, fontWeight: '800' },
-  emptySub: { color: C.textSecondary, fontSize: 16, textAlign: 'center', lineHeight: 25 },
+  emptyTitle: { color: colors.textPrimary, fontSize: 24, fontWeight: '800' },
+  emptySub: { color: colors.textSecondary, fontSize: 16, textAlign: 'center', lineHeight: 25 },
   learnBtn: { borderRadius: 14, paddingHorizontal: 28, paddingVertical: 14 },
   learnBtnText: { color: '#000000', fontWeight: '800', fontSize: 17 },
 
@@ -127,32 +133,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 18,
     borderBottomWidth: 1,
-    borderBottomColor: C.borderCardAlt,
+    borderBottomColor: colors.borderCardAlt,
   },
-  dueCount: { color: C.textPrimary, fontSize: 22, fontWeight: '800' },
-  dueHint: { color: C.textMuted, fontSize: 14, marginTop: 2 },
+  dueCount: { color: colors.textPrimary, fontSize: 22, fontWeight: '800' },
+  dueHint: { color: colors.textMuted, fontSize: 14, marginTop: 2 },
   dueBadge: {
-    backgroundColor: C.green + '22',
+    backgroundColor: colors.green + '22',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: C.green + '44',
+    borderColor: colors.green + '44',
     paddingHorizontal: 14,
     paddingVertical: 6,
   },
-  dueBadgeText: { color: C.green, fontSize: 18, fontWeight: '800' },
+  dueBadgeText: { color: colors.green, fontSize: 18, fontWeight: '800' },
 
   list: { padding: 16, gap: 10 },
   row: {
-    backgroundColor: C.bgCard,
+    backgroundColor: colors.bgCard,
     borderRadius: 14,
     padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
     borderWidth: 1,
-    borderColor: C.borderCard,
+    borderColor: colors.borderCard,
   },
-  cardTitle: { color: C.textPrimary, fontSize: 17, fontWeight: '600', marginBottom: 3 },
+  cardTitle: { color: colors.textPrimary, fontSize: 17, fontWeight: '600', marginBottom: 3 },
   cardDomain: { fontSize: 11, fontWeight: '700', letterSpacing: 1.5 },
-  arrow: { color: C.textMuted, fontSize: 24, fontWeight: '300' },
-});
+  arrow: { color: colors.textMuted, fontSize: 24, fontWeight: '300' },
+  });
+}

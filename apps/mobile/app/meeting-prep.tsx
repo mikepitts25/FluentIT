@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { ALL_CARDS, DOMAINS, type Card } from '../src/content';
 import { getDomainIconImage } from '../src/domain-icons';
+import { useThemeColors } from '../src/hooks/useThemeColors';
 import {
   addPrepPack,
   createPrepPack,
@@ -20,11 +21,15 @@ import {
   savePrepPacks,
   type PrepPack,
 } from '../src/meeting-prep/prep-pack-store';
+import type { ThemeColors } from '../src/theme';
 
 const PREP_PACK_LIMIT = 8;
+type MeetingPrepStyles = ReturnType<typeof createStyles>;
 
 export default function MeetingPrepScreen() {
   const router = useRouter();
+  const { colors } = useThemeColors();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [agenda, setAgenda] = useState('');
   const [activePack, setActivePack] = useState<PrepPack | null>(null);
   const [packs, setPacks] = useState<PrepPack[]>([]);
@@ -99,7 +104,7 @@ export default function MeetingPrepScreen() {
           multiline
           textAlignVertical="top"
           placeholder="Paste a technical agenda, Slack thread, or job-to-be-done."
-          placeholderTextColor="#64748B"
+          placeholderTextColor={colors.textMuted}
         />
         <TouchableOpacity
           style={[styles.buildButton, !canBuild && styles.buildButtonDisabled]}
@@ -140,6 +145,7 @@ export default function MeetingPrepScreen() {
                 isActive={activePack?.id === pack.id}
                 onPress={() => setActivePack(pack)}
                 onDelete={() => handleDeletePack(pack.id)}
+                styles={styles}
               />
             ))
           ) : (
@@ -169,6 +175,7 @@ export default function MeetingPrepScreen() {
                 key={card.id}
                 card={card}
                 onPress={() => router.push(`/card/${card.id}`)}
+                styles={styles}
               />
             ))
           ) : (
@@ -190,11 +197,13 @@ function PrepPackRow({
   isActive,
   onPress,
   onDelete,
+  styles,
 }: {
   pack: PrepPack;
   isActive: boolean;
   onPress: () => void;
   onDelete: () => void;
+  styles: MeetingPrepStyles;
 }) {
   return (
     <TouchableOpacity
@@ -227,7 +236,15 @@ function PrepPackRow({
   );
 }
 
-function PrepCard({ card, onPress }: { card: Card; onPress: () => void }) {
+function PrepCard({
+  card,
+  onPress,
+  styles,
+}: {
+  card: Card;
+  onPress: () => void;
+  styles: MeetingPrepStyles;
+}) {
   const domain = DOMAINS.find((candidate) => candidate.id === card.domain)!;
 
   return (
@@ -262,49 +279,50 @@ function formatPackDate(createdAt: string): string {
   });
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.bgPrimary },
   content: { padding: 20, paddingBottom: 48, gap: 18 },
   inputPanel: {
-    backgroundColor: '#1E293B',
+    backgroundColor: colors.bgCard,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: colors.borderCard,
     padding: 16,
     gap: 12,
   },
-  inputLabel: { color: '#94A3B8', fontSize: 14, fontWeight: '800', textTransform: 'uppercase' },
+  inputLabel: { color: colors.textSecondary, fontSize: 14, fontWeight: '800', textTransform: 'uppercase' },
   input: {
     minHeight: 184,
     borderRadius: 12,
-    backgroundColor: '#0F172A',
+    backgroundColor: colors.bgInput,
     borderWidth: 1,
-    borderColor: '#334155',
-    color: '#E2E8F0',
+    borderColor: colors.borderCard,
+    color: colors.textPrimary,
     fontSize: 17,
     lineHeight: 25,
     padding: 14,
   },
   buildButton: {
-    backgroundColor: '#38BDF8',
+    backgroundColor: colors.cyan,
     borderRadius: 12,
     minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buildButtonDisabled: { backgroundColor: '#334155' },
+  buildButtonDisabled: { backgroundColor: colors.bgCardAlt },
   buildButtonText: { color: '#082F49', fontSize: 17, fontWeight: '800' },
   currentPackNotice: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#38BDF866',
-    backgroundColor: '#082F4933',
+    borderColor: colors.cyan + '66',
+    backgroundColor: colors.cyan + '18',
     padding: 12,
     gap: 3,
   },
-  currentPackLabel: { color: '#38BDF8', fontSize: 13, fontWeight: '900', textTransform: 'uppercase' },
-  currentPackTitle: { color: '#F8FAFC', fontSize: 17, fontWeight: '800' },
-  currentPackMeta: { color: '#94A3B8', fontSize: 14, fontWeight: '700' },
+  currentPackLabel: { color: colors.cyan, fontSize: 13, fontWeight: '900', textTransform: 'uppercase' },
+  currentPackTitle: { color: colors.textPrimary, fontSize: 17, fontWeight: '800' },
+  currentPackMeta: { color: colors.textSecondary, fontSize: 14, fontWeight: '700' },
   pack: { gap: 12 },
   packHeader: {
     flexDirection: 'row',
@@ -313,9 +331,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   packTitleBlock: { flex: 1, gap: 2 },
-  packTitle: { color: '#F8FAFC', fontSize: 22, fontWeight: '800' },
-  packDate: { color: '#64748B', fontSize: 14, fontWeight: '700' },
-  packCount: { color: '#64748B', fontSize: 14, fontWeight: '700' },
+  packTitle: { color: colors.textPrimary, fontSize: 22, fontWeight: '800' },
+  packDate: { color: colors.textMuted, fontSize: 14, fontWeight: '700' },
+  packCount: { color: colors.textMuted, fontSize: 14, fontWeight: '700' },
   history: { gap: 12, marginTop: 4 },
   historyHeader: {
     flexDirection: 'row',
@@ -323,48 +341,48 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 12,
   },
-  historyTitle: { color: '#F8FAFC', fontSize: 19, fontWeight: '800' },
-  historySubtitle: { color: '#94A3B8', fontSize: 14, fontWeight: '700', marginTop: 2 },
+  historyTitle: { color: colors.textPrimary, fontSize: 19, fontWeight: '800' },
+  historySubtitle: { color: colors.textSecondary, fontSize: 14, fontWeight: '700', marginTop: 2 },
   packRow: {
-    backgroundColor: '#1E293B',
+    backgroundColor: colors.bgCard,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: colors.borderCard,
     padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-  packRowActive: { borderColor: '#38BDF8' },
+  packRowActive: { borderColor: colors.cyan },
   packRowText: { flex: 1, gap: 4 },
-  packRowTitle: { color: '#F8FAFC', fontSize: 17, fontWeight: '800' },
-  packRowMeta: { color: '#94A3B8', fontSize: 14, fontWeight: '700' },
+  packRowTitle: { color: colors.textPrimary, fontSize: 17, fontWeight: '800' },
+  packRowMeta: { color: colors.textSecondary, fontSize: 14, fontWeight: '700' },
   packRowActions: { alignItems: 'flex-end', gap: 8 },
-  activeBadge: { color: '#38BDF8', fontSize: 13, fontWeight: '900', textTransform: 'uppercase' },
+  activeBadge: { color: colors.cyan, fontSize: 13, fontWeight: '900', textTransform: 'uppercase' },
   activeBadgeHidden: { color: 'transparent' },
   deleteButton: {
     minHeight: 32,
     paddingHorizontal: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#7F1D1D',
+    borderColor: colors.red + '66',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  deleteButtonText: { color: '#FCA5A5', fontSize: 14, fontWeight: '800' },
+  deleteButtonText: { color: colors.red, fontSize: 14, fontWeight: '800' },
   card: {
-    backgroundColor: '#1E293B',
+    backgroundColor: colors.bgCard,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: colors.borderCard,
     padding: 14,
     gap: 10,
   },
   cardTop: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   domainIcon: { width: 40, height: 40 },
   cardText: { flex: 1, gap: 2 },
-  cardTitle: { color: '#F8FAFC', fontSize: 18, fontWeight: '700' },
-  cardSubtitle: { color: '#94A3B8', fontSize: 14, lineHeight: 19 },
+  cardTitle: { color: colors.textPrimary, fontSize: 18, fontWeight: '700' },
+  cardSubtitle: { color: colors.textSecondary, fontSize: 14, lineHeight: 19 },
   cardMeta: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -372,19 +390,20 @@ const styles = StyleSheet.create({
   },
   domainLabel: { fontSize: 14, fontWeight: '800' },
   difficulty: {
-    color: '#64748B',
+    color: colors.textMuted,
     fontSize: 13,
     fontWeight: '700',
     textTransform: 'uppercase',
   },
   emptyState: {
-    backgroundColor: '#1E293B',
+    backgroundColor: colors.bgCard,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: colors.borderCard,
     padding: 16,
     gap: 4,
   },
-  emptyTitle: { color: '#F8FAFC', fontSize: 17, fontWeight: '700' },
-  emptyText: { color: '#94A3B8', fontSize: 15, lineHeight: 21 },
-});
+  emptyTitle: { color: colors.textPrimary, fontSize: 17, fontWeight: '700' },
+  emptyText: { color: colors.textSecondary, fontSize: 15, lineHeight: 21 },
+  });
+}

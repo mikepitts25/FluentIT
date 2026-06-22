@@ -247,7 +247,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'devops-capacity-planning',
     domain: 'devops',
-    title: 'Capacity Planning',
+    title: 'DevOps Capacity Planning',
     subtitle: 'Forecasting resource needs before saturation hits',
     difficulty: 'intermediate',
     tags: ['capacity', 'performance', 'forecasting'],
@@ -472,7 +472,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'cloud-shared-responsibility',
     domain: 'cloud',
-    title: 'Shared Responsibility Model',
+    title: 'Cloud Shared Responsibility Model',
     subtitle: 'Knowing what the cloud provider secures and what you still own',
     difficulty: 'beginner',
     tags: ['security', 'governance', 'cloud basics'],
@@ -1162,7 +1162,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'data-retention-policy',
     domain: 'data',
-    title: 'Data Retention Policy',
+    title: 'Data Retention Rules',
     subtitle: 'Defining how long data is kept and when it is removed',
     difficulty: 'beginner',
     tags: ['retention', 'privacy', 'governance'],
@@ -1222,7 +1222,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'data-vector-database',
     domain: 'data',
-    title: 'Vector Database',
+    title: 'Vector Database for Data Teams',
     subtitle: 'Searching by semantic similarity using embeddings',
     difficulty: 'intermediate',
     tags: ['AI', 'embeddings', 'search'],
@@ -1702,7 +1702,7 @@ const seeds: ExpansionSeed[] = [
   {
     id: 'integration-api-versioning',
     domain: 'integration',
-    title: 'API Versioning',
+    title: 'Integration API Versioning',
     subtitle: 'Evolving interfaces without breaking consumers',
     difficulty: 'beginner',
     tags: ['API', 'compatibility', 'governance'],

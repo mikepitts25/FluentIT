@@ -46,7 +46,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-webhook',
     domain: 'integration',
-    title: 'Webhooks',
+    title: 'Webhook Integrations',
     subtitle: 'Real-time event notifications via HTTP callbacks',
     difficulty: 'beginner',
     tags: ['events', 'HTTP', 'real-time'],
@@ -67,7 +67,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-graphql',
     domain: 'integration',
-    title: 'GraphQL',
+    title: 'GraphQL APIs',
     subtitle: 'Query language for APIs — ask for exactly what you need',
     difficulty: 'intermediate',
     tags: ['API', 'query', 'schema'],
@@ -109,7 +109,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-oauth',
     domain: 'integration',
-    title: 'OAuth 2.0',
+    title: 'OAuth 2.0 Integrations',
     subtitle: 'Delegated authorization without sharing passwords',
     difficulty: 'intermediate',
     tags: ['auth', 'tokens', 'security'],
@@ -151,7 +151,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-idempotency',
     domain: 'integration',
-    title: 'Idempotency',
+    title: 'Integration Idempotency',
     subtitle: 'Making operations safe to retry',
     difficulty: 'intermediate',
     tags: ['reliability', 'retry', 'API design'],
@@ -172,7 +172,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-grpc',
     domain: 'integration',
-    title: 'gRPC',
+    title: 'gRPC Integrations',
     subtitle: 'High-performance RPC framework using HTTP/2 and Protobuf',
     difficulty: 'intermediate',
     tags: ['RPC', 'Protobuf', 'HTTP/2', 'microservices'],
@@ -214,7 +214,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-service-discovery',
     domain: 'integration',
-    title: 'Service Discovery',
+    title: 'Integration Service Discovery',
     subtitle: 'How services find each other in dynamic environments',
     difficulty: 'intermediate',
     tags: ['microservices', 'networking', 'DNS'],
@@ -277,7 +277,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-circuit-breaker',
     domain: 'integration',
-    title: 'Circuit Breaker Pattern',
+    title: 'Integration Circuit Breaker Pattern',
     subtitle: 'Failing fast when a downstream service is unhealthy',
     difficulty: 'intermediate',
     tags: ['resilience', 'fault tolerance', 'microservices'],
@@ -298,7 +298,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-cqrs',
     domain: 'integration',
-    title: 'CQRS',
+    title: 'CQRS Integration Pattern',
     subtitle: 'Separating read and write models for scalability',
     difficulty: 'advanced',
     tags: ['architecture', 'event sourcing', 'scalability'],
@@ -340,7 +340,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-saga',
     domain: 'integration',
-    title: 'Saga Pattern',
+    title: 'Saga Integration Pattern',
     subtitle: 'Distributed transactions without a global lock',
     difficulty: 'advanced',
     tags: ['distributed systems', 'transactions', 'microservices'],
@@ -445,7 +445,7 @@ export const integrationCards: Card[] = [
   {
     id: 'int-service-mesh',
     domain: 'integration',
-    title: 'Service Mesh',
+    title: 'Service Mesh Integrations',
     subtitle: 'Infrastructure layer for service-to-service communication',
     difficulty: 'advanced',
     tags: ['microservices', 'Istio', 'observability'],

@@ -403,7 +403,7 @@ export const governanceCards: Card[] = [
   {
     id: 'gov-vulnerability-mgmt',
     domain: 'governance',
-    title: 'Vulnerability Management',
+    title: 'Vulnerability Governance',
     subtitle: 'Continuously finding and prioritizing security weaknesses',
     difficulty: 'intermediate',
     tags: ['security', 'scanning', 'CVE'],
@@ -466,7 +466,7 @@ export const governanceCards: Card[] = [
   {
     id: 'gov-pen-testing',
     domain: 'governance',
-    title: 'Penetration Testing',
+    title: 'Penetration Testing Governance',
     subtitle: 'Authorized hacking to find vulnerabilities before attackers do',
     difficulty: 'intermediate',
     tags: ['security testing', 'red team', 'offensive security'],
@@ -613,7 +613,7 @@ export const governanceCards: Card[] = [
   {
     id: 'gov-security-awareness',
     domain: 'governance',
-    title: 'Security Awareness Training',
+    title: 'Security Awareness Program',
     subtitle: 'Making employees the first line of defense',
     difficulty: 'beginner',
     tags: ['training', 'phishing', 'human risk'],

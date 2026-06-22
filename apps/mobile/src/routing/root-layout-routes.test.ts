@@ -141,7 +141,9 @@ describe('root stack route declarations', () => {
   it('uses a normal back title for stack screens opened from tabs', () => {
     const options = rootStackScreenOptions();
 
+    expect(options.get('card/[id]')?.headerBackTitle).toBe('Back');
     expect(options.get('session')?.headerBackTitle).toBe('Back');
     expect(options.get('meeting-prep')?.headerBackTitle).toBe('Back');
+    expect(options.get('pro')?.headerBackTitle).toBe('Back');
   });
 });

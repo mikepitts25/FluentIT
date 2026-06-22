@@ -613,7 +613,7 @@ export const sysengCards: Card[] = [
   {
     id: 'syseng-secrets-management',
     domain: 'syseng',
-    title: 'Secrets Management',
+    title: 'System Secrets Management',
     subtitle: 'Storing and rotating credentials, API keys, and certificates securely',
     difficulty: 'intermediate',
     tags: ['secrets', 'Vault', 'credentials', 'rotation', 'security'],
@@ -634,7 +634,7 @@ export const sysengCards: Card[] = [
   {
     id: 'syseng-immutable-infrastructure',
     domain: 'syseng',
-    title: 'Immutable Infrastructure',
+    title: 'Immutable Server Infrastructure',
     subtitle: 'Replace servers instead of patching them',
     difficulty: 'intermediate',
     tags: ['immutable', 'infrastructure', 'cattle vs pets', 'deployment'],
@@ -676,7 +676,7 @@ export const sysengCards: Card[] = [
   {
     id: 'syseng-ebpf',
     domain: 'syseng',
-    title: 'eBPF',
+    title: 'eBPF System Tracing',
     subtitle: 'Running sandboxed programs inside the Linux kernel for observability',
     difficulty: 'advanced',
     tags: ['eBPF', 'observability', 'Linux', 'kernel', 'tracing'],

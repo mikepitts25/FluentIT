@@ -131,7 +131,7 @@ const observabilitySeeds: Seed[] = [
   ],
   [
     'correlation-id',
-    'Correlation ID',
+    'Observability Correlation ID',
     'A shared identifier for related events',
     'beginner',
     'A correlation ID ties logs, requests, jobs, and downstream activity to the same business operation.',
@@ -248,7 +248,7 @@ const observabilitySeeds: Seed[] = [
   ],
   [
     'golden-signals',
-    'Golden Signals',
+    'Observability Golden Signals',
     'Latency, traffic, errors, and saturation',
     'beginner',
     'Golden signals are a compact starting set for service health: latency, traffic, errors, and saturation.',
@@ -437,7 +437,7 @@ const observabilitySeeds: Seed[] = [
   ],
   [
     'dependency-map',
-    'Dependency Map',
+    'Operational Dependency Map',
     'A view of upstream and downstream risk',
     'intermediate',
     'A dependency map shows which services, stores, queues, and vendors interact with a service.',
@@ -593,7 +593,7 @@ const identitySeeds: Seed[] = [
   ],
   [
     'passwordless',
-    'Passwordless Authentication',
+    'Passwordless Identity Flow',
     'Sign-in without a reusable password',
     'beginner',
     'Passwordless authentication uses device-bound keys, passkeys, certificates, or other flows instead of reusable passwords.',
@@ -647,7 +647,7 @@ const identitySeeds: Seed[] = [
   ],
   [
     'oauth',
-    'OAuth 2.0',
+    'OAuth 2.0 Identity Flow',
     'Delegated authorization for APIs',
     'intermediate',
     'OAuth 2.0 lets a client receive limited access to protected resources without handling the resource owner password.',
@@ -791,7 +791,7 @@ const identitySeeds: Seed[] = [
   ],
   [
     'access-review',
-    'Access Review',
+    'Identity Access Review',
     'Confirming existing access is still needed',
     'beginner',
     'An access review asks accountable owners to confirm that permissions remain appropriate.',
@@ -809,7 +809,7 @@ const identitySeeds: Seed[] = [
   ],
   [
     'jit-access',
-    'Just-in-Time Access',
+    'Identity Just-in-Time Access',
     'Temporary elevation when needed',
     'intermediate',
     'Just-in-time access grants elevated permission for a short approved window and removes it automatically.',
@@ -1046,7 +1046,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'microservices',
-    'Microservices',
+    'Microservices Architecture',
     'Independently deployable service boundaries',
     'intermediate',
     'Microservices split capabilities into independently deployable services with separate ownership and communication contracts.',
@@ -1055,7 +1055,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'event-driven',
-    'Event-Driven Architecture',
+    'Event-Driven Architecture Review',
     'Reacting to facts that happened',
     'intermediate',
     'Event-driven architecture lets producers publish events and consumers react asynchronously without direct request coupling.',
@@ -1073,7 +1073,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'api-gateway',
-    'API Gateway',
+    'API Gateway Architecture',
     'An edge entry point for APIs',
     'beginner',
     'An API gateway routes external API traffic and can centralize concerns such as auth, rate limits, and request policy.',
@@ -1082,7 +1082,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'service-mesh',
-    'Service Mesh',
+    'Service Mesh Architecture',
     'Infrastructure for service-to-service traffic',
     'advanced',
     'A service mesh manages service communication concerns such as mTLS, retries, policy, and telemetry around workloads.',
@@ -1109,7 +1109,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'load-balancer',
-    'Load Balancer',
+    'Load Balancer Architecture',
     'Traffic distribution across backends',
     'beginner',
     'A load balancer routes traffic to healthy backend targets according to protocol and balancing policy.',
@@ -1208,7 +1208,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'eventual-consistency',
-    'Eventual Consistency',
+    'Eventual Consistency Architecture',
     'Convergence after a delay',
     'intermediate',
     'Eventual consistency allows replicas or downstream views to converge after propagation delay rather than immediately.',
@@ -1226,7 +1226,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'backpressure',
-    'Backpressure',
+    'Backpressure Architecture',
     'Slowing demand to protect capacity',
     'intermediate',
     'Backpressure limits intake or slows producers when downstream capacity cannot keep up.',
@@ -1235,7 +1235,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'idempotency',
-    'Idempotency',
+    'Idempotency in System Design',
     'Safe repeats of an operation',
     'intermediate',
     'Idempotency ensures repeating an operation does not create extra business side effects.',
@@ -1244,7 +1244,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'circuit-breaker',
-    'Circuit Breaker',
+    'Circuit Breaker Architecture',
     'Fast failure around unhealthy dependencies',
     'intermediate',
     'A circuit breaker stops repeated calls to a failing dependency for a period so callers preserve capacity.',
@@ -1271,7 +1271,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'retry-policy',
-    'Retry Policy',
+    'Retry Policy Architecture',
     'Rules for trying failed work again',
     'intermediate',
     'A retry policy defines which failures are retried, how often, with what backoff, and under what idempotency guarantees.',
@@ -1280,7 +1280,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'rate-limiting',
-    'Rate Limiting',
+    'Rate Limiting Architecture',
     'A cap on demand',
     'beginner',
     'Rate limiting controls request volume per client, tenant, route, or resource to protect capacity and fairness.',
@@ -1298,7 +1298,7 @@ const architectureSeeds: Seed[] = [
   ],
   [
     'schema-evolution',
-    'Schema Evolution',
+    'Schema Evolution Architecture',
     'Changing data formats safely',
     'intermediate',
     'Schema evolution changes stored or exchanged data formats while preserving required compatibility and migration behavior.',
@@ -1436,7 +1436,7 @@ const architectureSeeds: Seed[] = [
 const appsecSeeds: Seed[] = [
   [
     'threat-modeling',
-    'Threat Modeling',
+    'Application Threat Modeling',
     'Finding design risk before code ships',
     'beginner',
     'Threat modeling identifies assets, actors, trust boundaries, abuse paths, and mitigations in a system design.',
@@ -1481,7 +1481,7 @@ const appsecSeeds: Seed[] = [
   ],
   [
     'owasp-top-ten',
-    'OWASP Top 10',
+    'OWASP Top 10 for AppSec',
     'A common web application risk reference',
     'beginner',
     'The OWASP Top 10 summarizes common classes of web application security risk for awareness and prioritization.',
@@ -1859,7 +1859,7 @@ const appsecSeeds: Seed[] = [
   ],
   [
     'bug-bounty',
-    'Bug Bounty',
+    'Bug Bounty Program',
     'External reports rewarded by policy',
     'beginner',
     'A bug bounty program invites researchers to report qualifying vulnerabilities under rules and rewards.',

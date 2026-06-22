@@ -20,21 +20,23 @@ describe('content validation', () => {
     expect(ALL_CARDS.length).toBeGreaterThanOrEqual(1200);
   });
 
-  it('does not repeat term titles within a domain', () => {
-    const seenTitlesByDomain = new Map<string, Set<string>>();
+  it('does not repeat term titles anywhere in the catalog', () => {
+    const seenTitles = new Map<string, string>();
+    const duplicates: string[] = [];
 
     for (const card of ALL_CARDS) {
       const normalizedTitle = card.title.toLowerCase().replace(/\s+/g, ' ').trim();
-      const seenTitles = seenTitlesByDomain.get(card.domain) ?? new Set<string>();
+      const firstCard = seenTitles.get(normalizedTitle);
 
-      expect(
-        seenTitles.has(normalizedTitle),
-        `${card.domain} repeats title "${card.title}"`,
-      ).toBe(false);
+      if (firstCard) {
+        duplicates.push(`${card.id} repeats "${card.title}" already used by ${firstCard}`);
+        continue;
+      }
 
-      seenTitles.add(normalizedTitle);
-      seenTitlesByDomain.set(card.domain, seenTitles);
+      seenTitles.set(normalizedTitle, card.id);
     }
+
+    expect(duplicates).toEqual([]);
   });
 
   it('includes the first meeting-prep focus domains', () => {

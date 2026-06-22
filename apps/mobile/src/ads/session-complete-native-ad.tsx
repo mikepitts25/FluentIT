@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Image,
   Platform,
@@ -8,7 +8,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import type { NativeAd } from 'react-native-google-mobile-ads';
-import { C } from '../theme';
+import { useThemeColors } from '../hooks/useThemeColors';
+import type { ThemeColors } from '../theme';
 import {
   getSessionCompleteNativeAdUnitId,
   resolvePlatformNativeAdUnitId,
@@ -25,6 +26,8 @@ const CARD_VERTICAL_EXTRA_SPACE = 260;
 
 export function SessionCompleteNativeAd() {
   const { width: windowWidth } = useWindowDimensions();
+  const { colors } = useThemeColors();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [adsModule, setAdsModule] = useState<GoogleMobileAdsModule | null>(null);
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
   const [loadState, setLoadState] = useState<'loading' | 'hidden' | 'failed'>('loading');
@@ -91,7 +94,7 @@ export function SessionCompleteNativeAd() {
 
   if (!adsModule || !nativeAd) {
     if (!SHOW_AD_PLACEHOLDER) return null;
-    return <SessionCompleteAdPlaceholder state={loadState} width={adWidth} />;
+    return <SessionCompleteAdPlaceholder state={loadState} width={adWidth} styles={styles} />;
   }
 
   const { NativeAdView, NativeAsset, NativeAssetType, NativeMediaView } = adsModule;
@@ -144,9 +147,11 @@ export function SessionCompleteNativeAd() {
 function SessionCompleteAdPlaceholder({
   state,
   width,
+  styles,
 }: {
   state: 'loading' | 'hidden' | 'failed';
   width: number;
+  styles: ReturnType<typeof createStyles>;
 }) {
   const message = state === 'loading'
     ? 'Loading sponsored content...'
@@ -163,12 +168,13 @@ function SessionCompleteAdPlaceholder({
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   card: {
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: C.borderCard,
-    backgroundColor: C.bgCard,
+    borderColor: colors.borderCard,
+    backgroundColor: colors.bgCard,
     paddingTop: 14,
     paddingBottom: 24,
   },
@@ -198,17 +204,17 @@ const styles = StyleSheet.create({
   adBadge: {
     overflow: 'hidden',
     borderRadius: 5,
-    backgroundColor: C.amber + '22',
+    backgroundColor: colors.amber + '22',
     borderWidth: 1,
-    borderColor: C.amber + '55',
-    color: C.amber,
+    borderColor: colors.amber + '55',
+    color: colors.amber,
     fontSize: 11,
     fontWeight: '800',
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
   headline: {
-    color: C.textPrimary,
+    color: colors.textPrimary,
     fontSize: 16,
     fontWeight: '800',
     lineHeight: 21,
@@ -216,11 +222,11 @@ const styles = StyleSheet.create({
   media: {
     borderRadius: 10,
     overflow: 'hidden',
-    backgroundColor: C.bgPrimary,
+    backgroundColor: colors.bgPrimary,
     marginBottom: 10,
   },
   body: {
-    color: C.textSecondary,
+    color: colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 10,
@@ -228,7 +234,7 @@ const styles = StyleSheet.create({
   cta: {
     overflow: 'hidden',
     borderRadius: 10,
-    backgroundColor: C.green,
+    backgroundColor: colors.green,
     color: '#000000',
     fontSize: 15,
     fontWeight: '800',
@@ -244,23 +250,24 @@ const styles = StyleSheet.create({
   placeholderBadge: {
     overflow: 'hidden',
     borderRadius: 5,
-    backgroundColor: C.cyan + '18',
+    backgroundColor: colors.cyan + '18',
     borderWidth: 1,
-    borderColor: C.cyan + '55',
-    color: C.cyan,
+    borderColor: colors.cyan + '55',
+    color: colors.cyan,
     fontSize: 11,
     fontWeight: '800',
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
   placeholderTitle: {
-    color: C.textPrimary,
+    color: colors.textPrimary,
     fontSize: 16,
     fontWeight: '800',
   },
   placeholderBody: {
-    color: C.textMuted,
+    color: colors.textMuted,
     fontSize: 13,
     lineHeight: 19,
   },
-});
+  });
+}

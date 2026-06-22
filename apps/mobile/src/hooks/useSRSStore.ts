@@ -1,14 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Grade } from '@fluentit/srs';
 import {
-  loadSRSStates,
-  loadStreak,
-  saveSRSStates,
-  saveStreak,
+  getCachedSRS,
+  isSRSCacheLoaded,
+  loadCachedSRS,
+  subscribeSRS,
+  updateCachedSRS,
   getDueCardIds,
   getOrCreateCardState,
   performReview,
   updateStreak,
+  type SRSCache,
   type SRSStateMap,
   type StreakData,
   type CardSRSState,
@@ -25,44 +27,53 @@ export interface SRSStore {
 }
 
 export function useSRSStore(): SRSStore {
-  const [states, setStates] = useState<SRSStateMap>({});
-  const [streak, setStreak] = useState<StreakData>({
-    lastStudyDate: '',
-    currentStreak: 0,
-    longestStreak: 0,
-  });
-  const [isLoaded, setIsLoaded] = useState(false);
-  const statesRef = useRef(states);
-  statesRef.current = states;
+  const [cache, setCache] = useState<SRSCache>(() => getCachedSRS());
+  const [isLoaded, setIsLoaded] = useState(() => isSRSCacheLoaded());
 
   useEffect(() => {
-    Promise.all([loadSRSStates(), loadStreak()]).then(([s, k]) => {
-      setStates(s);
-      setStreak(k);
+    let isMounted = true;
+    const unsubscribe = subscribeSRS((nextCache) => {
+      setCache(nextCache);
       setIsLoaded(true);
     });
+
+    loadCachedSRS().then((nextCache) => {
+      if (!isMounted) return;
+      setCache(nextCache);
+      setIsLoaded(true);
+    });
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, []);
 
   const review = useCallback(async (cardId: string, grade: Grade) => {
-    const { states: newStates } = performReview(statesRef.current, cardId, grade);
-    setStates(newStates);
-    await saveSRSStates(newStates);
+    await loadCachedSRS();
+    await updateCachedSRS((current) => {
+      const { states: newStates } = performReview(current.states, cardId, grade);
+      return { ...current, states: newStates };
+    }, { states: true, streak: false });
   }, []);
 
   const startStudy = useCallback(async () => {
-    const newStreak = updateStreak(streak);
-    if (newStreak.lastStudyDate !== streak.lastStudyDate) {
-      setStreak(newStreak);
-      await saveStreak(newStreak);
-    }
-  }, [streak]);
+    await loadCachedSRS();
+    await updateCachedSRS((current) => {
+      const newStreak = updateStreak(current.streak);
+      if (newStreak === current.streak) return current;
+      return { ...current, streak: newStreak };
+    }, { states: false, streak: true });
+  }, []);
 
   const getCardState = useCallback(
-    (cardId: string) => getOrCreateCardState(statesRef.current, cardId),
+    (cardId: string) => getOrCreateCardState(getCachedSRS().states, cardId),
     [],
   );
 
-  const dueCardIds = getDueCardIds(states);
+  const states = cache.states;
+  const streak = cache.streak;
+  const dueCardIds = useMemo(() => getDueCardIds(states), [states]);
 
   return { states, streak, isLoaded, dueCardIds, review, startStudy, getCardState };
 }

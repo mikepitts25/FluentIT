@@ -361,7 +361,7 @@ export const networkingCards: Card[] = [
   {
     id: 'net-ztna',
     domain: 'networking',
-    title: 'ZTNA',
+    title: 'Network ZTNA',
     subtitle: 'Zero Trust Network Access — replace VPN with per-app identity-based access',
     difficulty: 'intermediate',
     tags: ['zero trust', 'remote access', 'security'],
@@ -487,7 +487,7 @@ export const networkingCards: Card[] = [
   {
     id: 'net-cdn',
     domain: 'networking',
-    title: 'CDN',
+    title: 'CDN Edge Networking',
     subtitle: 'Content Delivery Network — serving content close to users',
     difficulty: 'beginner',
     tags: ['performance', 'caching', 'availability'],
@@ -655,7 +655,7 @@ export const networkingCards: Card[] = [
   {
     id: 'net-microsegmentation',
     domain: 'networking',
-    title: 'Microsegmentation',
+    title: 'Network Microsegmentation',
     subtitle: 'Per-workload security policies, not just network zones',
     difficulty: 'advanced',
     tags: ['security', 'zero trust', 'east-west'],

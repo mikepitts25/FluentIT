@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -6,26 +6,48 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { DOMAINS } from '../../src/content';
+import { ALL_CARDS, DOMAINS } from '../../src/content';
 import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
+import { useProStore } from '../../src/hooks/useProStore';
 import { usePreferencesStore } from '../../src/hooks/usePreferencesStore';
+import { getVisibleLearnDomains } from '../../src/learn/domain-search';
+import { FREE_TERMS_PER_CATEGORY, getAccessibleCards, getLockedCardCount } from '../../src/pro/pro-access';
 import { GRAD_GREEN_CYAN, getThemeColors, type ThemeColors } from '../../src/theme';
 import type { DomainMeta } from '../../src/content';
 
 type HomeStyles = ReturnType<typeof createStyles>;
 
+const AGENDA_PREP_GRADIENT = ['#A78BFA', '#7C3AED'] as const;
+
 export default function HomeScreen() {
   const router = useRouter();
   const { dueCardIds } = useSRSStore();
-  const { preferences, toggleDomain, setColorMode } = usePreferencesStore();
+  const { entitlement, isLoaded: isProLoaded } = useProStore();
+  const { preferences, toggleDomain } = usePreferencesStore();
+  const [searchQuery, setSearchQuery] = useState('');
   const colors = getThemeColors(preferences.colorMode);
   const styles = useMemo(() => createStyles(colors), [colors]);
-  const isLightMode = preferences.colorMode === 'light';
   const selectedCount = preferences.selectedDomains.length;
+  const isPro = entitlement.isPro;
+  const accessibleCards = useMemo(
+    () => getAccessibleCards({ cards: ALL_CARDS, isPro }),
+    [isPro],
+  );
+  const lockedCount = getLockedCardCount({ cards: ALL_CARDS, isPro });
+  const visibleDomains = useMemo(
+    () => getVisibleLearnDomains({
+      domains: DOMAINS,
+      cards: accessibleCards,
+      query: searchQuery,
+    }),
+    [accessibleCards, searchQuery],
+  );
+  const isSearching = searchQuery.trim().length > 0;
 
   return (
     <ScrollView
@@ -33,25 +55,20 @@ export default function HomeScreen() {
       contentContainerStyle={styles.content}
       contentInsetAdjustmentBehavior="automatic"
     >
-      <View style={styles.homeHeader}>
-        <TouchableOpacity
-          accessibilityLabel={isLightMode ? 'Switch to dark mode' : 'Switch to light mode'}
-          accessibilityRole="button"
-          activeOpacity={0.8}
-          style={styles.themeToggleButton}
-          onPress={() => {
-            void setColorMode(isLightMode ? 'dark' : 'light');
-          }}
-        >
-          <Text
-            style={[
-              styles.themeToggleIcon,
-              { color: isLightMode ? colors.amber : colors.cyan },
-            ]}
-          >
-            {isLightMode ? '☀' : '☾'}
-          </Text>
-        </TouchableOpacity>
+      <View style={styles.searchWrap}>
+        <Text style={styles.searchIcon}>⌕</Text>
+        <TextInput
+          accessibilityLabel="Search keyword or topic"
+          autoCapitalize="none"
+          autoCorrect={false}
+          clearButtonMode="while-editing"
+          placeholder="Search keyword or topic"
+          placeholderTextColor={colors.textMuted}
+          returnKeyType="search"
+          style={styles.searchInput}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
       </View>
 
       {/* Primary CTA */}
@@ -79,15 +96,21 @@ export default function HomeScreen() {
 
       {/* Meeting Prep */}
       <TouchableOpacity
-        style={styles.secondaryCta}
         onPress={() => router.push('/meeting-prep')}
         activeOpacity={0.8}
       >
-        <View>
-          <Text style={styles.secondaryCtaTitle}>Prep for a Meeting</Text>
-          <Text style={styles.secondaryCtaSub}>Turn agenda terms into a concept pack</Text>
-        </View>
-        <Text style={styles.secondaryCtaArrow}>→</Text>
+        <LinearGradient
+          colors={AGENDA_PREP_GRADIENT}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.secondaryCta}
+        >
+          <View>
+            <Text style={styles.secondaryCtaTitle}>Agenda Prep</Text>
+            <Text style={styles.secondaryCtaSub}>Turn agenda terms into a concept pack</Text>
+          </View>
+          <Text style={styles.secondaryCtaArrow}>→</Text>
+        </LinearGradient>
       </TouchableOpacity>
 
       {/* Due review nudge */}
@@ -105,24 +128,56 @@ export default function HomeScreen() {
         </TouchableOpacity>
       )}
 
+      {isProLoaded && !isPro && (
+        <TouchableOpacity
+          style={styles.proNudge}
+          activeOpacity={0.8}
+          onPress={() => router.push('/pro')}
+        >
+          <View style={styles.proNudgeIcon}>
+            <Text style={styles.proNudgeIconText}>PRO</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.proNudgeTitle}>
+              {FREE_TERMS_PER_CATEGORY} free terms per category
+            </Text>
+            <Text style={styles.proNudgeText}>
+              Go Pro to unlock {lockedCount} more and remove ads.
+            </Text>
+          </View>
+          <Text style={styles.proNudgeArrow}>→</Text>
+        </TouchableOpacity>
+      )}
+
       {/* Domain grid */}
-      <Text style={styles.sectionLabel}>KNOWLEDGE BASE</Text>
-      <View style={styles.grid}>
-        {DOMAINS.map((d) => {
-          const isFocused = preferences.selectedDomains.includes(d.id);
-          return (
-            <DomainCard
-              key={d.id}
-              domain={d}
-              isFocused={isFocused}
-              onPress={() => router.push(`/domain/${d.id}`)}
-              onToggleFocus={() => toggleDomain(d.id)}
-              colors={colors}
-              styles={styles}
-            />
-          );
-        })}
-      </View>
+      <Text style={styles.sectionLabel}>
+        {isSearching ? 'MATCHING TOPICS' : 'KNOWLEDGE BASE'}
+      </Text>
+      {visibleDomains.length > 0 ? (
+        <View style={styles.grid}>
+          {visibleDomains.map((d) => {
+            const isFocused = preferences.selectedDomains.includes(d.id);
+            return (
+              <DomainCard
+                key={d.id}
+                domain={d}
+                isFocused={isFocused}
+                onPress={() => router.push(`/domain/${d.id}`)}
+                onToggleFocus={() => toggleDomain(d.id)}
+                colors={colors}
+                styles={styles}
+              />
+            );
+          })}
+        </View>
+      ) : (
+        <View style={styles.emptySearch}>
+          <Text style={styles.emptySearchTitle}>No matching topics</Text>
+          <Text style={styles.emptySearchText}>
+            Try another keyword, topic, or category name.
+          </Text>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -189,23 +244,29 @@ function createStyles(colors: ThemeColors) {
   container: { flex: 1, backgroundColor: colors.bgPrimary },
   content: { padding: 16, paddingBottom: 48, gap: 12 },
 
-  homeHeader: {
-    alignItems: 'flex-end',
-    minHeight: 42,
-    position: 'relative',
-    zIndex: 5,
-  },
-  themeToggleButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
+  searchWrap: {
+    minHeight: 48,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.borderCard,
-    backgroundColor: colors.bgCard,
+    backgroundColor: colors.bgInput,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: 14,
+    gap: 8,
   },
-  themeToggleIcon: { fontSize: 23, fontWeight: '800', lineHeight: 25 },
+  searchIcon: {
+    color: colors.textMuted,
+    fontSize: 21,
+    fontWeight: '800',
+  },
+  searchInput: {
+    flex: 1,
+    color: colors.textPrimary,
+    fontSize: 16,
+    minHeight: 46,
+    paddingVertical: 0,
+  },
 
   primaryCta: {
     borderRadius: 16,
@@ -219,18 +280,15 @@ function createStyles(colors: ThemeColors) {
   primaryCtaArrow: { color: '#000000', fontSize: 25, fontWeight: '300' },
 
   secondaryCta: {
-    backgroundColor: colors.bgCard,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.borderCard,
     padding: 18,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  secondaryCtaTitle: { color: colors.textPrimary, fontSize: 19, fontWeight: '700' },
-  secondaryCtaSub: { color: colors.textSecondary, fontSize: 16, marginTop: 3 },
-  secondaryCtaArrow: { color: colors.textMuted, fontSize: 23 },
+  secondaryCtaTitle: { color: '#FFFFFF', fontSize: 19, fontWeight: '800' },
+  secondaryCtaSub: { color: 'rgba(255,255,255,0.76)', fontSize: 16, marginTop: 3 },
+  secondaryCtaArrow: { color: '#FFFFFF', fontSize: 23, fontWeight: '700' },
 
   reviewNudge: {
     flexDirection: 'row',
@@ -252,6 +310,31 @@ function createStyles(colors: ThemeColors) {
   reviewNudgeText: { flex: 1, color: colors.green, fontSize: 16, fontWeight: '600' },
   reviewNudgeArrow: { color: colors.green, fontSize: 19 },
 
+  proNudge: {
+    backgroundColor: colors.bgCard,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.purple + '44',
+    padding: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  proNudgeIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 12,
+    backgroundColor: colors.purple + '20',
+    borderWidth: 1,
+    borderColor: colors.purple + '55',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  proNudgeIconText: { color: colors.purple, fontSize: 11, fontWeight: '900' },
+  proNudgeTitle: { color: colors.textPrimary, fontSize: 15, fontWeight: '800' },
+  proNudgeText: { color: colors.textSecondary, fontSize: 13, marginTop: 2 },
+  proNudgeArrow: { color: colors.purple, fontSize: 18, fontWeight: '900' },
+
   sectionLabel: {
     color: colors.textMuted,
     fontSize: 14,
@@ -262,6 +345,17 @@ function createStyles(colors: ThemeColors) {
   },
 
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+
+  emptySearch: {
+    backgroundColor: colors.bgCard,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.borderCard,
+    padding: 16,
+    gap: 4,
+  },
+  emptySearchTitle: { color: colors.textPrimary, fontSize: 17, fontWeight: '800' },
+  emptySearchText: { color: colors.textSecondary, fontSize: 15, lineHeight: 21 },
 
   domainCard: {
     width: '47.5%',

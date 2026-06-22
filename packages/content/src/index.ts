@@ -69,3 +69,14 @@ export function getCardsByDomain(domain: Domain): Card[] {
 export function getCardById(id: string): Card | undefined {
   return ALL_CARDS.find((c) => c.id === id);
 }
+
+function normalizeCardTitle(title: string): string {
+  return title.trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+export function getCardByTitle(title: string): Card | undefined {
+  const normalizedTitle = normalizeCardTitle(title);
+  if (!normalizedTitle) return undefined;
+
+  return ALL_CARDS.find((card) => normalizeCardTitle(card.title) === normalizedTitle);
+}
