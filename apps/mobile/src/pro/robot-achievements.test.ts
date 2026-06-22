@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   ROBOT_ACCESSORIES,
+  getNextRobotAvatarTestMilestone,
   getRobotAchievementProgress,
   getRobotAvatarMilestonePercent,
   getUnlockedRobotAccessories,
@@ -49,5 +50,12 @@ describe('robot achievements', () => {
   it('selects the highest unlocked robot avatar milestone for Pro users', () => {
     expect(getRobotAvatarMilestonePercent({ percentExplored: 16, isPro: true })).toBe(15);
     expect(getRobotAvatarMilestonePercent({ percentExplored: 101, isPro: true })).toBe(100);
+  });
+
+  it('cycles the dev robot preview one unlock at a time', () => {
+    expect(getNextRobotAvatarTestMilestone(null)).toBe(5);
+    expect(getNextRobotAvatarTestMilestone(5)).toBe(10);
+    expect(getNextRobotAvatarTestMilestone(95)).toBe(100);
+    expect(getNextRobotAvatarTestMilestone(100)).toBe(0);
   });
 });

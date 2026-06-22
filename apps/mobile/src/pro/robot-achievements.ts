@@ -79,3 +79,11 @@ export function getRobotAvatarMilestonePercent({
   const milestone = Math.floor(clamped / 5) * 5;
   return milestone as RobotAvatarMilestone;
 }
+
+export function getNextRobotAvatarTestMilestone(
+  current: RobotAvatarMilestone | null,
+): RobotAvatarMilestone {
+  if (current === null) return 5;
+  if (current >= 100) return 0;
+  return (current + 5) as RobotAvatarMilestone;
+}
