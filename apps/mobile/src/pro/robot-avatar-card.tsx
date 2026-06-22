@@ -55,26 +55,27 @@ export function RobotAvatarCard({
         </Text>
       </View>
 
-      <View style={styles.avatarRow}>
+      <View style={styles.avatarStage}>
         <RobotFigure colors={colors} milestonePercent={displayMilestonePercent} />
-        <View style={styles.avatarCopy}>
-          <Text style={styles.avatarTitle}>
-            {isTestingRobot
-              ? `Test loadout ${displayMilestonePercent}%`
-              : isPro
-                ? `${displayMilestonePercent}% robot loadout`
-                : 'Pro cosmetics locked'}
-          </Text>
-          <Text style={styles.avatarText}>
-            {isTestingRobot
-              ? 'Development preview only. Remove this control before any production build.'
-              : isPro
-              ? progress.nextUnlockPercent
-                ? `${progress.percentToNextUnlock}% more library progress unlocks the ${progress.nextUnlockPercent}% accessory.`
-                : 'All cosmetics unlocked.'
-              : 'Upgrade to Pro to unlock a new robot cosmetic every 5% of library progress.'}
-          </Text>
-        </View>
+      </View>
+
+      <View style={styles.avatarCopy}>
+        <Text style={styles.avatarTitle}>
+          {isTestingRobot
+            ? `Test loadout ${displayMilestonePercent}%`
+            : isPro
+              ? `${displayMilestonePercent}% robot loadout`
+              : 'Pro cosmetics locked'}
+        </Text>
+        <Text style={styles.avatarText}>
+          {isTestingRobot
+            ? 'Development preview only. Remove this control before any production build.'
+            : isPro
+            ? progress.nextUnlockPercent
+              ? `${progress.percentToNextUnlock}% more library progress unlocks the ${progress.nextUnlockPercent}% accessory.`
+              : 'All cosmetics unlocked.'
+            : 'Upgrade to Pro to unlock a new robot cosmetic every 5% of library progress.'}
+        </Text>
       </View>
 
       {SHOW_ROBOT_TEST_CONTROLS && (
@@ -140,8 +141,8 @@ function RobotFigure({
 
 const stylesForFigure = StyleSheet.create({
   shell: {
-    width: 144,
-    height: 180,
+    width: '100%',
+    height: 300,
     borderRadius: 18,
     borderWidth: 1,
     alignItems: 'center',
@@ -166,8 +167,8 @@ function createStyles(colors: ThemeColors) {
     },
     title: { color: colors.textPrimary, fontSize: 20, fontWeight: '800', marginTop: 4 },
     unlockCount: { color: colors.purple, fontSize: 18, fontWeight: '900' },
-    avatarRow: { flexDirection: 'row', gap: 14, alignItems: 'center' },
-    avatarCopy: { flex: 1, gap: 6 },
+    avatarStage: { width: '100%' },
+    avatarCopy: { gap: 6 },
     avatarTitle: { color: colors.textPrimary, fontSize: 16, fontWeight: '800' },
     avatarText: { color: colors.textSecondary, fontSize: 13, lineHeight: 19 },
     testButton: {

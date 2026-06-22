@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
@@ -5,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const assetDir = resolve(__dirname, '../assets/robot-avatar');
+const conceptSourcePath = join(assetDir, 'source/robot-100-concept.png');
 const tmpDir = join(assetDir, '.tmp-svg');
 const milestones = Array.from({ length: 21 }, (_, index) => index * 5);
 
@@ -279,6 +281,30 @@ for (const percent of milestones) {
   const padded = String(percent).padStart(3, '0');
   const svgPath = join(tmpDir, `robot-${padded}.svg`);
   const pngPath = join(assetDir, `robot-${padded}.png`);
+
+  if (percent === 100 && existsSync(conceptSourcePath)) {
+    const conceptResult = spawnSync('magick', [
+      conceptSourcePath,
+      '-resize',
+      '512x640',
+      '-background',
+      '#0A0A0F',
+      '-gravity',
+      'center',
+      '-extent',
+      '512x640',
+      '-depth',
+      '8',
+      '-strip',
+      pngPath,
+    ], { stdio: 'inherit' });
+
+    if (conceptResult.status !== 0) {
+      throw new Error('ImageMagick failed for curated robot-100.png');
+    }
+    continue;
+  }
+
   await writeFile(svgPath, svg(percent), 'utf8');
 
   const result = spawnSync('magick', [
