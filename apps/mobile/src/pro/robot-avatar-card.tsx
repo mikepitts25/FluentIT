@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { ThemeColors } from '../theme';
 import {
   ROBOT_ACCESSORIES,
@@ -7,9 +7,10 @@ import {
   getRobotAchievementProgress,
   getRobotAvatarMilestonePercent,
   getUnlockedRobotAccessories,
+  type RobotAccessory,
   type RobotAvatarMilestone,
 } from './robot-achievements';
-import { getRobotAvatarImage } from './robot-avatar-assets';
+import { RobotAvatar3DView } from './robot-avatar-3d-view';
 
 const SHOW_ROBOT_TEST_CONTROLS = typeof __DEV__ !== 'undefined' && __DEV__;
 
@@ -56,7 +57,7 @@ export function RobotAvatarCard({
       </View>
 
       <View style={styles.avatarStage}>
-        <RobotFigure colors={colors} milestonePercent={displayMilestonePercent} />
+        <RobotFigure colors={colors} unlockedAccessories={displayUnlocked} />
       </View>
 
       <View style={styles.avatarCopy}>
@@ -122,38 +123,13 @@ export function RobotAvatarCard({
 
 function RobotFigure({
   colors,
-  milestonePercent,
+  unlockedAccessories,
 }: {
   colors: ThemeColors;
-  milestonePercent: RobotAvatarMilestone;
+  unlockedAccessories: RobotAccessory[];
 }) {
-  return (
-    <View style={[stylesForFigure.shell, { borderColor: colors.borderCard, backgroundColor: colors.bgPrimary }]}>
-      <Image
-        accessibilityIgnoresInvertColors
-        resizeMode="contain"
-        source={getRobotAvatarImage(milestonePercent)}
-        style={stylesForFigure.avatarImage}
-      />
-    </View>
-  );
+  return <RobotAvatar3DView colors={colors} unlockedAccessories={unlockedAccessories} />;
 }
-
-const stylesForFigure = StyleSheet.create({
-  shell: {
-    width: '100%',
-    height: 300,
-    borderRadius: 18,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-  },
-});
 
 function createStyles(colors: ThemeColors) {
   return StyleSheet.create({
