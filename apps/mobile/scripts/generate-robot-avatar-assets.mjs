@@ -41,28 +41,32 @@ function has(percent, id) {
 function drawBack(percent) {
   return `
     ${has(percent, 'cape') ? `
-      <path d="M158 289 C95 340 74 459 110 570 C156 552 211 508 243 438 L208 313 Z" fill="#4C1D95" opacity=".95" filter="url(#shadow)"/>
-      <path d="M354 289 C417 340 438 459 402 570 C356 552 301 508 269 438 L304 313 Z" fill="#4C1D95" opacity=".95" filter="url(#shadow)"/>
-      <path d="M116 558 C174 528 210 486 235 433" fill="none" stroke="#8B5CF6" stroke-width="4" opacity=".6"/>
-      <path d="M396 558 C338 528 302 486 277 433" fill="none" stroke="#00D4FF" stroke-width="4" opacity=".55"/>
+      <path d="M165 286 C96 339 71 463 105 579 C157 557 209 507 244 431 L213 311 Z" fill="#4C1D95" opacity=".98" filter="url(#shadow)"/>
+      <path d="M347 286 C416 339 441 463 407 579 C355 557 303 507 268 431 L299 311 Z" fill="#4C1D95" opacity=".98" filter="url(#shadow)"/>
+      <path d="M113 562 C171 532 209 484 236 427" fill="none" stroke="#A78BFA" stroke-width="7" opacity=".72"/>
+      <path d="M399 562 C341 532 303 484 276 427" fill="none" stroke="#00D4FF" stroke-width="7" opacity=".62"/>
+      <path d="M137 516 C165 492 189 460 207 420" fill="none" stroke="#2DD4BF" stroke-width="2" opacity=".45"/>
+      <path d="M375 516 C347 492 323 460 305 420" fill="none" stroke="#2DD4BF" stroke-width="2" opacity=".45"/>
     ` : ''}
     ${has(percent, 'jetpack') ? `
       <g filter="url(#shadow)">
-        <rect x="126" y="292" width="56" height="154" rx="22" fill="#CBD5E1" stroke="#00D4FF" stroke-width="4"/>
-        <rect x="330" y="292" width="56" height="154" rx="22" fill="#CBD5E1" stroke="#00D4FF" stroke-width="4"/>
-        <path d="M143 444 C133 474 137 512 156 548 C174 512 178 474 168 444 Z" fill="#F59E0B" opacity=".88"/>
-        <path d="M343 444 C333 474 337 512 356 548 C374 512 378 474 368 444 Z" fill="#F59E0B" opacity=".88"/>
-        <path d="M139 326 h30" stroke="#7C3AED" stroke-width="6" stroke-linecap="round"/>
-        <path d="M343 326 h30" stroke="#7C3AED" stroke-width="6" stroke-linecap="round"/>
+        <rect x="124" y="286" width="61" height="160" rx="24" fill="#CBD5E1" stroke="#00D4FF" stroke-width="4"/>
+        <rect x="327" y="286" width="61" height="160" rx="24" fill="#CBD5E1" stroke="#00D4FF" stroke-width="4"/>
+        <path d="M141 444 C130 477 135 518 156 556 C177 518 182 477 171 444 Z" fill="#F59E0B" opacity=".95"/>
+        <path d="M341 444 C330 477 335 518 356 556 C377 518 382 477 371 444 Z" fill="#F59E0B" opacity=".95"/>
+        <path d="M139 326 h31" stroke="#7C3AED" stroke-width="7" stroke-linecap="round"/>
+        <path d="M342 326 h31" stroke="#7C3AED" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="155" cy="372" r="10" fill="#00FF88" opacity=".72"/>
+        <circle cx="357" cy="372" r="10" fill="#00FF88" opacity=".72"/>
       </g>
     ` : ''}
     ${has(percent, 'rocket') ? `
-      <g transform="translate(360 188) rotate(16)" filter="url(#glowAmber)">
-        <path d="M30 0 C60 25 67 78 44 126 L15 126 C-7 78 0 25 30 0 Z" fill="#F8FAFC" stroke="#A78BFA" stroke-width="3"/>
-        <circle cx="30" cy="48" r="12" fill="#00D4FF" stroke="#FFFFFF" stroke-width="4"/>
-        <path d="M11 94 L-20 124 L16 116 Z" fill="#7C3AED"/>
-        <path d="M49 94 L80 124 L44 116 Z" fill="#7C3AED"/>
-        <path d="M20 126 C16 146 23 165 30 178 C37 165 44 146 40 126 Z" fill="#F59E0B"/>
+      <g filter="url(#glowAmber)">
+        <path d="M414 137 C449 167 456 225 429 276 L399 276 C372 225 379 167 414 137 Z" fill="#F8FAFC" stroke="#A78BFA" stroke-width="4"/>
+        <circle cx="414" cy="191" r="15" fill="#00D4FF" stroke="#FFFFFF" stroke-width="4"/>
+        <path d="M395 239 L358 274 L398 264 Z" fill="#7C3AED"/>
+        <path d="M433 239 L470 274 L430 264 Z" fill="#7C3AED"/>
+        <path d="M404 276 C399 297 405 318 414 333 C423 318 429 297 424 276 Z" fill="#F59E0B"/>
       </g>
     ` : ''}
   `;
@@ -71,15 +75,17 @@ function drawBack(percent) {
 function drawFeet(percent) {
   const gold = has(percent, 'boots-gold');
   const boots = has(percent, 'boots') || gold;
-  const fill = gold ? '#F59E0B' : boots ? '#454B56' : '#6B7280';
-  const stroke = gold ? '#F59E0B' : boots ? '#00D4FF' : '#6B7280';
+  const fill = gold ? '#F59E0B' : boots ? '#242938' : '#8B95A3';
+  const stroke = gold ? '#FDE68A' : boots ? '#00D4FF' : '#4B5563';
   return `
     <g filter="url(#shadow)">
-      <rect x="176" y="493" width="62" height="40" rx="16" fill="${fill}" stroke="${stroke}" stroke-width="${boots ? 4 : 0}"/>
-      <rect x="274" y="493" width="62" height="40" rx="16" fill="${fill}" stroke="${stroke}" stroke-width="${boots ? 4 : 0}"/>
+      <rect x="174" y="496" width="66" height="42" rx="17" fill="${fill}" stroke="${stroke}" stroke-width="${boots ? 5 : 2}"/>
+      <rect x="272" y="496" width="66" height="42" rx="17" fill="${fill}" stroke="${stroke}" stroke-width="${boots ? 5 : 2}"/>
+      <path d="M186 503 h42" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".3"/>
+      <path d="M284 503 h42" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".3"/>
       ${boots ? `
-        <path d="M188 518 h36" stroke="${gold ? '#FFF7AD' : '#00FF88'}" stroke-width="4" stroke-linecap="round"/>
-        <path d="M286 518 h36" stroke="${gold ? '#FFF7AD' : '#00FF88'}" stroke-width="4" stroke-linecap="round"/>
+        <path d="M188 521 h36" stroke="${gold ? '#FFF7AD' : '#00FF88'}" stroke-width="5" stroke-linecap="round"/>
+        <path d="M286 521 h36" stroke="${gold ? '#FFF7AD' : '#00FF88'}" stroke-width="5" stroke-linecap="round"/>
       ` : ''}
     </g>
   `;
@@ -89,37 +95,42 @@ function drawBody(percent) {
   const suit = has(percent, 'suit');
   return `
     <g filter="url(#shadow)">
-      <rect x="170" y="298" width="172" height="158" rx="42" fill="${suit ? '#D9DEE7' : '#E5E7EB'}" stroke="#A78BFA" stroke-width="6"/>
+      <path d="M178 319 C188 295 212 283 256 283 C300 283 324 295 334 319 L348 422 C352 458 326 484 289 486 H223 C186 484 160 458 164 422 Z" fill="#F8FAFC" stroke="#F8FAFC" stroke-width="5"/>
+      <path d="M305 299 C329 317 337 346 337 419 C337 446 322 464 302 472 C316 422 315 356 305 299 Z" fill="#94A3B8" opacity=".55"/>
+      <path d="M187 333 C219 311 293 311 325 333" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".75"/>
+      <path d="M189 334 C218 358 294 358 323 334 L323 438 C286 465 226 465 189 438 Z" fill="#111827" opacity=".18"/>
       ${suit ? `
         <path d="M187 326 C218 352 294 352 325 326 L325 438 C286 464 226 464 187 438 Z" fill="#151723" opacity=".82"/>
         <path d="M207 316 L256 368 L305 316" fill="none" stroke="#F8FAFC" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
       ` : ''}
-      <rect x="209" y="345" width="94" height="72" rx="20" fill="#0A0A0F" stroke="#00D4FF" stroke-width="4" filter="url(#glowCyan)"/>
-      <path d="M256 365 L282 381 L282 411 L256 427 L230 411 L230 381 Z" fill="#00D4FF" opacity=".92"/>
-      <path d="M256 375 L273 386 L273 406 L256 417 L239 406 L239 386 Z" fill="#00FF88" opacity=".6"/>
+      <rect x="201" y="342" width="110" height="88" rx="24" fill="#06080F" stroke="#7C3AED" stroke-width="5"/>
+      <rect x="209" y="350" width="94" height="72" rx="20" fill="#0A0A0F" stroke="#00D4FF" stroke-width="4" filter="url(#glowCyan)"/>
+      <path d="M256 363 L285 380 L285 414 L256 431 L227 414 L227 380 Z" fill="#00D4FF" opacity=".94"/>
+      <path d="M256 374 L273 386 L273 406 L256 418 L239 406 L239 386 Z" fill="#00FF88" opacity=".68"/>
       ${has(percent, 'tie') ? `
-        <path d="M246 301 L266 301 L276 358 L256 382 L236 358 Z" fill="#7C3AED" stroke="#A78BFA" stroke-width="3"/>
-        <path d="M244 304 L256 320 L268 304" fill="#111827" opacity=".45"/>
+        <path d="M245 294 L267 294 L279 361 L256 391 L233 361 Z" fill="#7C3AED" stroke="#A78BFA" stroke-width="4"/>
+        <path d="M243 299 L256 318 L269 299" fill="#111827" opacity=".48"/>
       ` : ''}
       ${has(percent, 'badge') ? `
-        <g transform="translate(302 328)" filter="url(#glowAmber)">
-          <path d="M0 16 L15 0 L31 16 L31 38 L15 50 L0 38 Z" fill="#F59E0B" stroke="#FDE68A" stroke-width="3"/>
-          <path d="M15 11 L19 22 L30 22 L21 29 L24 41 L15 34 L6 41 L9 29 L0 22 L11 22 Z" fill="#7C3AED"/>
+        <g transform="translate(305 322)" filter="url(#glowAmber)">
+          <path d="M0 17 L17 0 L36 17 L36 43 L17 57 L0 43 Z" fill="#F59E0B" stroke="#FDE68A" stroke-width="3"/>
+          <path d="M17 12 L22 24 L34 24 L24 32 L28 45 L17 37 L6 45 L10 32 L0 24 L12 24 Z" fill="#7C3AED"/>
         </g>
       ` : ''}
       ${has(percent, 'toolbelt') ? `
-        <g transform="translate(165 421)">
-          <rect x="0" y="0" width="182" height="22" rx="10" fill="#171923" stroke="#9CA3AF" stroke-width="2"/>
-          <rect x="67" y="-4" width="48" height="30" rx="8" fill="#3F3F46" stroke="#F59E0B" stroke-width="3"/>
-          <path d="M82 10 h18" stroke="#FDE68A" stroke-width="3" stroke-linecap="round"/>
+        <g transform="translate(164 424)">
+          <rect x="0" y="0" width="184" height="25" rx="11" fill="#171923" stroke="#9CA3AF" stroke-width="3"/>
+          <rect x="67" y="-5" width="50" height="33" rx="8" fill="#3F3F46" stroke="#F59E0B" stroke-width="3"/>
+          <path d="M82 11 h20" stroke="#FDE68A" stroke-width="3" stroke-linecap="round"/>
+          <rect x="128" y="2" width="23" height="21" rx="5" fill="#111827" stroke="#00D4FF" stroke-width="2"/>
         </g>
       ` : ''}
       ${has(percent, 'satchel') ? `
-        <g transform="translate(319 379) rotate(-7)" filter="url(#shadow)">
-          <path d="M0 0 h55 a14 14 0 0 1 14 14 v75 a14 14 0 0 1 -14 14 h-55 a14 14 0 0 1 -14 -14 v-75 a14 14 0 0 1 14 -14 Z" fill="#171923" stroke="#8B5CF6" stroke-width="4"/>
-          <path d="M13 48 h36 v34 h-36 Z" fill="#0A0A0F" stroke="#00D4FF" stroke-width="3"/>
-          <path d="M20 72 v-12 M31 72 v-22 M42 72 v-16" stroke="#00FF88" stroke-width="4" stroke-linecap="round"/>
-          <path d="M4 -35 C-4 12 9 42 60 69" fill="none" stroke="#5B4636" stroke-width="8"/>
+        <g transform="translate(346 416) rotate(-7)" filter="url(#shadow)">
+          <path d="M-72 -101 C-54 -47 -33 -8 16 31" fill="none" stroke="#5B4636" stroke-width="9" opacity=".95"/>
+          <path d="M0 0 h60 a14 14 0 0 1 14 14 v76 a14 14 0 0 1 -14 14 h-60 a14 14 0 0 1 -14 -14 v-76 a14 14 0 0 1 14 -14 Z" fill="#171923" stroke="#8B5CF6" stroke-width="5"/>
+          <path d="M12 45 h40 v36 h-40 Z" fill="#0A0A0F" stroke="#00D4FF" stroke-width="4"/>
+          <path d="M20 73 v-12 M32 73 v-25 M44 73 v-18" stroke="#00FF88" stroke-width="5" stroke-linecap="round"/>
         </g>
       ` : ''}
     </g>
@@ -127,25 +138,30 @@ function drawBody(percent) {
 }
 
 function drawArms(percent) {
+  const gloveFill = has(percent, 'gloves') ? '#171923' : '#E2E8F0';
+  const gloveStroke = has(percent, 'gloves') ? '#A78BFA' : '#94A3B8';
   return `
     <g filter="url(#shadow)">
-      <path d="M174 330 C125 342 99 380 92 426" fill="none" stroke="#CBD5E1" stroke-width="26" stroke-linecap="round"/>
-      <path d="M338 330 C387 342 413 380 420 426" fill="none" stroke="#CBD5E1" stroke-width="26" stroke-linecap="round"/>
-      <circle cx="92" cy="431" r="${has(percent, 'gloves') ? 28 : 21}" fill="${has(percent, 'gloves') ? '#171923' : '#D9DEE7'}" stroke="${has(percent, 'gloves') ? '#A78BFA' : '#9CA3AF'}" stroke-width="5"/>
-      <circle cx="420" cy="431" r="${has(percent, 'gloves') ? 28 : 21}" fill="${has(percent, 'gloves') ? '#171923' : '#D9DEE7'}" stroke="${has(percent, 'gloves') ? '#A78BFA' : '#9CA3AF'}" stroke-width="5"/>
+      <path d="M176 326 C129 337 103 373 94 423" fill="none" stroke="#CBD5E1" stroke-width="30" stroke-linecap="round"/>
+      <path d="M336 326 C383 337 409 373 418 423" fill="none" stroke="#CBD5E1" stroke-width="30" stroke-linecap="round"/>
+      <path d="M124 376 C146 350 164 342 176 339" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".38"/>
+      <path d="M388 376 C366 350 348 342 336 339" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".38"/>
+      <circle cx="94" cy="427" r="${has(percent, 'gloves') ? 30 : 24}" fill="${gloveFill}" stroke="${gloveStroke}" stroke-width="5"/>
+      <circle cx="418" cy="427" r="${has(percent, 'gloves') ? 30 : 24}" fill="${gloveFill}" stroke="${gloveStroke}" stroke-width="5"/>
       ${has(percent, 'wrench') ? `
-        <g transform="translate(48 292)">
-          <rect x="32" y="52" width="24" height="142" rx="11" fill="#CBD5E1" stroke="#9CA3AF" stroke-width="4"/>
-          <path d="M16 0 C35 18 53 17 70 0 L82 13 L57 39 L70 64 C50 76 30 76 10 64 L23 39 L-2 13 Z" fill="#CBD5E1" stroke="#D1D5DB" stroke-width="4"/>
-          <circle cx="44" cy="159" r="13" fill="#0A0A0F" stroke="#00FF88" stroke-width="4"/>
+        <g transform="translate(38 277)">
+          <rect x="36" y="62" width="27" height="154" rx="12" fill="#CBD5E1" stroke="#9CA3AF" stroke-width="4"/>
+          <path d="M18 0 C39 20 59 19 78 0 L91 15 L63 45 L78 73 C55 87 32 87 9 73 L24 45 L-4 15 Z" fill="#CBD5E1" stroke="#E5E7EB" stroke-width="5"/>
+          <circle cx="50" cy="179" r="15" fill="#0A0A0F" stroke="#00FF88" stroke-width="5"/>
         </g>
       ` : ''}
       ${has(percent, 'shield') ? `
-        <g transform="translate(387 356)" filter="url(#glowCyan)">
-          <path d="M42 0 L98 22 L87 109 C79 147 56 178 42 184 C28 178 5 147 -3 109 L-14 22 Z" fill="#10121C" stroke="#00FF88" stroke-width="5"/>
-          <path d="M42 25 L76 39 L69 101 C64 124 50 145 42 150 C34 145 20 124 15 101 L8 39 Z" fill="#111827" stroke="#00D4FF" stroke-width="3"/>
-          <path d="M25 86 C25 68 59 68 59 86 V94 H25 Z" fill="#00D4FF"/>
-          <rect x="18" y="90" width="48" height="43" rx="8" fill="#00D4FF"/>
+        <g transform="translate(382 344)" filter="url(#glowCyan)">
+          <path d="M47 0 L110 25 L98 119 C89 160 63 194 47 201 C31 194 5 160 -4 119 L-16 25 Z" fill="#10121C" stroke="#00FF88" stroke-width="6"/>
+          <path d="M47 27 L86 43 L78 110 C72 136 56 159 47 165 C38 159 22 136 16 110 L8 43 Z" fill="#111827" stroke="#00D4FF" stroke-width="4"/>
+          <path d="M28 95 C28 74 66 74 66 95 V104 H28 Z" fill="#00D4FF"/>
+          <rect x="20" y="101" width="54" height="49" rx="9" fill="#00D4FF"/>
+          <path d="M47 47 V157 M10 81 L86 132 M84 82 L12 132" stroke="#00FF88" stroke-width="2" opacity=".7"/>
         </g>
       ` : ''}
     </g>
@@ -161,34 +177,41 @@ function drawHead(percent) {
         <path d="M128 72 C112 58 105 42 108 24" fill="none" stroke="#00FF88" stroke-width="4" stroke-linecap="round" opacity=".7"/>
       ` : ''}
       ${has(percent, 'halo') ? `
-        <ellipse cx="256" cy="34" rx="96" ry="24" fill="#F59E0B" opacity=".96"/>
-        <ellipse cx="256" cy="34" rx="75" ry="11" fill="#0A0A0F"/>
+        <ellipse cx="256" cy="35" rx="98" ry="25" fill="#F59E0B" opacity=".98" filter="url(#glowAmber)"/>
+        <ellipse cx="256" cy="35" rx="76" ry="11" fill="#0A0A0F"/>
       ` : ''}
       ${has(percent, 'crown') ? `
-        <path d="M169 112 L188 66 L225 105 L256 56 L287 105 L324 66 L343 112 Z" fill="#F59E0B" stroke="#FDE68A" stroke-width="5" filter="url(#glowAmber)"/>
-        <path d="M246 80 L256 63 L266 80 L266 103 L246 103 Z" fill="#8B5CF6"/>
+        <path d="M165 113 L187 62 L224 104 L256 52 L288 104 L325 62 L347 113 Z" fill="#F59E0B" stroke="#FDE68A" stroke-width="5" filter="url(#glowAmber)"/>
+        <path d="M242 76 L256 56 L270 76 L270 105 L242 105 Z" fill="#7C3AED" stroke="#FDE68A" stroke-width="2"/>
       ` : ''}
       ${has(percent, 'helmet') ? `
-        <path d="M150 142 C162 84 210 61 256 61 C302 61 350 84 362 142 Z" fill="#252837" stroke="#A78BFA" stroke-width="5"/>
-        <path d="M178 111 C215 86 297 86 334 111" fill="none" stroke="#00D4FF" stroke-width="5" opacity=".8"/>
-      ` : ''}
-      <rect x="146" y="121" width="220" height="142" rx="47" fill="#F3F4F6" stroke="#00D4FF" stroke-width="6" filter="url(#glowCyan)"/>
-      <rect x="172" y="153" width="168" height="78" rx="31" fill="#070911" stroke="#101827" stroke-width="4"/>
+        <path d="M145 146 C158 82 208 58 256 58 C304 58 354 82 367 146 Z" fill="#252837" stroke="#A78BFA" stroke-width="5"/>
+        <path d="M176 112 C214 86 298 86 336 112" fill="none" stroke="#00D4FF" stroke-width="6" opacity=".86"/>
+        <path d="M149 143 L125 105 L167 118 Z" fill="#F59E0B" opacity=".92"/>
+        <path d="M363 143 L387 105 L345 118 Z" fill="#F59E0B" opacity=".92"/>
+      ` : `
+        <path d="M154 148 C169 98 212 78 256 78 C300 78 343 98 358 148 Z" fill="#1C2030" stroke="#111827" stroke-width="4"/>
+        <path d="M187 120 C222 101 290 101 325 120" fill="none" stroke="#00D4FF" stroke-width="5" opacity=".72"/>
+      `}
+      <rect x="139" y="122" width="234" height="150" rx="52" fill="#F8FAFC" stroke="#F8FAFC" stroke-width="5"/>
+      <rect x="166" y="153" width="180" height="83" rx="33" fill="#050711" stroke="#00D4FF" stroke-width="5" filter="url(#glowCyan)"/>
       ${has(percent, 'visor') ? `
-        <path d="M165 145 C217 133 295 133 347 145 L335 196 C288 206 224 206 177 196 Z" fill="#7C3AED" opacity=".86" stroke="#A78BFA" stroke-width="4"/>
+        <path d="M160 145 C216 132 296 132 352 145 L339 199 C289 210 223 210 173 199 Z" fill="#7C3AED" opacity=".92" stroke="#C4B5FD" stroke-width="5"/>
       ` : ''}
-      <ellipse cx="222" cy="192" rx="16" ry="25" fill="#00FF88" filter="url(#glowGreen)"/>
-      <ellipse cx="290" cy="192" rx="16" ry="25" fill="#00FF88" filter="url(#glowGreen)"/>
+      <ellipse cx="221" cy="194" rx="17" ry="27" fill="#00FF88" filter="url(#glowGreen)"/>
+      <ellipse cx="291" cy="194" rx="17" ry="27" fill="#00FF88" filter="url(#glowGreen)"/>
       ${has(percent, 'monocle') ? `
-        <circle cx="290" cy="192" r="32" fill="none" stroke="#F59E0B" stroke-width="7"/>
-        <path d="M314 216 L351 252" stroke="#F59E0B" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="291" cy="194" r="34" fill="none" stroke="#F59E0B" stroke-width="8" filter="url(#glowAmber)"/>
+        <path d="M316 219 L355 257" stroke="#F59E0B" stroke-width="7" stroke-linecap="round"/>
         <path d="M285 184 L295 184 M290 179 L290 189" stroke="#00FF88" stroke-width="3" stroke-linecap="round"/>
       ` : ''}
       ${has(percent, 'headphones') ? `
-        <path d="M152 175 C152 97 360 97 360 175" fill="none" stroke="#1F2432" stroke-width="18" stroke-linecap="round"/>
-        <rect x="118" y="157" width="42" height="78" rx="21" fill="#1F2432" stroke="#A78BFA" stroke-width="5"/>
-        <rect x="352" y="157" width="42" height="78" rx="21" fill="#1F2432" stroke="#A78BFA" stroke-width="5"/>
-        <path d="M129 185 h21 M363 185 h21" stroke="#00D4FF" stroke-width="5" stroke-linecap="round"/>
+        <path d="M150 178 C150 96 362 96 362 178" fill="none" stroke="#1F2432" stroke-width="20" stroke-linecap="round"/>
+        <rect x="113" y="156" width="47" height="84" rx="22" fill="#1F2432" stroke="#A78BFA" stroke-width="5"/>
+        <rect x="352" y="156" width="47" height="84" rx="22" fill="#1F2432" stroke="#A78BFA" stroke-width="5"/>
+        <path d="M126 185 h22 M364 185 h22" stroke="#00D4FF" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="137" cy="211" r="8" fill="#00FF88" opacity=".7"/>
+        <circle cx="375" cy="211" r="8" fill="#00FF88" opacity=".7"/>
       ` : ''}
     </g>
   `;
