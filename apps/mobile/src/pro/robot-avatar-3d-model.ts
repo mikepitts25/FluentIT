@@ -27,14 +27,14 @@ export function buildRobotAvatarModel(unlockedAccessories: RobotAccessory[]): Ro
     { id: 'cape-shadow', geometry: 'box', color: '#2B145F', position: [0, -0.34, -0.33], size: [2.42, 2.2, 0.18], opacity: has(unlockedAccessories, 'cape') ? 1 : 0 },
     { id: 'helmet-cap', geometry: 'box', color: '#1C2232', position: [0, 1.58, -0.02], size: [1.95, 0.42, 1.18] },
     { id: 'head', geometry: 'box', color: '#F8FAFC', position: [0, 1.18, 0], size: [1.96, 1.08, 1.14] },
-    { id: 'faceplate', geometry: 'box', color: '#050711', position: [0, 1.17, 0.6], size: [1.42, 0.54, 0.12] },
-    { id: 'eye-left', geometry: 'box', color: '#00FF88', position: [-0.35, 1.18, 0.69], size: [0.16, 0.3, 0.08] },
-    { id: 'eye-right', geometry: 'box', color: '#00FF88', position: [0.35, 1.18, 0.69], size: [0.16, 0.3, 0.08] },
+    { id: 'faceplate', geometry: 'box', color: '#050711', position: [0, 1.17, 0.63], size: [1.42, 0.54, 0.08] },
+    { id: 'eye-left', geometry: 'box', color: '#00FF88', position: [-0.35, 1.18, 0.72], size: [0.16, 0.3, 0.06] },
+    { id: 'eye-right', geometry: 'box', color: '#00FF88', position: [0.35, 1.18, 0.72], size: [0.16, 0.3, 0.06] },
     { id: 'neck', geometry: 'box', color: '#CBD5E1', position: [0, 0.48, 0], size: [0.48, 0.28, 0.46] },
     { id: 'body', geometry: 'box', color: '#F8FAFC', position: [0, -0.18, 0], size: [1.36, 1.34, 0.92] },
-    { id: 'body-side-shadow', geometry: 'box', color: '#CBD5E1', position: [0.5, -0.18, 0.48], size: [0.18, 1.06, 0.08] },
-    { id: 'core-panel', geometry: 'box', color: '#080B12', position: [0, -0.16, 0.52], size: [0.56, 0.56, 0.1] },
-    { id: 'core-gem', geometry: 'box', color: '#00D4FF', position: [0, -0.16, 0.61], size: [0.3, 0.3, 0.1], rotation: [0, 0, Math.PI / 4] },
+    { id: 'body-side-shadow', geometry: 'box', color: '#CBD5E1', position: [0.5, -0.18, 0.52], size: [0.18, 1.06, 0.08] },
+    { id: 'core-panel', geometry: 'box', color: '#080B12', position: [0, -0.16, 0.54], size: [0.56, 0.56, 0.1] },
+    { id: 'core-gem', geometry: 'box', color: '#00D4FF', position: [0, -0.16, 0.65], size: [0.3, 0.3, 0.08], rotation: [0, 0, Math.PI / 4] },
     { id: 'arm-left', geometry: 'box', color: '#CBD5E1', position: [-0.94, -0.2, 0.03], size: [0.28, 1.0, 0.36], rotation: [0, 0, -0.16] },
     { id: 'arm-right', geometry: 'box', color: '#CBD5E1', position: [0.94, -0.2, 0.03], size: [0.28, 1.0, 0.36], rotation: [0, 0, 0.16] },
     { id: 'hand-left', geometry: 'box', color: '#171923', position: [-1.03, -0.8, 0.07], size: [0.34, 0.34, 0.36] },
@@ -53,7 +53,7 @@ export function buildRobotAvatarModel(unlockedAccessories: RobotAccessory[]): Ro
   }
 
   if (has(unlockedAccessories, 'visor')) {
-    parts.push({ id: 'accessory-visor', geometry: 'box', color: '#7C3AED', position: [0, 1.24, 0.73], size: [1.58, 0.42, 0.08], opacity: 0.72 });
+    parts.push({ id: 'accessory-visor', geometry: 'box', color: '#7C3AED', position: [0, 1.24, 0.72], size: [1.58, 0.42, 0.06], opacity: 0.72 });
   }
 
   if (has(unlockedAccessories, 'badge')) {
