@@ -12,7 +12,9 @@ import {
 } from './robot-achievements';
 import { RobotAvatar3DView } from './robot-avatar-3d-view';
 
-const SHOW_ROBOT_TEST_CONTROLS = typeof __DEV__ !== 'undefined' && __DEV__;
+const SHOW_ROBOT_TEST_CONTROLS =
+  process.env.EXPO_PUBLIC_SHOW_ROBOT_TEST_CONTROLS === 'true'
+  || (typeof __DEV__ !== 'undefined' && __DEV__);
 
 export function RobotAvatarCard({
   colors,
