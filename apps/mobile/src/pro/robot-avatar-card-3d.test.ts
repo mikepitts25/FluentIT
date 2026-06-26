@@ -10,4 +10,10 @@ describe('robot avatar card 3D integration', () => {
     expect(source).toContain('<RobotAvatar3DView');
     expect(source).not.toContain("import { getRobotAvatarImage } from './robot-avatar-assets';");
   });
+
+  it('keeps transparent avatar meshes from writing depth over underlying parts', () => {
+    const source = readFileSync(join(__dirname, 'robot-avatar-3d-view.tsx'), 'utf8');
+
+    expect(source).toContain('depthWrite: part.opacity === undefined || part.opacity >= 1');
+  });
 });

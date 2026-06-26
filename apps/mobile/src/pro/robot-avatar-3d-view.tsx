@@ -227,6 +227,7 @@ function createMesh(part: RobotPartSpec) {
     roughness: 0.58,
     transparent: part.opacity !== undefined && part.opacity < 1,
     opacity: part.opacity ?? 1,
+    depthWrite: part.opacity === undefined || part.opacity >= 1,
   });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(...part.position);

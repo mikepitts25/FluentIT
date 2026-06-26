@@ -1,22 +1,52 @@
 import { describe, expect, it } from 'vitest';
 import { ROBOT_ACCESSORIES } from './robot-achievements';
-import { buildRobotAvatarModel } from './robot-avatar-3d-model';
+import { buildRobotAvatarModel, type RobotAvatarModel, type RobotPartSpec } from './robot-avatar-3d-model';
 
 describe('robot avatar 3D model spec', () => {
-  function partById(id: string) {
-    const model = buildRobotAvatarModel([]);
+  function partById(id: string, model: RobotAvatarModel = buildRobotAvatarModel([])) {
     const part = model.parts.find((item) => item.id === id);
     expect(part, `${id} should exist`).toBeDefined();
-    expect(part?.size, `${id} should have box size`).toBeDefined();
     return part!;
   }
 
-  function front(part: ReturnType<typeof partById>) {
-    return part.position[2] + (part.size?.[2] ?? 0) / 2;
+  function extent(part: RobotPartSpec, axis: 0 | 1 | 2) {
+    if (part.size) return part.size[axis];
+    if (part.geometry === 'sphere') return (part.radius ?? 0.15) * 2;
+    if (part.geometry === 'torus') {
+      return axis === 2
+        ? (part.tube ?? 0.04) * 2
+        : ((part.radius ?? 0.5) + (part.tube ?? 0.04)) * 2;
+    }
+    if (part.geometry === 'cone') {
+      return axis === 1 ? part.size?.[1] ?? 0.4 : (part.radius ?? 0.18) * 2;
+    }
+    if (part.geometry === 'cylinder') {
+      return axis === 1 ? part.size?.[1] ?? 0.4 : (part.radius ?? 0.2) * 2;
+    }
+    return 0;
   }
 
-  function back(part: ReturnType<typeof partById>) {
-    return part.position[2] - (part.size?.[2] ?? 0) / 2;
+  function front(part: RobotPartSpec) {
+    return part.position[2] + extent(part, 2) / 2;
+  }
+
+  function back(part: RobotPartSpec) {
+    return part.position[2] - extent(part, 2) / 2;
+  }
+
+  function top(part: RobotPartSpec) {
+    return part.position[1] + extent(part, 1) / 2;
+  }
+
+  function bottom(part: RobotPartSpec) {
+    return part.position[1] - extent(part, 1) / 2;
+  }
+
+  function expectInFrontOf(frontPart: RobotPartSpec, backPart: RobotPartSpec) {
+    const minimumGap = 0.01;
+    expect(back(frontPart), `${frontPart.id} should sit in front of ${backPart.id}`).toBeGreaterThan(
+      front(backPart) + minimumGap,
+    );
   }
 
   it('builds the base robot from real centered 3D block parts', () => {
@@ -52,6 +82,64 @@ describe('robot avatar 3D model spec', () => {
     expect(back(rightEye)).toBeGreaterThan(front(faceplate) + minimumGap);
     expect(back(corePanel)).toBeGreaterThan(front(body) + minimumGap);
     expect(back(coreGem)).toBeGreaterThan(front(corePanel) + minimumGap);
+  });
+
+  it('keeps the fully unlocked loadout from intersecting stacked face and torso accessories', () => {
+    const model = buildRobotAvatarModel(ROBOT_ACCESSORIES);
+    const head = partById('head', model);
+    const helmetCap = partById('helmet-cap', model);
+    const antennaStem = partById('accessory-antenna-stem', model);
+    const helmetLeftHorn = partById('accessory-helmet-left-horn', model);
+    const helmetRightHorn = partById('accessory-helmet-right-horn', model);
+    const crownCenter = partById('accessory-crown-center', model);
+    const faceplate = partById('faceplate', model);
+    const leftEye = partById('eye-left', model);
+    const rightEye = partById('eye-right', model);
+    const visor = partById('accessory-visor', model);
+    const monocle = partById('accessory-monocle', model);
+    const body = partById('body', model);
+    const suitPanel = partById('accessory-pro-suit-panel', model);
+    const tie = partById('accessory-tie', model);
+    const corePanel = partById('core-panel', model);
+    const coreGem = partById('core-gem', model);
+    const toolbelt = partById('accessory-toolbelt', model);
+    const toolbeltBuckle = partById('accessory-toolbelt-buckle', model);
+    const handLeft = partById('hand-left', model);
+    const handRight = partById('hand-right', model);
+    const gloveLeft = partById('accessory-glove-left', model);
+    const gloveRight = partById('accessory-glove-right', model);
+    const wrench = partById('accessory-wrench', model);
+    const wrenchHead = partById('accessory-wrench-head', model);
+    const shield = partById('accessory-shield', model);
+    const shieldCore = partById('accessory-shield-core', model);
+    const minimumGap = 0.01;
+
+    expect(bottom(helmetCap), 'helmet cap should rest above the head instead of cutting through it')
+      .toBeGreaterThan(top(head) + minimumGap);
+    expect(bottom(antennaStem), 'antenna should mount above the cap instead of piercing it')
+      .toBeGreaterThan(top(helmetCap) + minimumGap);
+    expect(bottom(helmetLeftHorn), 'left helmet horn should mount above the cap instead of piercing it')
+      .toBeGreaterThan(top(helmetCap) + minimumGap);
+    expect(bottom(helmetRightHorn), 'right helmet horn should mount above the cap instead of piercing it')
+      .toBeGreaterThan(top(helmetCap) + minimumGap);
+    expect(bottom(crownCenter), 'crown should sit above the cap instead of piercing it')
+      .toBeGreaterThan(top(helmetCap) + minimumGap);
+    expectInFrontOf(leftEye, faceplate);
+    expectInFrontOf(rightEye, faceplate);
+    expectInFrontOf(visor, leftEye);
+    expectInFrontOf(visor, rightEye);
+    expectInFrontOf(monocle, visor);
+    expectInFrontOf(suitPanel, body);
+    expectInFrontOf(tie, suitPanel);
+    expectInFrontOf(corePanel, tie);
+    expectInFrontOf(coreGem, corePanel);
+    expectInFrontOf(toolbeltBuckle, toolbelt);
+    expectInFrontOf(gloveLeft, handLeft);
+    expectInFrontOf(gloveRight, handRight);
+    expectInFrontOf(wrench, gloveLeft);
+    expectInFrontOf(wrenchHead, gloveLeft);
+    expectInFrontOf(shield, gloveRight);
+    expectInFrontOf(shieldCore, shield);
   });
 
   it('adds visible 3D accessories only for unlocked achievements', () => {
