@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Card, DomainMeta } from '../content';
-import { getVisibleLearnDomains } from './domain-search';
+import { getLearnSearchCardResults, getVisibleLearnDomains } from './domain-search';
 
 const domains: DomainMeta[] = [
   {
@@ -104,5 +104,86 @@ describe('getVisibleLearnDomains', () => {
     });
 
     expect(visible.map((domain) => domain.id)).toEqual(['ai']);
+  });
+});
+
+describe('getLearnSearchCardResults', () => {
+  it('includes locked matching card titles for free users', () => {
+    const results = getLearnSearchCardResults({
+      cards: [
+        card({
+          id: 'free-cloud',
+          domain: 'cloud',
+          title: 'Cloud IAM',
+          subtitle: 'Identity controls',
+        }),
+        card({
+          id: 'locked-cyber',
+          domain: 'cyber',
+          title: 'Zero Trust',
+          subtitle: 'Never trust, always verify',
+        }),
+      ],
+      accessibleCardIds: new Set(['free-cloud']),
+      query: 'zero trust',
+    });
+
+    expect(results).toEqual([
+      expect.objectContaining({
+        card: expect.objectContaining({
+          id: 'locked-cyber',
+          title: 'Zero Trust',
+        }),
+        isLocked: true,
+      }),
+    ]);
+  });
+
+  it('marks accessible matching card titles as unlocked', () => {
+    const results = getLearnSearchCardResults({
+      cards: [
+        card({
+          id: 'cloud-iam',
+          domain: 'cloud',
+          title: 'Cloud IAM',
+          subtitle: 'Identity controls',
+        }),
+      ],
+      accessibleCardIds: new Set(['cloud-iam']),
+      query: 'identity',
+    });
+
+    expect(results).toEqual([
+      expect.objectContaining({
+        card: expect.objectContaining({ id: 'cloud-iam' }),
+        isLocked: false,
+      }),
+    ]);
+  });
+
+  it('returns an empty card result list for blank search queries', () => {
+    expect(
+      getLearnSearchCardResults({
+        cards: [card({ id: 'cloud-iam', title: 'Cloud IAM' })],
+        accessibleCardIds: new Set(['cloud-iam']),
+        query: '   ',
+      }),
+    ).toEqual([]);
+  });
+
+  it('sorts matching card titles alphabetically', () => {
+    const results = getLearnSearchCardResults({
+      cards: [
+        card({ id: 'zero-trust', title: 'Zero Trust', tags: ['identity'] }),
+        card({ id: 'access-review', title: 'Access Review', tags: ['identity'] }),
+      ],
+      accessibleCardIds: new Set(['zero-trust', 'access-review']),
+      query: 'identity',
+    });
+
+    expect(results.map((result) => result.card.title)).toEqual([
+      'Access Review',
+      'Zero Trust',
+    ]);
   });
 });

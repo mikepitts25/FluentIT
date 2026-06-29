@@ -7,6 +7,8 @@ import type { RobotAccessory } from './robot-achievements';
 import { buildRobotAvatarModel, type RobotPartSpec } from './robot-avatar-3d-model';
 
 const NativeGLView = GLView as unknown as ComponentType<GLViewProps>;
+const ROBOT_CAMERA_DISTANCE = 9.2;
+const ROBOT_CAMERA_FOCUS_Y = 0.42;
 
 interface RobotAvatar3DViewProps {
   colors: ThemeColors;
@@ -105,8 +107,8 @@ function createRobotScene(
     0.1,
     100,
   );
-  camera.position.set(0, 0.22, 6.3);
-  camera.lookAt(0, 0.18, 0);
+  camera.position.set(0, ROBOT_CAMERA_FOCUS_Y + 0.04, ROBOT_CAMERA_DISTANCE);
+  camera.lookAt(0, ROBOT_CAMERA_FOCUS_Y, 0);
 
   const renderer = createExpoRenderer(gl, {
     antialias: true,

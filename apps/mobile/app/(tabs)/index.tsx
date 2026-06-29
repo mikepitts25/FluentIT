@@ -15,8 +15,16 @@ import { getDomainIconImage } from '../../src/domain-icons';
 import { useSRSStore } from '../../src/hooks/useSRSStore';
 import { useProStore } from '../../src/hooks/useProStore';
 import { usePreferencesStore } from '../../src/hooks/usePreferencesStore';
-import { getVisibleLearnDomains } from '../../src/learn/domain-search';
-import { FREE_TERMS_PER_CATEGORY, getAccessibleCards, getLockedCardCount } from '../../src/pro/pro-access';
+import {
+  getLearnSearchCardResults,
+  getVisibleLearnDomains,
+  type LearnSearchCardResult,
+} from '../../src/learn/domain-search';
+import {
+  FREE_TERMS_PER_CATEGORY,
+  getAccessibleCardIds,
+  getLockedCardCount,
+} from '../../src/pro/pro-access';
 import { GRAD_GREEN_CYAN, getThemeColors, type ThemeColors } from '../../src/theme';
 import type { DomainMeta } from '../../src/content';
 
@@ -34,20 +42,33 @@ export default function HomeScreen() {
   const styles = useMemo(() => createStyles(colors), [colors]);
   const selectedCount = preferences.selectedDomains.length;
   const isPro = entitlement.isPro;
-  const accessibleCards = useMemo(
-    () => getAccessibleCards({ cards: ALL_CARDS, isPro }),
+  const accessibleCardIds = useMemo(
+    () => getAccessibleCardIds({ cards: ALL_CARDS, isPro }),
     [isPro],
+  );
+  const domainsById = useMemo(
+    () => new Map(DOMAINS.map((domain) => [domain.id, domain])),
+    [],
   );
   const lockedCount = getLockedCardCount({ cards: ALL_CARDS, isPro });
   const visibleDomains = useMemo(
     () => getVisibleLearnDomains({
       domains: DOMAINS,
-      cards: accessibleCards,
+      cards: ALL_CARDS,
       query: searchQuery,
     }),
-    [accessibleCards, searchQuery],
+    [searchQuery],
+  );
+  const searchCardResults = useMemo(
+    () => getLearnSearchCardResults({
+      cards: ALL_CARDS,
+      accessibleCardIds,
+      query: searchQuery,
+    }),
+    [accessibleCardIds, searchQuery],
   );
   const isSearching = searchQuery.trim().length > 0;
+  const hasSearchResults = visibleDomains.length > 0 || searchCardResults.length > 0;
 
   return (
     <ScrollView
@@ -153,6 +174,26 @@ export default function HomeScreen() {
       <Text style={styles.sectionLabel}>
         {isSearching ? 'MATCHING TOPICS' : 'KNOWLEDGE BASE'}
       </Text>
+      {isSearching && searchCardResults.length > 0 && (
+        <View style={styles.searchResults}>
+          {searchCardResults.map((result) => {
+            const domain = domainsById.get(result.card.domain);
+            if (!domain) return null;
+
+            return (
+              <SearchResultRow
+                key={result.card.id}
+                result={result}
+                domain={domain}
+                onPress={() => router.push(result.isLocked ? '/pro' : `/card/${result.card.id}`)}
+                colors={colors}
+                styles={styles}
+              />
+            );
+          })}
+        </View>
+      )}
+
       {visibleDomains.length > 0 ? (
         <View style={styles.grid}>
           {visibleDomains.map((d) => {
@@ -170,15 +211,60 @@ export default function HomeScreen() {
             );
           })}
         </View>
-      ) : (
+      ) : !hasSearchResults ? (
         <View style={styles.emptySearch}>
           <Text style={styles.emptySearchTitle}>No matching topics</Text>
           <Text style={styles.emptySearchText}>
             Try another keyword, topic, or category name.
           </Text>
         </View>
-      )}
+      ) : null}
     </ScrollView>
+  );
+}
+
+function SearchResultRow({
+  result,
+  domain,
+  onPress,
+  colors,
+  styles,
+}: {
+  result: LearnSearchCardResult;
+  domain: DomainMeta;
+  onPress: () => void;
+  colors: ThemeColors;
+  styles: HomeStyles;
+}) {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.searchResultRow,
+        result.isLocked && styles.searchResultRowLocked,
+      ]}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      <View style={{ flex: 1, gap: 4 }}>
+        <View style={styles.searchResultMetaRow}>
+          <Text style={[styles.searchResultDomain, { color: domain.color + 'AA' }]}>
+            {domain.label.toUpperCase()}
+          </Text>
+          {result.isLocked && (
+            <View style={styles.searchLockedBadge}>
+              <Text style={styles.searchLockedBadgeText}>PRO</Text>
+            </View>
+          )}
+        </View>
+        <Text style={styles.searchResultTitle}>{result.card.title}</Text>
+        <Text style={styles.searchResultSubtitle} numberOfLines={1}>
+          {result.isLocked ? 'Locked term. Go Pro to view it.' : result.card.subtitle}
+        </Text>
+      </View>
+      <Text style={[styles.searchResultArrow, { color: result.isLocked ? colors.purple : colors.textMuted }]}>
+        →
+      </Text>
+    </TouchableOpacity>
   );
 }
 
@@ -345,6 +431,43 @@ function createStyles(colors: ThemeColors) {
   },
 
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+
+  searchResults: {
+    gap: 8,
+  },
+  searchResultRow: {
+    backgroundColor: colors.bgCard,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.borderCard,
+    padding: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  searchResultRowLocked: {
+    borderColor: colors.purple + '44',
+    backgroundColor: colors.purple + '10',
+  },
+  searchResultMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  searchResultDomain: { fontSize: 11, fontWeight: '800', letterSpacing: 1.4 },
+  searchLockedBadge: {
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: colors.purple + '55',
+    backgroundColor: colors.purple + '20',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  searchLockedBadgeText: { color: colors.purple, fontSize: 10, fontWeight: '900' },
+  searchResultTitle: { color: colors.textPrimary, fontSize: 16, fontWeight: '800' },
+  searchResultSubtitle: { color: colors.textSecondary, fontSize: 14 },
+  searchResultArrow: { fontSize: 18, fontWeight: '900' },
 
   emptySearch: {
     backgroundColor: colors.bgCard,

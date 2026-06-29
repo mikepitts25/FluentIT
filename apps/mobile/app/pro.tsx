@@ -1,6 +1,5 @@
-import { useNavigation, useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ALL_CARDS } from '../src/content';
 import { useProStore } from '../src/hooks/useProStore';
 import { useThemeColors } from '../src/hooks/useThemeColors';
@@ -9,22 +8,11 @@ import { ProUpgradeCard } from '../src/pro/pro-upgrade-card';
 import type { ThemeColors } from '../src/theme';
 
 export default function ProScreen() {
-  const router = useRouter();
-  const navigation = useNavigation();
   const { entitlement, grantPro, isLoaded } = useProStore();
   const { colors } = useThemeColors();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const isPro = entitlement.isPro;
   const lockedCount = getLockedCardCount({ cards: ALL_CARDS, isPro });
-
-  const goBack = () => {
-    if (navigation.canGoBack()) {
-      router.back();
-      return;
-    }
-
-    router.replace('/(tabs)');
-  };
 
   if (!isLoaded) {
     return (
@@ -40,16 +28,6 @@ export default function ProScreen() {
       contentContainerStyle={styles.content}
       contentInsetAdjustmentBehavior="automatic"
     >
-      <TouchableOpacity
-        accessibilityRole="button"
-        accessibilityLabel="Back"
-        activeOpacity={0.75}
-        style={styles.backButton}
-        onPress={goBack}
-      >
-        <Text style={styles.backButtonText}>← Back</Text>
-      </TouchableOpacity>
-
       <View style={styles.hero}>
         <Text style={styles.eyebrow}>PRO MODE</Text>
         <Text style={styles.title}>Unlock the full library</Text>
@@ -81,16 +59,6 @@ function createStyles(colors: ThemeColors) {
       backgroundColor: colors.bgPrimary,
     },
     loadingText: { color: colors.textMuted, fontSize: 16 },
-    backButton: {
-      alignSelf: 'flex-start',
-      borderRadius: 999,
-      borderWidth: 1,
-      borderColor: colors.borderCard,
-      backgroundColor: colors.bgCard,
-      paddingHorizontal: 14,
-      paddingVertical: 9,
-    },
-    backButtonText: { color: colors.textSecondary, fontSize: 15, fontWeight: '800' },
     hero: {
       backgroundColor: colors.bgCard,
       borderRadius: 16,
