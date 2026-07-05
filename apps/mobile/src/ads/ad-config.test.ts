@@ -25,17 +25,6 @@ describe('ad config', () => {
     ).toBe('production-native-unit');
   });
 
-  it('can force the native test ad unit outside development', () => {
-    expect(
-      getSessionCompleteNativeAdUnitId({
-        forceTestAds: true,
-        isDev: false,
-        testNativeAdUnitId: 'test-native-unit',
-        nativeAdUnitId: 'production-native-unit',
-      }),
-    ).toBe('test-native-unit');
-  });
-
   it('disables the placement when production has no native ad unit', () => {
     expect(
       getSessionCompleteNativeAdUnitId({

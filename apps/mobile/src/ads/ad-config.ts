@@ -1,6 +1,5 @@
 export type SessionCompleteNativeAdConfig = {
   adsEnabled?: boolean;
-  forceTestAds?: boolean;
   isDev: boolean;
   nativeAdUnitId?: string;
   testNativeAdUnitId: string;
@@ -17,13 +16,12 @@ export type PlatformNativeAdConfig = {
 
 export function getSessionCompleteNativeAdUnitId({
   adsEnabled = true,
-  forceTestAds = false,
   isDev,
   nativeAdUnitId,
   testNativeAdUnitId,
 }: SessionCompleteNativeAdConfig): string | null {
   if (!adsEnabled) return null;
-  if (isDev || forceTestAds) return testNativeAdUnitId;
+  if (isDev) return testNativeAdUnitId;
 
   const configuredAdUnitId = nativeAdUnitId?.trim();
   return configuredAdUnitId && configuredAdUnitId.length > 0 ? configuredAdUnitId : null;

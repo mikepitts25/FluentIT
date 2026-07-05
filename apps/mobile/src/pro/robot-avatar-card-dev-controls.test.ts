@@ -3,19 +3,19 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 describe('robot avatar dev controls', () => {
-  it('keeps the robot build test button behind the React Native dev flag or explicit TestFlight flag', () => {
+  it('does not include robot preview dev controls in the app UI', () => {
     const source = readFileSync(join(__dirname, 'robot-avatar-card.tsx'), 'utf8');
 
-    expect(source).toContain("process.env.EXPO_PUBLIC_SHOW_ROBOT_TEST_CONTROLS === 'true'");
-    expect(source).toContain("typeof __DEV__ !== 'undefined' && __DEV__");
-    expect(source).toContain('{SHOW_ROBOT_TEST_CONTROLS && (');
+    expect(source).not.toContain('EXPO_PUBLIC_SHOW_ROBOT_TEST_CONTROLS');
+    expect(source).not.toContain('DEV:');
+    expect(source).not.toContain('Development preview only');
+    expect(source).not.toContain('getNextRobotAvatarTestMilestone');
   });
 
-  it('enables robot test controls only for the TestFlight build profile', () => {
+  it('does not enable dev/test env flags for the TestFlight build profile', () => {
     const easJson = JSON.parse(readFileSync(join(__dirname, '../../eas.json'), 'utf8'));
 
-    expect(easJson.build.testflight.env.EXPO_PUBLIC_SHOW_ROBOT_TEST_CONTROLS).toBe('true');
-    expect(easJson.build.production.env?.EXPO_PUBLIC_SHOW_ROBOT_TEST_CONTROLS).toBeUndefined();
+    expect(easJson.build.testflight.env).toBeUndefined();
   });
 
   it('centers the test loadout copy and wrapped percentage indicators', () => {

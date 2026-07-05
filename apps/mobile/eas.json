@@ -12,12 +12,7 @@
       "distribution": "internal"
     },
     "testflight": {
-      "extends": "production",
-      "env": {
-        "EXPO_PUBLIC_ADMOB_FORCE_TEST_ADS": "true",
-        "EXPO_PUBLIC_ADMOB_SHOW_AD_PLACEHOLDER": "true",
-        "EXPO_PUBLIC_SHOW_ROBOT_TEST_CONTROLS": "true"
-      }
+      "extends": "production"
     },
     "production": {
       "autoIncrement": true

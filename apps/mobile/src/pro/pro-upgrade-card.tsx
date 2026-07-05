@@ -6,7 +6,6 @@ import { PRO_PRODUCT_TITLE } from './pro-config';
 import type { ProEntitlementSource } from './pro-store';
 
 type ProUpgradeCardStyles = ReturnType<typeof createStyles>;
-const SHOW_PRO_TEST_CONTROLS = typeof __DEV__ !== 'undefined' && __DEV__;
 
 export function ProUpgradeCard({
   colors,
@@ -74,20 +73,6 @@ export function ProUpgradeCard({
           >
             <Text style={styles.restoreButtonText}>Restore Purchase</Text>
           </TouchableOpacity>
-          {SHOW_PRO_TEST_CONTROLS && (
-            <TouchableOpacity
-              accessibilityLabel="Development unlock Pro features"
-              accessibilityRole="button"
-              activeOpacity={0.75}
-              disabled={purchase.isProcessing}
-              onPress={() => {
-                void onGrantPro('local');
-              }}
-              style={styles.devUnlockButton}
-            >
-              <Text style={styles.devUnlockButtonText}>DEV: Unlock Pro features</Text>
-            </TouchableOpacity>
-          )}
         </View>
       )}
 
@@ -141,15 +126,6 @@ function createStyles(colors: ThemeColors) {
       alignItems: 'center',
     },
     restoreButtonText: { color: colors.textSecondary, fontSize: 14, fontWeight: '700' },
-    devUnlockButton: {
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: colors.amber + '66',
-      backgroundColor: colors.amber + '16',
-      paddingVertical: 11,
-      alignItems: 'center',
-    },
-    devUnlockButtonText: { color: colors.amber, fontSize: 13, fontWeight: '900', letterSpacing: 0.4 },
     statusText: { color: colors.textMuted, fontSize: 13, lineHeight: 18 },
   });
 }
