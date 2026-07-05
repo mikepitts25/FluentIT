@@ -278,8 +278,15 @@ function createStyles(colors: ThemeColors) {
   return StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.bgPrimary },
   content: { padding: 16, gap: 14 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 14, backgroundColor: colors.bgPrimary },
-  errorText: { color: colors.textMuted, fontSize: 18 },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 14,
+    paddingHorizontal: 24,
+    backgroundColor: colors.bgPrimary,
+  },
+  errorText: { color: colors.textMuted, fontSize: 18, textAlign: 'center' },
 
   doneIconWrap: {
     width: 72,
@@ -292,8 +299,8 @@ function createStyles(colors: ThemeColors) {
     justifyContent: 'center',
   },
   doneIconText: { color: colors.green, fontSize: 34, fontWeight: '800' },
-  doneTitle: { color: colors.textPrimary, fontSize: 24, fontWeight: '800' },
-  doneSub: { color: colors.textSecondary, fontSize: 16 },
+  doneTitle: { color: colors.textPrimary, fontSize: 24, fontWeight: '800', textAlign: 'center' },
+  doneSub: { color: colors.textSecondary, fontSize: 16, lineHeight: 24, textAlign: 'center' },
   backBtn: {
     borderRadius: 12,
     borderWidth: 1,

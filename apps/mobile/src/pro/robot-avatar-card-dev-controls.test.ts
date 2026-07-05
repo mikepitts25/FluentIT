@@ -17,4 +17,13 @@ describe('robot avatar dev controls', () => {
     expect(easJson.build.testflight.env.EXPO_PUBLIC_SHOW_ROBOT_TEST_CONTROLS).toBe('true');
     expect(easJson.build.production.env?.EXPO_PUBLIC_SHOW_ROBOT_TEST_CONTROLS).toBeUndefined();
   });
+
+  it('centers the test loadout copy and wrapped percentage indicators', () => {
+    const source = readFileSync(join(__dirname, 'robot-avatar-card.tsx'), 'utf8');
+
+    expect(source).toContain("avatarTitle: { color: colors.textPrimary, fontSize: 16, fontWeight: '800', textAlign: 'center' }");
+    expect(source).toContain("avatarText: { color: colors.textSecondary, fontSize: 13, lineHeight: 19, textAlign: 'center' }");
+    expect(source).toContain("accessoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }");
+    expect(source).toContain("accessoryText: { color: colors.textMuted, fontSize: 10, fontWeight: '800', textAlign: 'center', width: '100%' }");
+  });
 });

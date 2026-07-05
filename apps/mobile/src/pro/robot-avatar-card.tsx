@@ -147,8 +147,8 @@ function createStyles(colors: ThemeColors) {
     unlockCount: { color: colors.purple, fontSize: 18, fontWeight: '900' },
     avatarStage: { width: '100%' },
     avatarCopy: { gap: 6 },
-    avatarTitle: { color: colors.textPrimary, fontSize: 16, fontWeight: '800' },
-    avatarText: { color: colors.textSecondary, fontSize: 13, lineHeight: 19 },
+    avatarTitle: { color: colors.textPrimary, fontSize: 16, fontWeight: '800', textAlign: 'center' },
+    avatarText: { color: colors.textSecondary, fontSize: 13, lineHeight: 19, textAlign: 'center' },
     testButton: {
       alignSelf: 'flex-start',
       borderRadius: 999,
@@ -159,7 +159,7 @@ function createStyles(colors: ThemeColors) {
       paddingVertical: 8,
     },
     testButtonText: { color: colors.amber, fontSize: 12, fontWeight: '900', letterSpacing: 0.5 },
-    accessoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+    accessoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, justifyContent: 'center' },
     accessoryChip: {
       width: 42,
       borderRadius: 10,
@@ -176,7 +176,7 @@ function createStyles(colors: ThemeColors) {
     },
     accessoryIcon: { color: colors.textMuted, fontSize: 13, fontWeight: '800' },
     accessoryIconUnlocked: { color: colors.purple },
-    accessoryText: { color: colors.textMuted, fontSize: 10, fontWeight: '800' },
+    accessoryText: { color: colors.textMuted, fontSize: 10, fontWeight: '800', textAlign: 'center', width: '100%' },
     accessoryTextUnlocked: { color: colors.textPrimary },
   });
 }
