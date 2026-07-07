@@ -15,6 +15,7 @@ export {
   integrationCards,
   agileCards,
   governanceCards,
+  quantumCards,
   observabilityCards,
   identityCards,
   architectureCards,

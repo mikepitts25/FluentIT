@@ -46,6 +46,8 @@ const domainAnalogies: Record<Card['domain'], string> = {
     'Like a city plan: service boundaries, roads, capacity, and emergency routes matter because every trade-off shapes later movement.',
   appsec:
     'Like inspecting a supply chain: secure software depends on design, code, dependencies, delivery steps, and operating controls.',
+  quantum:
+    'Like a specialized physics lab: the equipment can answer certain questions only when the experiment, calibration, noise limits, and classical analysis are designed together.',
 };
 
 const seeds: ExpansionSeed[] = [

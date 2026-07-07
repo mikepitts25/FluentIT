@@ -13,4 +13,17 @@ describe('content lookup helpers', () => {
   it('returns undefined when no card has the requested title', () => {
     expect(getCardByTitle('Not A Real FluentIT Term')).toBeUndefined();
   });
+
+  it('includes requested current terms in the catalog', () => {
+    expect(getCardByTitle('Data Fabric')?.domain).toBe('data');
+    expect(getCardByTitle('Data Engineering')?.domain).toBe('data');
+    expect(getCardByTitle('Agentic Engineering')?.domain).toBe('ai');
+  });
+
+  it('includes foundational quantum computing terms in the catalog', () => {
+    expect(getCardByTitle('Quantum Computing')?.domain).toBe('quantum');
+    expect(getCardByTitle('Qubit')?.domain).toBe('quantum');
+    expect(getCardByTitle('Quantum Entanglement')?.domain).toBe('quantum');
+    expect(getCardByTitle('Post-Quantum Cryptography')?.domain).toBe('quantum');
+  });
 });

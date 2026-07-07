@@ -45,6 +45,11 @@ describe('content validation', () => {
     );
   });
 
+  it('includes a complete quantum computing domain', () => {
+    expect(DOMAINS.map((domain) => domain.id)).toContain('quantum');
+    expect(ALL_CARDS.filter((card) => card.domain === 'quantum')).toHaveLength(50);
+  });
+
   it('reports duplicate card ids', () => {
     const duplicate = { ...ALL_CARDS[0] };
 

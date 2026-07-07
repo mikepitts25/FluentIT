@@ -16,4 +16,5 @@ export const DOMAIN_ICON_FILES = {
   identity: 'identity.png',
   architecture: 'architecture.png',
   appsec: 'appsec.png',
+  quantum: 'quantum.png',
 } satisfies Record<Domain, string>;

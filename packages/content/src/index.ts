@@ -12,6 +12,7 @@ export { codingCards } from './cards/coding';
 export { integrationCards } from './cards/integration';
 export { agileCards } from './cards/agile';
 export { governanceCards } from './cards/governance';
+export { quantumCards } from './cards/quantum';
 export { expansionCards } from './cards/expansions';
 export { deepExpansionCards } from './cards/deep-expansions';
 export {
@@ -32,6 +33,7 @@ import { codingCards } from './cards/coding';
 import { integrationCards } from './cards/integration';
 import { agileCards } from './cards/agile';
 import { governanceCards } from './cards/governance';
+import { quantumCards } from './cards/quantum';
 import { expansionCards } from './cards/expansions';
 import { deepExpansionCards } from './cards/deep-expansions';
 import {
@@ -54,6 +56,7 @@ export const ALL_CARDS: Card[] = [
   ...integrationCards,
   ...agileCards,
   ...governanceCards,
+  ...quantumCards,
   ...expansionCards,
   ...deepExpansionCards,
   ...observabilityCards,

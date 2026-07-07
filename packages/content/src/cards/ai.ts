@@ -473,6 +473,27 @@ export const aiCards: Card[] = [
     relatedTerms: ['Tool Use', 'ReAct Pattern', 'MCP', 'Orchestration'],
   },
   {
+    id: 'ai-agentic-engineering',
+    domain: 'ai',
+    title: 'Agentic Engineering',
+    subtitle: 'Using AI agents with professional engineering discipline',
+    difficulty: 'advanced',
+    tags: ['AI agents', 'software engineering', 'workflow', 'governance'],
+    definition:
+      'Agentic engineering is the practice of using AI coding agents and agentic workflows as part of professional software delivery. Engineers define the problem, constraints, tests, and review process; agents can plan, edit, run tools, and iterate; humans still own architecture, validation, security, and accountability.',
+    whyItMatters:
+      'Agentic tools can compress multi-file implementation work from days to hours, but they can also generate plausible mistakes at speed. Treating the work as engineering means using specifications, small scopes, automated tests, code review, observability, and clear rollback paths instead of trusting generated code blindly.',
+    analogy:
+      'Like supervising a fast junior team with access to the codebase. They can do a lot of work quickly, but the outcome depends on clear instructions, review checkpoints, test evidence, and someone experienced owning the final judgment.',
+    soundsSmartToSay:
+      '"We should treat this as agentic engineering, not vibe coding: write the acceptance criteria first, let the agent work in small commits, and require tests plus human review before merge."',
+    commonConfusions: [
+      'Agentic engineering vs vibe coding: Vibe coding is informal prompting and acceptance by feel. Agentic engineering adds specs, tests, review, security checks, and explicit ownership.',
+      'Agentic engineering does not mean the AI owns the system. The agent is a high-leverage tool; the engineering team remains responsible for design decisions and production quality.',
+    ],
+    relatedTerms: ['AI Agents', 'AI Coding Assistants', 'Tool Use / Function Calling', 'CI/CD'],
+  },
+  {
     id: 'ai-tool-use',
     domain: 'ai',
     title: 'Tool Use / Function Calling',

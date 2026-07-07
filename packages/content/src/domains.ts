@@ -106,4 +106,11 @@ export const DOMAINS: DomainMeta[] = [
     color: '#F59E0B',
     description: 'Secure software delivery, threat models, and flaws',
   },
+  {
+    id: 'quantum',
+    label: 'Quantum Computing',
+    icon: 'atom',
+    color: '#7C3AED',
+    description: 'Qubits, quantum algorithms, hardware, and quantum-safe security',
+  },
 ];

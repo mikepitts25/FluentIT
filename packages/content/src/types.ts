@@ -13,7 +13,8 @@ export type Domain =
   | 'observability'
   | 'identity'
   | 'architecture'
-  | 'appsec';
+  | 'appsec'
+  | 'quantum';
 
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
 

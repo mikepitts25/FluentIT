@@ -17,6 +17,7 @@ export const DOMAIN_ICON_IMAGES = {
   identity: require('../assets/domain-icons/identity.png'),
   architecture: require('../assets/domain-icons/architecture.png'),
   appsec: require('../assets/domain-icons/appsec.png'),
+  quantum: require('../assets/domain-icons/quantum.png'),
 } satisfies Record<Domain, ImageSourcePropType>;
 
 export function getDomainIconImage(domain: Domain): ImageSourcePropType {

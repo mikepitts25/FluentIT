@@ -2,6 +2,27 @@ import type { Card } from '../types';
 
 export const dataCards: Card[] = [
   {
+    id: 'data-engineering',
+    domain: 'data',
+    title: 'Data Engineering',
+    subtitle: 'Building the pipelines and platforms that make data usable',
+    difficulty: 'beginner',
+    tags: ['pipelines', 'infrastructure', 'analytics', 'platform'],
+    definition:
+      'Data engineering is the discipline of designing, building, and operating the systems that collect, transform, store, govern, and deliver data. It turns raw application events, database records, files, and third-party feeds into reliable datasets for analytics, AI, reporting, and operational workflows.',
+    whyItMatters:
+      'Most organizations have plenty of data but little trusted, usable data. Data engineering is what makes dashboards accurate, ML models trainable, compliance reporting repeatable, and business decisions less dependent on spreadsheet archaeology.',
+    analogy:
+      'Like building roads, utilities, and warehouses for a city. Data scientists and analysts can create value only if the underlying routes, storage, and maintenance crews keep goods moving reliably.',
+    soundsSmartToSay:
+      '"Before we debate another BI tool, we need to invest in data engineering basics: source ingestion, quality checks, lineage, and ownership for the datasets everyone depends on."',
+    commonConfusions: [
+      'Data engineering vs data science: Data engineering builds and operates the data supply chain. Data science uses data to model, predict, experiment, and explain.',
+      'Data engineering is not just ETL scripts. It includes orchestration, data modeling, quality, governance, security, cost management, and platform reliability.',
+    ],
+    relatedTerms: ['ETL / ELT', 'Data Pipeline', 'Data Warehouse', 'Pipeline Orchestration'],
+  },
+  {
     id: 'data-etl',
     domain: 'data',
     title: 'ETL / ELT',
@@ -209,7 +230,28 @@ export const dataCards: Card[] = [
       'Data mesh is not a technology — it is an organizational and architectural paradigm. You do not buy a data mesh product.',
       'Data mesh vs data fabric: Data fabric is a technology-driven integration layer. Data mesh is an organizational model.',
     ],
-    relatedTerms: ['Data Product', 'Domain-Driven Design', 'Federated Governance', 'Data Catalog'],
+    relatedTerms: ['Data Product', 'Domain-Driven Design', 'Federated Governance', 'Data Fabric'],
+  },
+  {
+    id: 'data-fabric',
+    domain: 'data',
+    title: 'Data Fabric',
+    subtitle: 'A unified layer for discovering, governing, and accessing distributed data',
+    difficulty: 'advanced',
+    tags: ['architecture', 'metadata', 'governance', 'integration'],
+    definition:
+      'A data fabric is a data architecture approach that connects data across warehouses, lakes, databases, applications, and clouds through shared metadata, catalogs, integration, governance, and automation. The goal is a unified, self-service way to find and use trusted data without forcing every dataset into one physical store.',
+    whyItMatters:
+      'Enterprise data is usually fragmented across departments, SaaS tools, cloud platforms, and legacy systems. A data fabric reduces the friction of finding, governing, and combining that data, which is especially important when AI and analytics teams need trusted context quickly.',
+    analogy:
+      'Like a transit network map across many neighborhoods. The neighborhoods still exist separately, but the map, routes, rules, and transfer points let people move through the whole city without learning every local street first.',
+    soundsSmartToSay:
+      '"A data fabric could help us expose governed customer data across Snowflake, S3, and operational systems without pretending one migration will centralize everything."',
+    commonConfusions: [
+      'Data fabric vs data mesh: A fabric is a technology and architecture layer for connecting, cataloging, and governing distributed data. A mesh is an operating model where domain teams own data products.',
+      'Data fabric is not one tool. It usually combines catalogs, metadata, governance, virtualization or integration, lineage, and automation across existing platforms.',
+    ],
+    relatedTerms: ['Data Mesh', 'Data Catalog', 'Data Governance', 'Data Lineage'],
   },
   {
     id: 'data-sql-vs-nosql',

@@ -18,6 +18,7 @@ const domainLabels: Record<Card['domain'], string> = {
   identity: 'identity and access',
   architecture: 'architecture and system design',
   appsec: 'application security',
+  quantum: 'quantum computing',
 };
 
 const domainTags: Record<Card['domain'], readonly string[]> = {
@@ -36,6 +37,7 @@ const domainTags: Record<Card['domain'], readonly string[]> = {
   identity: ['identity', 'access', 'trust'],
   architecture: ['architecture', 'design', 'trade-offs'],
   appsec: ['security', 'application', 'delivery'],
+  quantum: ['quantum', 'computing', 'hardware'],
 };
 
 const domainConfusions: Record<Card['domain'], string> = {
@@ -69,6 +71,8 @@ const domainConfusions: Record<Card['domain'], string> = {
     'This term is sometimes used as abstract design language, but it should clarify constraints, trade-offs, ownership, and failure behavior.',
   appsec:
     'This term is sometimes treated as scanner output, but application security also depends on design choices, exploitability, remediation, and release controls.',
+  quantum:
+    'This term is sometimes treated as future magic, but useful quantum work depends on hardware limits, error rates, algorithms, and classical integration.',
 };
 
 const relatedTerms: Record<Card['domain'], readonly string[]> = {
@@ -87,6 +91,7 @@ const relatedTerms: Record<Card['domain'], readonly string[]> = {
   identity: ['Authentication', 'Authorization', 'Policy', 'Audit'],
   architecture: ['Trade-off', 'Boundary', 'Scalability', 'Resilience'],
   appsec: ['Threat Model', 'Vulnerability', 'Control', 'Remediation'],
+  quantum: ['Qubit', 'Gate', 'Noise', 'Algorithm'],
 };
 
 const terms: Record<Card['domain'], readonly TermSeed[]> = {
@@ -570,6 +575,7 @@ const terms: Record<Card['domain'], readonly TermSeed[]> = {
     ['Secret Rotation', 'Replacing credentials on a planned or emergency basis'],
     ['Security Exception Review', 'Reassessing an accepted application security risk'],
   ],
+  quantum: [],
 };
 
 function slugify(value: string): string {
